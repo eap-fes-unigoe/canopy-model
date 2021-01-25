@@ -1,17 +1,17 @@
 name,value,unit,type,description
 R,8.3145,J mol-1 K-1,physical constant,universal gas constant
-rho_leaf,0.4,unitless,physical parameter,Leaf reflectance
-tau_leaf,0.1,unitless,physical parameter,Leaf trasmittance
-clump_OMEGA,1,unitless,canopy parameter,Canopy clumping coefficient (Ω)
-alb_soil_b,0.1,unitless,,Soil albedo for direct shortwave radiation
-alb_soil_d,0.1,unitless,,Soil albedo for diffuse shortwave radiation
-em_leaf,0.97,unitless,,Leaf longwave emissivity
-em_soil,0.97,unitless,,Soil longwave emissivity
-lat,51.099,degrees,site parameter,Latitude of Hainich
-lon,10.426,degrees,site parameter,Longitude of Hainich
-leaf_out,110,day of year,,Day when leaf emission starts in the spring
-leaf_full,170,day of year,,Day when leaf reach max LAI at the end of spring
-leaf_fall,280,day of year,,Day when leaf start to fall
-lat,51.099,degrees,site parameter,Latitude of Hainich
-max_LAI,5,m2 m-2,,Max LAI during the summer
-min_radiation_PAI,1,m2 m-2,,Min Plant area Index during winter (used as LAI in the radiation transfer)
+rho_leaf,0.4,unitless,radiative transfer,Leaf reflectance
+tau_leaf,0.1,unitless,radiative transfer,Leaf trasmittance
+clump_OMEGA,1,unitless,radiative transfer,Canopy clumping coefficient (Ω)
+alb_soil_b,0.1,unitless,radiative transfer,Soil albedo for direct shortwave radiation
+alb_soil_d,0.1,unitless,radiative transfer,Soil albedo for diffuse shortwave radiation
+em_leaf,0.97,unitless,radiative transfer,Leaf longwave emissivity
+em_soil,0.97,unitless,radiative transfer,Soil longwave emissivity
+lat,51.099,degrees,radiative transfer,Latitude of Hainich
+lon,10.426,degrees,radiative transfer,Longitude of Hainich
+leaf_out,110,day of year,radiative transfer,Day when leaf emission starts in the spring
+leaf_full,170,day of year,radiative transfer,Day when leaf reach max LAI at the end of spring
+leaf_fall,280,day of year,radiative transfer,Day when leaf start to fall
+lat,51.099,degrees,radiative transfer,Latitude of Hainich
+max_LAI,5,m2 m-2,radiative transfer,Max LAI during the summer
+min_radiation_PAI,1,m2 m-2,radiative transfer,Min Plant area Index during winter (used as LAI in the radiation transfer)
