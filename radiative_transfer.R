@@ -1,8 +1,8 @@
 # Radiative transfer model
 
-source("shortwave.R")
-source("longwave.R")
-source("calc_parameters.R")
+source("radiative_transfer/shortwave.R")
+source("radiative_transfer/longwave.R")
+source("radiative_transfer/calc_parameters.R")
 
 
 #' Radiative transfer model step
