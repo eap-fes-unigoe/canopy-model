@@ -1,0 +1,10 @@
+Variable,Unit,Description
+C_leaf,kg C m-2,carbon pool of leaves
+C_fineroot,kg C m-2,carbon pool of fine roots
+C_wood,kg C m-2,carbon pool of wood
+C_litter_m,kg C m-2,carbon pool of metabolic litter
+C_litter_s,kg C m-2,carbon pool of structural litter
+C_cwd,kg C m-2,carbon pool of course woody debris
+C_som_f,kg C m-2,carbon pool of fast soil organic matter
+C_som_s,kg C m-2,carbon pool of slow soil organic matter
+C_som_p,kg C m-2,carbon pool of passive soil organic matter
