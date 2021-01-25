@@ -1,2 +1,2 @@
-name,value,unit,type
-R,8.3145,J mol-1 K-1,physical constant
+name,value,unit,type,description
+R,8.3145,J mol-1 K-1,physical constant,universal gas constant

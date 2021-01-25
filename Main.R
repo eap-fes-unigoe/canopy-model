@@ -7,24 +7,31 @@
 ## 3. Running a for loop that calculates fluxes and stocks over the simulation time
 ## 4. Writing out model output
 
-# Required packages
+## Required packages
 
-# Load parameter file
+## Load parameter file ----
 pars <- read.csv("parameters.csv")
 
-# Load functions
+## Load functions ----
 
 
-# Load input
-input <- read.csv("FLX_DE-Hai-nogap.csv")
+## Load input ----
+input <- read.csv("data/Hainch_2002_input.csv")
 
-# Load initial state (this should be a dataframe with all the state variables and one row with initial values)
-# statevars <- read.csv("initial_values.csv")
+## Load initial state ----
+## This should be a dataframe with all the state variables and one row with initial values
 
-# Initial calculations and variables
+# statevars <- read.csv("initial_state.csv")
 
+## Initial calculations and variables ----
 
-# Model run (for loop)
+# Setting some time unit variables in unit seconds
+dhour <- 3800
+dday  <- dhour * 24
+dyear <- dday * 365
+dt    <- dhour # model time step
+
+## Model run (for loop) ----
 for(n in 1:length(time)) {
 
   # Calculate radiative transfer
