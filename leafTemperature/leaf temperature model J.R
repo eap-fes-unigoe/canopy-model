@@ -1,31 +1,28 @@
 # install.packages("dplyr")
 library(dplyr)
 
-
+setwd("D:/Kathina/FES/2020-21 WS/Eco-Atmo Processes/Modelling/data")
 #obtain data from the Hainich forest
-data <-read.csv("FLX_DE-Hainich.csv",header=TRUE, sep=";", na.strings="NA", dec=",")
-# select: air temperature TA_F (?C), vapor pressure deficit VPD_F (hPa) and air pressure PA_F (kPa)
-# incoming solar SW_IN_F and longwave radiation LW_IN_F (W m-2), soil Temp.in 2cm depth TS_F_MDS_1 (?C)
-# wind speed WS_F (M s-1)
-mydata<- data%>%select(TIMESTAMP_START,TA_F,PA_F,SW_IN_F,LW_IN_F,TS_F_MDS_1,WS_F,VPD_F)
-rm(data)
+input <-read.csv("Hainch_2002_input.csv",header=TRUE, sep=";", na.strings="NA", dec=",")
+
+# select: air temperature (?C), air pressure (mb), vapor pressure of air (kPa)
+# wind speed (m s-1), incoming shortwave radiation (W/m2)
+myinput <- input%>%select(DOY,hour,Tair...C.,pressure..mb.,Vpact..kPa.,vhor..m.s.,SWDR..W.m².,ST005...C.)
 
 #change units from kPa to Pa and ?C to K
-mydata<- mydata%>% 
-  mutate(tair = TA_F+273.15)%>%   #temperature in K
-  mutate(patm = PA_F*1000)%>%     #air pressure in hPa
-  mutate(u = WS_F)%>%             #wind speed in m
-  mutate(Ts = TS_F_MDS_1+273.15)%>%   #Temperature of soil in K
-  mutate(VPD_F = VPD_F*100)       #vapor pressure deficit in Pa
-  select(TIMESTAMP_START,tair,patm,u,Ts,SW_IN_F,LW_IN_F,TA_F,VPD_F) 
-
-#atmospheric parameters
-  atmo <- mydata%>%
-    select(TIMESTAMP_START,patm,tair,VPD_F,TA_F)%>%
-    mutate(es = (0.6113*exp(5423*(1/273.15-1/tair)))*1000)%>%  # saturation vapor pressure(Pa) Clausius-Clapeyron equation
-    mutate(eair = es-(VPD_F/100))%>%
-    select(TIMESTAMP_START,patm,tair,eair)
+myinput<- myinput%>% 
+  mutate(time = paste0(DOY, "_", hour))%>%   #create time column
+  mutate(tair = Tair...C.+273.15)%>%         #temperature in K
+  mutate(patm = pressure..mb.*100)%>%        #air pressure in Pa
+  mutate(eair = Vpact..kPa.*1000)%>%         #vapor pressure of air in Pa
+  mutate(u = vhor..m.s.)%>%                  #wind speed m/s
+  mutate(SW = SWDR..W.m².)%>%                #incoming shortwave radiation W/m2
+  mutate(Ts = ST005...C.+273.15)%>%          #soil temperature (K)
+  select(time,tair,patm,eair,u,SW,Ts)
   
+#atmospheric parameters
+atmo <- myinput%>%
+    select(time,patm,tair,eair)
 
 #physical constants
 cpair <- 29.2                           # Specific heat of air at constant pressure (J/mol/K)
@@ -44,13 +41,14 @@ leaf <- data.frame(emiss)
 
 # Leaf radiative forcing qa (W/m2)
 # radiative forcing Qa = incoming shortwave - 15% + incoming longwave radiation + longwave soil (Boltzman law)
-# longwave radiation soil = 0.97*Boltzman constant (sigma)* soil temperature (K)^4a
-qa<- mydata%>%
-  select(TIMESTAMP_START,Ts,SW_IN_F,LW_IN_F)%>%
+# longwave radiation soil = 0.97*Boltzman constant (sigma)* soil temperature (K)^4a  (reference: Alexander Knohl)
+LW <- runif(8760, min=200, max=400) # randomly created longwave radiation between 200-400 W/m2
+LW <- 350
+qa<- myinput%>%
+  select(time,Ts,SW)%>%
   mutate(LW_S = 0.97*physcon$sigma*Ts^4)%>% # Longwave radiation from soil
-  mutate(qa = 0.85*SW_IN_F + LW_IN_F + LW_S)%>% # radiative forcing
-  select(TIMESTAMP_START,qa)
-
+  mutate(qa = 0.85*SW + LW + LW_S)%>% # radiative forcing
+  select(time,qa)
 
 
 ### boundary layer conductancee for heat gbh (mol/m2 leaf/s) for FORCED convection 
@@ -77,57 +75,44 @@ T0<- 273.15  # Temperature 0?C in Kelvin
 P0 <- 101325 # air Pressure (Pa) at 0?C
 Dh0 <- 18.9*10^(-6) # reference diffusivity of heat Dh (m^2 s-1) at 0?C
 v0 <- 13.3*10^(-6) # reference diffusivity of momentum v (m^2 s-1) at 0?C
-R <- 8.314        # gas constant, m^3*Pa*mol-1*K-1
+R <-  8.314        # gas constant, m^3*Pa*mol-1*K-1
+DW0 <- 21.8*10^(-6)       #Molecular diffusivity of mass H2o at 0?C (Mm? s-1)
 
-conduct1 <- mydata%>%
-  select(TIMESTAMP_START,tair,patm,u)%>%
-  mutate(pm = patm/(R*tair))%>%      # molar density (mol m-3) according to ideal gas law n=PV/RT, pm (n/volume, mol m-3)= P(Pa)/ R(m^3*Pa/mol*K)*T(K) 
+conduct <- myinput%>%
+  select(time,tair,patm,u)%>%
+  mutate(pm = patm/(R*tair))%>%           # molar density (mol m-3) according to ideal gas law n=PV/RT, pm (n/volume, mol m-3)= P(Pa)/ R(m^3*Pa/mol*K)*T(K) 
   mutate(Dh = Dh0*(P0/patm)*(tair/T0))%>% # diffusivity of heat (m^2 s-1) 
-  mutate(v = v0*(P0/patm)*(tair/T0))      # diffusivity of momentum (m^2 s-1)
-
-conduct2 <- conduct1%>%
-  select(TIMESTAMP_START,tair,patm,u,pm,Dh,v)%>%
+  mutate(v = v0*(P0/patm)*(tair/T0))%>%      # diffusivity of momentum (m^2 s-1)
   mutate(Pr = v/Dh)%>%                    # Prandtl number
   mutate(Re = u*dl/v)%>%                  # Reynolds number 
   mutate(Nu = 0.66*Pr^0.33*Re^0.5)%>%     # Nusselt number for forced conv.
-  mutate(gbh = (Nu*pm*Dh)/dl)             # Boundary layer conductance for heat (mol/m2 leaf/s)
-
-#boundary layer conductance for water vapor gbw (mol m-2 s-1) 
-#              gbw = 0,036* Sc^0,33* Re^0,50
-# Sc         #Sherwood number
-#             Sc = ??/Dj
-
-#constants
-DW0 <- 21.8*10^(-6)       #Molecular diffusivity of mass H2o at 0?C (Mm? s-1)
-
-conduct3 <- conduct2%>%
-  mutate(DW = DW0*(P0/patm)*(tair/T0)) #Molecular diffusivity of mass H2o (Mm? s-1)
-conduct4 <- conduct3%>%
-  mutate(Sc = v/DW)  #Sherwood number
-conduct5 <- conduct4%>%
-  mutate(gbw = 0.036*Sc^0.33*Re^0.50)  #boundary layer conductance for water vapor (mol m-2 s-1) 
-
-conduct <- conduct5%>%
-  select(TIMESTAMP_START,gbh,gbw)
+  mutate(gbh = (Nu*pm*Dh)/dl)%>%            # Boundary layer conductance for heat (mol/m2 leaf/s)
+  mutate(Pr = v/Dh)%>%                    # Prandtl number
+  mutate(Re = u*dl/v)%>%                  # Reynolds number 
+  mutate(Nu = 0.66*Pr^0.33*Re^0.5)%>%     # Nusselt number for forced conv.
+  mutate(gbh = (Nu*pm*Dh)/dl)%>%          # Boundary layer conductance for heat (mol/m2 leaf/s)
+  mutate(DW = DW0*(P0/patm)*(tair/T0))%>% # Molecular diffusivity of mass H2o (Mm? s-1)
+  mutate(Sc = v/DW)%>%                    #Sherwood number
+  mutate(gbw = 0.036*Sc^0.33*Re^0.50)%>%  #boundary layer conductance for water vapor (mol m-2 s-1) 
+  select(time,gbh,gbw)
 
 #  predefine leaf temperature
-leaftemp<- mydata%>%
-  select(TIMESTAMP_START,tair)%>%
+leaftemp<- myinput%>%
+  select(time,tair)%>%
   mutate(tleaf = tair)               
 
-flux <- merge(qa, conduct, by="TIMESTAMP_START")
-flux <- merge(flux, leaftemp, by="TIMESTAMP_START")
+flux <- merge(qa, conduct, by="time")
+flux <- merge(flux, leaftemp, by="time")
 
 #predefine fluxes from leaf temperature
-flux$rnet<-rep(0,length(flux$TIMESTAMP_START))   #Leaf net radiation (W/m2 leaf)
-flux$lwrad<-rep(0,length(flux$TIMESTAMP_START))  #Longwave radiation emitted from leaf (W/m2 leaf)
-flux$shflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf sensible heat flux (W/m2 leaf)
-flux$lhflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf latent heat flux (W/m2 leaf)
-flux$etflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf transpiration flux (mol H2O/m2 leaf/s)
+flux$rnet<-rep(0,length(flux$time))   #Leaf net radiation (W/m2 leaf)
+flux$lwrad<-rep(0,length(flux$time))  #Longwave radiation emitted from leaf (W/m2 leaf)
+flux$shflx<-rep(0,length(flux$time))  #Leaf sensible heat flux (W/m2 leaf)
+flux$lhflx<-rep(0,length(flux$time))  #Leaf latent heat flux (W/m2 leaf)
+flux$etflx<-rep(0,length(flux$time))  #Leaf transpiration flux (mol H2O/m2 leaf/s)
 
 # Leaf stomatal conductance (mol H2O/m2 leaf/s)  
-flux$gs <- 0.1
-
+flux$gs <-  0.1
 
 #function of Saturation vapor pressure and temperature derivative -- satvap()
 satvap <- function (tc) {   
@@ -185,7 +170,7 @@ str(atmo)
 str(leaf)
 str(flux)
 
-for(i in 1:length(mydata$TIMESTAMP_START)){
+for(i in 1:length(myinput$time)){
   # Leaf temperature and energy fluxes
   
   # ------------------------------------------------------
@@ -193,10 +178,10 @@ for(i in 1:length(mydata$TIMESTAMP_START)){
   #   physcon.tfrz     ! Freezing point of water (K)
   #   physcon.mmh2o    ! Molecular mass of water (kg/mol)
   #   physcon.sigma    ! Stefan-Boltzmann constant (W/m2/K4)
-  #   atmo.patm       ! Atmospheric pressure (Pa)
-  #   atmo.cpair      ! Specific heat of air at constant pressure (representable value: 29.2 J/mol/K)
-  #   atmo.tair       ! Air temperature (K)  
-  #   atmo.VPD_F      ! Vapor pressure deflict of air (Pa)
+  #   physcon.cpair    ! Specific heat of air at constant pressure (representable value: 29.2 J/mol/K)
+  #   atmo.patm        ! Atmospheric pressure (Pa)
+  #   atmo.tair        ! Air temperature (K)  
+  #   atmos.eair       ! Vapor pressure of air (Pa)
   #   leaf.emiss       ! Leaf emissivity
   #   flux.gbh         ! Leaf boundary layer conductance, heat (mol/m2 leaf/s)
   #   flux.gbw         ! Leaf boundary layer conductance, H2O (mol H2O/m2 leaf/s)
@@ -306,7 +291,6 @@ for(i in 1:length(mydata$TIMESTAMP_START)){
   print(paste0("tleaf: ", flux[i,"tleaf"][1]))
   print(paste0("tair: ", atmo[i,"tair"][1]))
 }
-
 
 plot(flux$tleaf, ylab = "leaf temperature (K)")
 plot(flux$tleaf-flux$tair,ylab = "leaf-air temperature deficit (K)")
