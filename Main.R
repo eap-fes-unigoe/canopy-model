@@ -13,7 +13,7 @@
 pars <- read.csv("parameters.csv")
 
 ## Load functions ----
-
+source("fun_calc_Cpools.R")
 
 ## Load input ----
 input <- read.csv("data/Hainch_2002_input.csv")
@@ -21,15 +21,20 @@ input <- read.csv("data/Hainch_2002_input.csv")
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
 
-# statevars <- read.csv("initial_state.csv")
+statevars <- read.csv("initial_state.csv")
 
 ## Initial calculations and variables ----
 
 # Setting some time unit variables in unit seconds
-dhour <- 3800
-dday  <- dhour * 24
-dyear <- dday * 365
-dt    <- dhour # model time step
+shour  <- 3800
+sday   <- shour * 24
+smonth <- sday * 30
+syear  <- sday * 365
+dt     <- shour # delta time: model time step
+
+# Source setup scripts for different model components
+source("setup_Cpools.R")
+
 
 ## Model run (for loop) ----
 for(n in 1:length(time)) {
@@ -47,9 +52,11 @@ for(n in 1:length(time)) {
 
 
   # Calculate plant C pools, soil decomposition and soil C pools
+  Cpools <- fun_calc_Cpools(pars, ...)
 
+  out <- ...
 }
 
 # Write out output
-
+write.csv(...)
 

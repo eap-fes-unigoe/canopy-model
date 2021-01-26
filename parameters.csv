@@ -1,10 +1,10 @@
 name,value,unit,type,description
 R,8.3145,J mol-1 K-1,physical constant,universal gas constant
-theta_sat,0.48,m3 m-3,soil hydrology,soil water volume at saturation = soil pore space
-kmod_a,0.6,unitless,soil carbon,parameter a for fun_kmod_Ms
-kmod_b,1.27,unitless,soil carbon,parameter b for fun_kmod_Ms
-kmod_c,0.0012,unitless,soil carbon,parameter c for fun_kmod_Ms
-kmod_d,2.94,unitless,soil carbon,parameter d for fun_kmod_Ms
+ps,0.48,m3 m-3,soil hydrology,soil pore space = soil water volume at saturation
+kmod_a,0.6,none,soil carbon,parameter a for fun_kmod_Ms
+kmod_b,1.27,none,soil carbon,parameter b for fun_kmod_Ms
+kmod_c,0.0012,none,soil carbon,parameter c for fun_kmod_Ms
+kmod_d,2.94,none,soil carbon,parameter d for fun_kmod_Ms
 rho_leaf,0.4,unitless,radiative transfer,Leaf reflectance
 tau_leaf,0.1,unitless,radiative transfer,Leaf trasmittance
 clump_OMEGA,1,unitless,radiative transfer,Canopy clumping coefficient (Ω)
