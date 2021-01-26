@@ -1,5 +1,10 @@
 name,value,unit,type,description
 R,8.3145,J mol-1 K-1,physical constant,universal gas constant
+theta_sat,0.48,m3 m-3,soil hydrology,soil water volume at saturation = soil pore space
+kmod_a,0.6,unitless,soil carbon,parameter a for fun_kmod_Ms
+kmod_b,1.27,unitless,soil carbon,parameter b for fun_kmod_Ms
+kmod_c,0.0012,unitless,soil carbon,parameter c for fun_kmod_Ms
+kmod_d,2.94,unitless,soil carbon,parameter d for fun_kmod_Ms
 rho_leaf,0.4,unitless,radiative transfer,Leaf reflectance
 tau_leaf,0.1,unitless,radiative transfer,Leaf trasmittance
 clump_OMEGA,1,unitless,radiative transfer,Canopy clumping coefficient (Ω)
@@ -12,6 +17,5 @@ lon,10.426,degrees,radiative transfer,Longitude of Hainich
 leaf_out,110,day of year,radiative transfer,Day when leaf emission starts in the spring
 leaf_full,170,day of year,radiative transfer,Day when leaf reach max LAI at the end of spring
 leaf_fall,280,day of year,radiative transfer,Day when leaf start to fall
-lat,51.099,degrees,radiative transfer,Latitude of Hainich
 max_LAI,5,m2 m-2,radiative transfer,Max LAI during the summer
 min_radiation_PAI,1,m2 m-2,radiative transfer,Min Plant area Index during winter (used as LAI in the radiation transfer)
