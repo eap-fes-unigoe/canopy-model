@@ -25,29 +25,27 @@ leaf_fall,280,day of year,radiative transfer,Day when leaf start to fall
 max_LAI,5,m2 m-2,radiative transfer,Max LAI during the summer
 min_radiation_PAI,1,m2 m-2,radiative transfer,Min Plant area Index during winter (used as LAI in the radiation transfer)
 tfrz,273.15,K,physical constant,Freezing point of water
-vcmax25,60,umol m-2 s-1,photosynthesis_leaf,max carboxylation at 25°C
-kc25,404.9,umol mol-1,photosynthesis_leaf,Michaelis Menten Constant for CO2 at 25 °C
-ko25,278.4,umol mol-1,photosynthesis_leaf,Michaelis Menten Constant for O2 at 25 °C
-cp25,42.75,umol mol-1,photosynthesis_leaf,CO2 compensation point at 25 °C
-kcha,79430,J mol-1,photosynthesis_leaf,Activation energy for Kc
-koha,36380,J mol-1,photosynthesis_leaf,Activation energy for Ko
-cpha,37830,J mol-1,photosynthesis_leaf,Activation energy for Cp
-rdha,46390,J mol-1,photosynthesis_leaf,Activation energy for R
-vcmaxha,65330,J mol-1,photosynthesis_leaf,Activation energy for Vcmax
-jmaxha,43540,J mol-1,photosynthesis_leaf,Activation energy for Jmax
-rdhd,150000,J mol-1,photosynthesis_leaf,Deactivation energy for Rd
-vcmaxhd,150000,J mol-1,photosynthesis_leaf,Deactivation energy for Vcmax
-jmaxhd,150000,J mol-1,photosynthesis_leaf,Deactivation energy for Jmax
-phi_psii,0.85,unitless,photosynthesis_leaf,quantum yield of PS II
-theta_j,0.90, unitless,photosynthesis_leaf,Empirical curvature parameter for electron transport rate
-colim_c3,0.98,unitless,photosynthesis_leaf,Empirical curvature parameter for C3 co-limitation
-g0,0.01,mol H2O m-2 s-1,photosynthesis_leaf,Ball-Berry minimum leaf conductance
-g1,9.0,unitless,photosynthesis_leaf,Ball-Berry slope of conductance-photosynthesis relationship
-dleaf,0.1,m,photosynthesis_leaf,leaf dimension;
-emiss,0.97,%,photosynthesis_leaf,leaf emissivity;
+vcmax25,60,umol m-2 s-1,leaf constant,max carboxylation at 25°C
+kc25,404.9,umol mol-1,leaf constant,Michaelis Menten Constant for CO2 at 25 °C
+ko25,278.4,umol mol-1,leaf constant,Michaelis Menten Constant for O2 at 25 °C
+cp25,42.75,umol mol-1,leaf constant,CO2 compensation point at 25 °C
+kcha,79430,J mol-1,leaf constant,Activation energy for Kc
+koha,36380,J mol-1,leaf constant,Activation energy for Ko
+cpha,37830,J mol-1,leaf constant,Activation energy for Cp
+rdha,46390,J mol-1,leaf constant,Activation energy for R
+vcmaxha,65330,J mol-1,leaf constant,Activation energy for Vcmax
+jmaxha,43540,J mol-1,leaf constant,Activation energy for Jmax
+rdhd,150000,J mol-1,leaf constant,Deactivation energy for Rd
+vcmaxhd,150000,J mol-1,leaf constant,Deactivation energy for Vcmax
+jmaxhd,150000,J mol-1,leaf constant,Deactivation energy for Jmax
+phi_psii,0.85,unitless,leaf constant,quantum yield of PS II
+theta_j,0.90, unitless,leaf constant,Empirical curvature parameter for electron transport rate
+colim_c3,0.98,unitless,leaf constant,Empirical curvature parameter for C3 co-limitation
+g0,0.01,mol H2O m-2 s-1,leaf constant,Ball-Berry minimum leaf conductance
+g1,9.0,unitless,leaf constant,Ball-Berry slope of conductance-photosynthesis relationship
+dleaf,0.1,m,leaf constant,leaf dimension;
 grav,9.80665,m s-2,physical constant,Gravitational acceleration
 mmdry,0.02897,kg mol-1,physical constant,Molecular mass of dry air
-mmh2o = 0.01802,kg mol-1,physical constant,Molecular mass of water
 cpd,1005,J kg-1 K-1,physical constant,Specific heat of dry air at constant pressure
 cpw,1846,J kg-1 K-1,physical constant,Specific heat of water vapor at constant pressure
 visc0,13.3e-06,m2 s-1,physical constant,Kinematic viscosity at 0C and 1013.25 hPa
