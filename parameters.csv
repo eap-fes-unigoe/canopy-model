@@ -3,7 +3,7 @@ R,8.3145,J mol-1 K-1,physical constant,universal gas constant
 cpair,29.2,J mol-1 K-1,atmospheric constant,Specific heat of air at constant pressure
 tfrz,273.15,K,physical constant,Freezing point of water
 mmh2o,0.01801528,kg mol-1,physical constant,Molecular mass of water
-sigma,5.670374419*10^-8,W m-2 K-4,physical constant,Stefan-Boltzmann constant 
+sigma,5.670374419*10^-8,W m-2 K-4,physical constant,Stefan-Boltzmann constant
 emiss,0.96 ,percent,leaf constant,leaf emissivity
 ps,0.48,m3 m-3,soil hydrology,soil pore space = soil water volume at saturation
 kmod_a,0.6,none,soil carbon,parameter a for fun_kmod_Ms
@@ -40,10 +40,19 @@ vcmaxhd,150000,J mol-1,photosynthesis_leaf,Deactivation energy for Vcmax
 jmaxhd,150000,J mol-1,photosynthesis_leaf,Deactivation energy for Jmax
 phi_psii,0.85,unitless,photosynthesis_leaf,quantum yield of PS II
 theta_j,0.90, unitless,photosynthesis_leaf,Empirical curvature parameter for electron transport rate
-colim_c3,0.98,unitless, photosynthesis_leaf,Empirical curvature parameter for C3 co-limitation
-g0,0.01,mol H2O m-2 s-1,photosynthesis_leaf, Ball-Berry minimum leaf conductance
+colim_c3,0.98,unitless,photosynthesis_leaf,Empirical curvature parameter for C3 co-limitation
+g0,0.01,mol H2O m-2 s-1,photosynthesis_leaf,Ball-Berry minimum leaf conductance
 g1,9.0,unitless,photosynthesis_leaf,Ball-Berry slope of conductance-photosynthesis relationship
 dleaf,0.1,m,photosynthesis_leaf,leaf dimension;
 emiss,0.97,%,photosynthesis_leaf,leaf emissivity;
+grav,9.80665,m s-2,physical constant,Gravitational acceleration
+mmdry,0.02897,kg mol-1,physical constant,Molecular mass of dry air
+mmh2o = 0.01802,kg mol-1,physical constant,Molecular mass of water
+cpd,1005,J kg-1 K-1,physical constant,Specific heat of dry air at constant pressure
+cpw,1846,J kg-1 K-1,physical constant,Specific heat of water vapor at constant pressure
+visc0,13.3e-06,m2 s-1,physical constant,Kinematic viscosity at 0C and 1013.25 hPa
+Dh0,18.9e-06,m2 s-1,physical constant,Molecular diffusivity (heat) at 0C and 1013.25 hPa
+Dv0,21.8e-06,m2 s-1,physical constant,Molecular diffusivity (H2O) at 0C and 1013.25 hPa
+Dc0,13.8e-06,m2 s-1,physical constant,Molecular diffusivity (CO2) at 0C and 1013.25 hPa
 
 
