@@ -8,7 +8,7 @@ sp_12_02 = function(flux,leaf,physcon,atmos){
 
 source("satvap.R")
 source("LeafPhysiologyParams.R")
-source("LeafBoundaryLayer.R") 
+source("LeafBoundaryLayer.R")
 
 # will get these from elsewhere later, or by iterating. Where startpioint?
 params = list()
@@ -20,25 +20,25 @@ params$vis = 1; params$nir = 2
 
 # --- Physical constants
 
-physcon$grav = 9.80665;               # Gravitational acceleration (m/s2)
-physcon$tfrz = 273.15;                # Freezing point of water (K)
-physcon$sigma = 5.67e-08;             # Stefan-Boltzmann constant (W/m2/K4)
-physcon$mmdry = 28.97 / 1000;         # Molecular mass of dry air (kg/mol)
-physcon$mmh2o = 18.02 / 1000;         # Molecular mass of water (kg/mol)
+physcon$grav = 9.80665;               # Gravitational acceleration (m/s2)     # needed for Leeafboundarylayer
+physcon$tfrz = 273.15;                # Freezing point of water (K)           # needed for Photosynthesis
+physcon$sigma = 5.67e-08;             # Stefan-Boltzmann constant (W/m2/K4)   # needed for ground radiation
+physcon$mmdry = 28.97 / 1000;         # Molecular mass of dry air (kg/mol)    # needed for specific humidity
+physcon$mmh2o = 18.02 / 1000;         # Molecular mass of water (kg/mol)      # needed for specific humidity
 physcon$cpd = 1005;                   # Specific heat of dry air at constant pressure (J/kg/K)
 physcon$cpw = 1846;                   # Specific heat of water vapor at constant pressure (J/kg/K)
-physcon$rgas = 8.31446;               # Universal gas constant (J/K/mol)
-physcon$visc0 = 13.3e-06;             # Kinematic viscosity at 0C and 1013.25 hPa (m2/s)
-physcon$Dh0 = 18.9e-06;               # Molecular diffusivity (heat) at 0C and 1013.25 hPa (m2/s)
-physcon$Dv0 = 21.8e-06;               # Molecular diffusivity (H2O) at 0C and 1013.25 hPa (m2/s)
-physcon$Dc0 = 13.8e-06;               # Molecular diffusivity (CO2) at 0C and 1013.25 hPa (m2/s)
+physcon$rgas = 8.31446;               # Universal gas constant (J/K/mol)      # needed for Photosynthesis
+physcon$visc0 = 13.3e-06;             # Kinematic viscosity at 0C and 1013.25 hPa (m2/s)  # needed for Leeafboundarylayer
+physcon$Dh0 = 18.9e-06;               # Molecular diffusivity (heat) at 0C and 1013.25 hPa (m2/s) # needed for Leeafboundarylayer
+physcon$Dv0 = 21.8e-06;               # Molecular diffusivity (H2O) at 0C and 1013.25 hPa (m2/s)  # needed for Leeafboundarylayer
+physcon$Dc0 = 13.8e-06;               # Molecular diffusivity (CO2) at 0C and 1013.25 hPa (m2/s)  # needed for Leeafboundarylayer
 
 # Leaf physiological parameters
 
 leaf = LeafPhysiologyParams(params,physcon,leaf);
 
-# --- Atmospheric forcing 
-# for Photosynthesis/Stomatal Conductance atmos$eair and flux$apar are needed 
+# --- Atmospheric forcing
+# for Photosynthesis/Stomatal Conductance atmos$eair and flux$apar are needed
 # these are calcualet in the lines below
 
 # Process sunlit or shaded leaf
@@ -56,7 +56,7 @@ atmos$o2air = 0.209 * 1000;
 atmos$tair = physcon$tfrz + 30;
 atmos$relhum = 60;
 
-# Wind (m/s) 
+# Wind (m/s)
 # needed for leafpboundarylayerconductance
 # u = 0.01_r8  ! Still air
 # u = 0.1_r8   ! Calm - smoke rises vertically
