@@ -19,3 +19,4 @@ leaf_full,170,day of year,radiative transfer,Day when leaf reach max LAI at the 
 leaf_fall,280,day of year,radiative transfer,Day when leaf start to fall
 max_LAI,5,m2 m-2,radiative transfer,Max LAI during the summer
 min_radiation_PAI,1,m2 m-2,radiative transfer,Min Plant area Index during winter (used as LAI in the radiation transfer)
+tfrz,273.15,K,photosynthesis,Freezing point of water
