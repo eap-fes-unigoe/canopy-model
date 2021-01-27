@@ -2,12 +2,13 @@
 library(dplyr)
 
 setwd("D:/Kathina/FES/2020-21 WS/Eco-Atmo Processes/Modelling/data")
+
 #obtain data from the Hainich forest
 input <-read.csv("Hainch_2002_input.csv",header=TRUE, sep=";", na.strings="NA", dec=",")
 
 # select: air temperature (?C), air pressure (mb), vapor pressure of air (kPa)
 # wind speed (m s-1), incoming shortwave radiation (W/m2)
-myinput <- input%>%select(DOY,hour,Tair...C.,pressure..mb.,Vpact..kPa.,vhor..m.s.,SWDR..W.m².,ST005...C.)
+myinput <- input%>%select(DOY,hour,Tair...C.,pressure..mb.,Vpact..kPa.,vhor..m.s.,SWDR..W.m2.,ST005...C.)
 
 #change units from kPa to Pa and ?C to K
 myinput<- myinput%>% 
@@ -16,7 +17,7 @@ myinput<- myinput%>%
   mutate(patm = pressure..mb.*100)%>%        #air pressure in Pa
   mutate(eair = Vpact..kPa.*1000)%>%         #vapor pressure of air in Pa
   mutate(u = vhor..m.s.)%>%                  #wind speed m/s
-  mutate(SW = SWDR..W.m².)%>%                #incoming shortwave radiation W/m2
+  mutate(SW = SWDR..W.m2.)%>%                #incoming shortwave radiation W/m2
   mutate(Ts = ST005...C.+273.15)%>%          #soil temperature (K)
   select(time,tair,patm,eair,u,SW,Ts)
   
