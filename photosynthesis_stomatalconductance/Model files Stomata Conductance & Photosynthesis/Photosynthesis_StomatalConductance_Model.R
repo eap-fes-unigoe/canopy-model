@@ -1,12 +1,12 @@
 #StomatalConductanceLeafPhotosynthesis = function(flux,leaf,physcon,atmos){
 
-  
+
 # call these:
 source("sp_12_02.R")
 source("satvap.R")
 source("LeafPhotosynthesis.R")
 source("PAR.R")
-  
+
 # read in Data
 Hainich5Days = read.csv("5_days.csv",header = T, dec = ",", sep = ";")
 #Hainich5Days = read.csv("5days_winter.csv",header = T, dec = ",", sep = ";")
@@ -19,7 +19,7 @@ physcon = list()
 atmos = list()
 
 #Create physical constants, inital atmos values, leafphysiology params, inital fluxes
-InitalValues = sp_12_02(flux,leaf,physcon,atmos) 
+InitalValues = sp_12_02(flux,leaf,physcon,atmos)
 flux = InitalValues[[1]]
 leaf = InitalValues[[2]]
 physcon = InitalValues[[3]]
@@ -49,7 +49,7 @@ fsds = Hainich5Days$SW_IN_F    #from group 3 #! SW radiation (W/m2)
 # Test values for PAR
 #   flux$apar           ! Leaf absorbed PAR (umol photon/m2 leaf/s)
 #flux$apar_i = flux$apar
-flux$apar_i = PAR(leaf,fsds) 
+flux$apar_i = PAR(leaf,fsds)
 
 
 
@@ -68,9 +68,9 @@ flux$tleaf_i = atmos$tair_i;
 output_an = c()
 output_gs = c()
 
-#running time loop over five days, 
+#running time loop over five days,
 #calculating an and gs with different values for co2air, tair, tleaf, apar, eair
-# _i are the vectors from the input data, 
+# _i are the vectors from the input data,
 # without _i are the singular value taken from those vectors at the specific timestep i
 # add _i to list input() instead ?
 
@@ -82,40 +82,40 @@ for (i in 1:iter){
 #for (i in 1:50){
   # loop counter
   print(i)
-  
+
   #co2air and tair for every time step
-  atmos$co2air = atmos$co2air_i[i] 
+  atmos$co2air = atmos$co2air_i[i]
   atmos$tair = atmos$tair_i[i]
-  
+
   #tleaf from group 4
   flux$tleaf = flux$tleaf_i[i]
-  
+
   # Entropy for rd, vcmax, jmax in combination with tair (J/mol/K)
-  # move these inside LeafPhotosynthesis.R
-  # leaf$rdse = 
+  # move these inside LeafPhotosynthesis.R - done
+  # leaf$rdse =
   leaf$vcmaxse = 668.39 - 1.07 * atmos$tair
   leaf$jmaxse = 659.7 - 0.75 * atmos$tair
-  
-  # add radiation PAR (from group 3) 
+
+  # add radiation PAR (from group 3)
   flux$apar = flux$apar_i[i]
   #print(flux$apar)
   # testing PAR values == hainich shortwave radiation
   #flux$apar = atmos$swsky_i[i]
   #print(flux$apar)
-  
+
   # loop for eair (not working right now, stopping at loop 180 with:
   # "Fehler in if (flux$an > 0) { : Argument hat Länge 0 )"
   atmos$relhum = atmos$relhum_i[i]
-  esat = satvap ((atmos$tair-physcon$tfrz)); 
+  esat = satvap ((atmos$tair-physcon$tfrz));
   atmos$eair = esat * (atmos$relhum / 100); #! Vapor pressure of air (Pa)
   atmos$eair = atmos$eair_i[i]
   #print(esat)
   #print(atmos$relhum)
   #print(atmos$eair)
-  
+
   # Calculation of an and gs
   flux = LeafPhotosynthesis(physcon, atmos, leaf, flux)
-  
+
   # writing outputs
   output_an[i] = flux$an
   output_gs[i] = flux$gs

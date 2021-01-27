@@ -9,12 +9,17 @@
 parsconst = pars$value[which(pars$type == "physical constant")]
 names(parsconst) = pars$name[which(pars$type == "physical constant")]
 physcon = as.list(parsconst)
+physcon$rgas = physcon$R
 
 
 parsleaf = pars$value[which(pars$type == "photosynthesis_leaf")]
 names(parsleaf) = pars$name[which(pars$type == "photosynthesis_leaf")]
-physcon = as.list(parsleaf)
+leaf = as.list(parsleaf)
 
+
+#parsflux = pars$value[which(pars$type == "photosynthesis_leaf")]
+#names(parsleaf) = pars$name[which(pars$type == "photosynthesis_leaf")]
+#leaf = as.list(parsleaf)
 
 #fill lists
 #physcon
