@@ -4,7 +4,7 @@ get_theta_soil <- function(input.test, stat.var, param) {
 
   # time steps
 
-  time <- seq(1, 1440) # [h over data time period; example data ]
+  time <- seq(1, h) # [h = number of half-hourly data]
 
 
   # state variables
@@ -23,7 +23,7 @@ get_theta_soil <- function(input.test, stat.var, param) {
   p <- stat.var[1,10]           # air density (kg m-3)
   psi.a <- stat.var[1,11]       # water potential of air (Pa)
   psi.fc <-  stat.var[1,12]     # soil water potential at field capacity (Pa)
-  sps <- 1 - (BD/PD)            # soil pore space [unitless]: bulk density = 1200 kg m-3 (climate data), particle density = 2650 kg m-3 (literature)
+  ps <- 1 - (BD/PD)            # soil pore space [unitless]: bulk density = 1200 kg m-3 (climate data), particle density = 2650 kg m-3 (literature)
   V <- 1 * 1 *SD                # volume of soil layer [m3]
 
   # parameters
@@ -36,13 +36,13 @@ get_theta_soil <- function(input.test, stat.var, param) {
 
   # input data
 
-  prec <- input.test[ , 9]    # precipitation [mm 30min-1]
+  prec <- input[ , 10]    # precipitation [mm 30min-1]
   prec <- prec / 1000 *30*60  # precipitation [m s-1]
 
-  Rh <- input.test[ , 13]     # relative humidity [%]
+  Rh <- input[ , 12]     # relative humidity [%]
   Rh <- Rh / 100              # relative humidity
 
-  temp <- input.test[ , 3]    # air temperature [°C]
+  temp <- input[ , 5]    # air temperature [°C]
   temp <- temp + 273          # air temperature [K]
 
 
