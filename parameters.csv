@@ -1,5 +1,10 @@
 name,value,unit,type,description
 R,8.3145,J mol-1 K-1,physical constant,universal gas constant
+cpair,29.2,J mol-1 K-1,atmospheric constant,Specific heat of air at constant pressure
+tfrz,273.15,K,physical constant,Freezing point of water
+mmh2o,0.01801528,kg mol-1,physical constant,Molecular mass of water
+sigma,5.670374419*10^-8,W m-2 K-4,physical constant,Stefan-Boltzmann constant 
+emiss,0.96 ,percent,leaf constant,leaf emissivity
 rho_leaf,0.4,unitless,radiative transfer,Leaf reflectance
 tau_leaf,0.1,unitless,radiative transfer,Leaf trasmittance
 clump_OMEGA,1,unitless,radiative transfer,Canopy clumping coefficient (Ω)
