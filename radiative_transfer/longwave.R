@@ -5,15 +5,15 @@
 #' @param t_leaf temperature leaves (in Kelvin)
 #' @param t_soil temperature of soil (in Kelvin)
 #' @param LAI Leaf Area Index
-#' @param Kb
-#' @param Kd
-#' @param em_leaf
-#' @param em_soil
+#' @param Kb Direct beam extiction coefficient
+#' @param Kd Diffuse exiction coefficient
+#' @param em_leaf Longwave emissivity of leaf
+#' @param em_soil Longwave emissivity of soil
 #'
 #' @return list of lc, lg, lc_sun, lc_sha, l_up, l_down
 longwave_radiation <- function(lw_sky, LAI, t_leaf, t_soil, Kb, Kd, em_leaf, em_soil){
   ## commonly used terms--
-  sigma <- 5.67e-08   # Stefan-Boltzmann constant TODO: Unit, check that is a good place for a costant definition 
+  sigma <- 5.67e-08   # Stefan-Boltzmann constant W m−2 K−4
   
   lw_soil_emit <- em_soil * sigma * t_soil^4
   lw_leaf_emit <- em_leaf * sigma  * t_leaf^4

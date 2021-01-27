@@ -3,13 +3,13 @@
 #' Calculate the direct shortwave radiation absorbed by the canopy with sunlit and shaded components
 #' @param sw_sky_b direct beam radiation above the canopy in W m-2
 #' @param LAI Leaf Area Index
-#' @param Kb TODO improve docs
-#' @param Kd
-#' @param beta
-#' @param beta0
-#' @param omega_leaf
-#' @param clump_OMEGA
-#' @param alb_soil_b
+#' @param Kb Direct beam extiction coefficient
+#' @param Kd Diffuse exiction coefficient
+#' @param beta Fraction of diffuse radiation upward scattered
+#' @param beta0 Fraction of direct beam radiation upward scattered
+#' @param omega_leaf Leaf scattering coefficient (reflectace + trasmittance)
+#' @param clump_OMEGA Canopy clumping coefficient
+#' @param alb_soil_b Albedo soil for direct beam radiation
 #'
 #' @return list of ic, ic_sun, ic_sha
 direct_beam_radiation <- function(sw_sky_b, LAI, Kb, Kd, beta, beta0, omega_leaf, clump_OMEGA, alb_soil_b, alb_soil_d){
@@ -79,13 +79,13 @@ direct_beam_radiation <- function(sw_sky_b, LAI, Kb, Kd, beta, beta0, omega_leaf
 #' Calculate the diffuse shortwave radiation absorbed by the canopy with sunlit and shaded components
 #' @param sw_sky_d diffuse radiation above the canopy in W m-2
 #' @param LAI Leaf Area Index
-#' @param Kb TODO improve docs
-#' @param Kd
-#' @param beta
-#' @param beta0
-#' @param omega_leaf
-#' @param clump_OMEGA
-#' @param alb_soil_d
+#' @param Kb Direct beam extiction coefficient
+#' @param Kd Diffuse exiction coefficient
+#' @param beta Fraction of diffuse radiation upward scattered
+#' @param beta0 Fraction of direct beam radiation upward scattered
+#' @param omega_leaf Leaf scattering coefficient (reflectace + trasmittance)
+#' @param clump_OMEGA Canopy clumping coefficient
+#' @param alb_soil_d Albedo soil for diffuse radiation
 #'
 #' @return list of ic, ic_sun, ic_sha, ig, i_up_d, i_down_d
 diffuse_radiation <- function(sw_sky_d, LAI, Kb, Kd, beta, beta0, omega_leaf, clump_OMEGA, alb_soil_d){
@@ -150,14 +150,14 @@ diffuse_radiation <- function(sw_sky_d, LAI, Kb, Kd, beta, beta0, omega_leaf, cl
 #' @param sw_sky_b direct beam radiation above the canopy in W m-2
 #' @param sw_sky_d diffuse radiation above the canopy in W m-2
 #' @param LAI Leaf Area Index
-#' @param Kb TODO improve docs
-#' @param Kd
-#' @param beta
-#' @param beta0
-#' @param omega_leaf
-#' @param clump_OMEGA
-#' @param alb_soil_b
-#' @param alb_soil_d
+#' @param Kb Direct beam extiction coefficient
+#' @param Kd Diffuse exiction coefficient
+#' @param beta Fraction of diffuse radiation upward scattered
+#' @param beta0 Fraction of direct beam radiation upward scattered
+#' @param omega_leaf Leaf scattering coefficient (reflectace + trasmittance)
+#' @param clump_OMEGA Canopy clumping coefficient
+#' @param alb_soil_b Albedo soil for direct beam radiation
+#' @param alb_soil_d Albedo soil for diffuse radiation
 #'
 #' @return list of ic, ic_sun, ic_sha
 shortwave_radiation <- function(sw_sky_b, sw_sky_d, LAI, Kb, Kd, beta, beta0, omega_leaf, clump_OMEGA, alb_soil_b, alb_soil_d){
