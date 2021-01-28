@@ -12,11 +12,11 @@
 ## Load parameter file ----
 pars <- read.csv("parameters.csv")
 
+## Load and prepare input ----
+source("setup_inputdata.R")
+
 ## Load functions ----
 source("fun_calc_Cpools.R")
-
-## Load input ----
-input <- read.csv("data/Hainch_2002_input.csv")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
