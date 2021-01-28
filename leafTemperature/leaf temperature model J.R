@@ -1,6 +1,7 @@
 library(dplyr)
 
 setwd("D:/Kathina/FES/2020-21 WS/Eco-Atmo Processes/Modelling/canopy-model.2")
+
 # 1. Read Input data
 input <-read.csv("data/Hainich_2018_input.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
 flux <-read.csv("data/Hainich_2018_fluxes.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
@@ -28,7 +29,7 @@ mydata<- mydata%>%
 # actual vapor pressure of air: avp = vpd/(1/rh -1)
 atmo <- mydata%>%
   select(TIMESTAMP_START,patm,tair,VPD_F,RH)%>%
-  mutate(eair=VPD_F/(1/RH-1))%>%
+  mutate(eair=VPD_F*RH/(RH-1))%>%
   select(TIMESTAMP_START,patm,tair,eair)
 
 # physical constants
