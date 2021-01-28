@@ -7,8 +7,8 @@ library(dplyr)
 input <-read.csv("data/Hainich_2018_input.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
 flux <-read.csv("data/Hainich_2018_fluxes.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
 
-# select: air temperature TA_F (?C), vapor pressure deficit VPD_F (hPa) and air pressure PA_F (kPa)
-# incoming solar SW_IN_F and longwave radiation LW_IN_F (W m-2), soil Temp.in 2cm depth TS_F_MDS_1 (?C)
+# select: air temperature TA_F (C), vapor pressure deficit VPD_F (hPa) and air pressure PA_F (kPa)
+# incoming solar SW_IN_F and longwave radiation LW_IN_F (W m-2), soil Temp.in 2cm depth TS_F_MDS_1 (C)
 # wind speed WS_F (m s-1), relative humidity RH 
 input<- input%>%select(TIMESTAMP_START,TA_F,VPD_F,PA_F,SW_IN_F,LW_IN_F,WS_F,RH)
 flux<- flux%>%select(TIMESTAMP_START,TS_F_MDS_1)
