@@ -30,15 +30,15 @@ fluxes <- read.csv("data/Hainich_2018_fluxes.csv")
 # We ignore this for the purpose of this excersice.
 fluxes <- fluxes %>% mutate(
   time = 1:nrow(fluxes),
-  sw_out = SW_OUT,
-  tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4) + 273.15,
-  swc = (SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3,
-  g = G_F_MDS,
-  le = LE_F_MDS,
-  h = H_F_MDS,
-  nee = NEE_VUT_REF,
-  reco = RECO_NT_VUT_REF,
-  gpp = GPP_NT_VUT_REF,
+  sw_out = SW_OUT,          # W m-2
+  tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4) + 273.15, # 30cm depth mean. Celsius to Kelvin
+  swc = ((SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3) / 100, # 30cm depth mean. From percent to fraction
+  g = G_F_MDS,              # W m-2
+  le = LE_F_MDS,            # W m-2
+  h = H_F_MDS,              # W m-2
+  nee = NEE_VUT_REF * 12 / 1000000 / 1000 * dt,        # µmol m-2 s-1 to kg m-2 dt-1
+  reco = RECO_NT_VUT_REF * 12 / 1000000 / 1000 * dt,   # µmol m-2 s-1 to kg m-2 dt-1
+  gpp = GPP_NT_VUT_REF * 12 / 1000000 / 1000 * dt,     # µmol m-2 s-1 to kg m-2 dt-1
   TIMESTAMP_START = NULL,
   TIMESTAMP_END = NULL,
   NIGHT = NULL,

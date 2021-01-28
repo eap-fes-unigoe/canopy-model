@@ -7,10 +7,22 @@
 ## 3. Running a for loop that calculates fluxes and stocks over the simulation time
 ## 4. Writing out model output
 
+
+##
+rm(list=ls())
+
 ## Required packages
 
-## Load parameter file ----
-pars <- read.csv("parameters.csv")
+# Setting some time unit variables in unit seconds
+shour  <- 3800
+shalfh <- shour/2
+sday   <- shour * 24
+smonth <- sday * 30
+syear  <- sday * 365
+dt     <- shour # delta time: model time step
+
+## Load parameters and adjust units ----
+source("setup_parameters.R")
 
 ## Load and prepare input ----
 source("setup_sitedata.R")
@@ -24,14 +36,6 @@ source("fun_calc_Cpools.R")
 initial_state <- read.csv("initial_state.csv")
 
 ## Initial calculations and variables ----
-
-# Setting some time unit variables in unit seconds
-shour  <- 3800
-shalfh <- shour/2
-sday   <- shour * 24
-smonth <- sday * 30
-syear  <- sday * 365
-dt     <- shalfh # delta time: model time step
 
 # Create output dataframe. Copy of initial_state but more variables can be added.
 out <- initial_state
@@ -59,11 +63,11 @@ for(n in 1:length(input$time)) {
 
 
   # Calculate plant C pools, soil decomposition and soil C pools
-  out_Cpools <- fun_calc_Cpools(pars, state_last, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
-  for(name in names(out_Cpools)) {out[n, name] <- out_Cpools$name}
+  Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
+  for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
 
 }
 
 # Write out output
-write.csv(...)
+# write.csv()
 
