@@ -13,7 +13,7 @@
 pars <- read.csv("parameters.csv")
 
 ## Load and prepare input ----
-source("setup_inputdata.R")
+source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_Cpools.R")
