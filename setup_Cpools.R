@@ -89,4 +89,5 @@ xi[7,7] <- 1.0
 xi[8,8] <- 1.0
 xi[9,9] <- 1.0
 
-vars_Cpools <- list(B, K, A, xi)
+vars_Cpools <- list(B=B, K=K, A=A, xi=xi)
+rm(B, K, A, xi, npool)

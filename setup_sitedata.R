@@ -31,7 +31,7 @@ fluxes <- read.csv("data/Hainich_2018_fluxes.csv")
 fluxes <- fluxes %>% mutate(
   time = 1:nrow(fluxes),
   sw_out = SW_OUT,
-  tsoil = (TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4,
+  tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4) + 273.15,
   swc = (SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3,
   g = G_F_MDS,
   le = LE_F_MDS,
