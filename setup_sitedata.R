@@ -2,7 +2,8 @@
 
 library(dplyr)
 
-input <- read.csv("data/Hainich_2018_input.csv")
+input <- read.csv("data/Hainich_2018-07_input.csv")
+fluxes <- read.csv("data/Hainich_2018-07_fluxes.csv")
 
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
@@ -23,8 +24,6 @@ input <- input %>% mutate(
 )
 
 
-fluxes <- read.csv("data/Hainich_2018_fluxes.csv")
-
 # Initial variable selection, renaming and conversion
 # tsoil and swc means across soil depths don't take into account layer thickness or properties.
 # We ignore this for the purpose of this excersice.
@@ -32,7 +31,7 @@ fluxes <- fluxes %>% mutate(
   time = 1:nrow(fluxes),
   sw_out = SW_OUT,          # W m-2
   tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4) + 273.15, # 30cm depth mean. Celsius to Kelvin
-  swc = ((SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3) / 100, # 30cm depth mean. From percent to fraction
+  swc = ((SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3) / 100, # 30cm depth mean. Percent to fraction
   g = G_F_MDS,              # W m-2
   le = LE_F_MDS,            # W m-2
   h = H_F_MDS,              # W m-2
