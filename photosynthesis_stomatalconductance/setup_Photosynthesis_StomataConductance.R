@@ -6,15 +6,15 @@
 
 #parsconst = pars$value
 #names(parsconst) = pars$name
-parsconst = pars$value[which(pars$type == "physical constant")]
-names(parsconst) = pars$name[which(pars$type == "physical constant")]
-physcon = as.list(parsconst)
-physcon$rgas = physcon$R
+#parsconst = pars$value[which(pars$type == "physical constant")]
+#names(parsconst) = pars$name[which(pars$type == "physical constant")]
+#physcon = as.list(parsconst)
+#physcon$rgas = physcon$R
 
 
-parsleaf = pars$value[which(pars$type == "photosynthesis_leaf")]
-names(parsleaf) = pars$name[which(pars$type == "photosynthesis_leaf")]
-leaf = as.list(parsleaf)
+#parsleaf = pars$value[which(pars$type == "photosynthesis_leaf")]
+#names(parsleaf) = pars$name[which(pars$type == "photosynthesis_leaf")]
+#leaf = as.list(parsleaf)
 
 
 #parsflux = pars$value[which(pars$type == "photosynthesis_leaf")]
@@ -24,12 +24,15 @@ leaf = as.list(parsleaf)
 #fill lists
 #physcon
 #flux
-leaf = parslist$
+#leaf = parslist$
 #etc
 
 
-params$vis = 1;
-params$nir = 2;
+# --- Waveband indices for ps_sc$visible and near-infrared
+
+ps_sc$vis = 1;
+ps_sc$rho[ps_sc$vis] = 0.057;
+ps_sc$tau[ps_sc$vis] = 0.048;
 
 
 #from LeafPhydiologyParams.R
@@ -43,12 +46,7 @@ leaf$vcmaxc = fth25 (leaf$vcmaxhd, leaf$vcmaxse);
 leaf$jmaxc  = fth25 (leaf$jmaxhd, leaf$jmaxse);
 leaf$rdc    = fth25 (leaf$rdhd, leaf$rdse);
 
-leaf$rho[params$vis] = 0.057;
-leaf$tau[params$vis] = 0.048;
-leaf$rho[params$nir] = 0.43;
-leaf$tau[params$nir] = 0.26;
 
-# use shortwave incoming for PAR
 
 
 

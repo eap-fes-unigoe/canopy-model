@@ -1,68 +1,15 @@
-
-#testing
-#ci_val = xa
-#ci_val = xb
-#ci_val = 315
-
 CiFunc = function(physcon, atmos, leaf, flux, ci_val){
-  
+
 library("signal")
 library("pracma")
-  
 
-# function [flux, ci_dif] = CiFunc (physcon, atmos, leaf, flux, ci_val)
-
-# Calculate leaf photosynthesis and stomatal conductance for a specified Ci
-# (ci_val). Then calculate a new Ci from the diffusion equation. This function
-# returns a value ci_dif = 0 when Ci has converged to the value that satisfies
-# the metabolic, stomatal constraint, and diffusion equations.
-
-# ------------------------------------------------------
-  # Input
-#   physcon$tfrz        ! Freezing point of water (K)
-#   atmos$o2air         ! Atmospheric O2 (mmol/mol)
-#   atmos$co2air        ! Atmospheric CO2 (umol/mol)
-#   atmos$eair          ! Vapor pressure of air (Pa)
-#   leaf$c3psn          ! Photosynthetic pathway: 1 = C3. 0 = C4 plant
-#   leaf$gstyp          ! Stomatal conductance: 0 = Medlyn. 1 = Ball-Berry. 2 = WUE optimization
-#   leaf$colim          ! Photosynthesis co-limitation: 0 = no. 1 = yes
-#   leaf$colim_c3       ! Empirical curvature parameter for C3 co-limitation
-#   leaf$colim_c4a      ! Empirical curvature parameter for C4 co-limitation
-#   leaf$colim_c4b      ! Empirical curvature parameter for C4 co-limitation
-#   leaf$qe_c4          ! C4: Quantum yield (mol CO2 / mol photons)
-#   leaf$g0             ! Ball-Berry minimum leaf conductance (mol H2O/m2/s)
-#   leaf$g1             ! Ball-Berry slope of conductance-photosynthesis relationship
-#   flux$vcmax          ! Maximum carboxylation rate (umol/m2/s)
-#   flux$cp             ! CO2 compensation point (umol/mol)
-#   flux$kc             ! Michaelis-Menten constant for CO2 (umol/mol)
-#   flux$ko             ! Michaelis-Menten constant for O2 (mmol/mol)
-#   flux$je             ! Electron transport rate (umol/m2/s)
-#   flux$kp_c4          ! C4: Initial slope of CO2 response curve (mol/m2/s)
-#   flux$rd             ! Leaf respiration rate (umol CO2/m2 leaf/s)
-#   flux$gbv            ! Leaf boundary layer conductance, H2O (mol H2O/m2 leaf/s)
-#   flux$gbc            ! Leaf boundary layer conductance, CO2 (mol CO2/m2 leaf/s)
-#   flux$apar           ! Leaf absorbed PAR (umol photon/m2 leaf/s)
-#   flux$tleaf          ! Leaf temperature (K)
-#   ci_val              ! Input value for Ci (umol/mol)
-#
-# Output
-#   flux$ac             ! Leaf Rubisco-limited gross photosynthesis (umol CO2/m2 leaf/s)
-#   flux$aj             ! Leaf RuBP regeneration-limited gross photosynthesis (umol CO2/m2 leaf/s)
-#   flux$ap             ! Leaf product-limited (C3) or CO2-limited (C4) gross photosynthesis (umol CO2/m2 leaf/s)
-#   flux$ag             ! Leaf gross photosynthesis (umol CO2/m2 leaf/s)
-#   flux$an             ! Leaf net photosynthesis (umol CO2/m2 leaf/s)
-#   flux$cs             ! Leaf surface CO2 (umol/mol)
-#   flux$gs             ! Leaf stomatal conductance (mol H2O/m2 leaf/s)
-#   ci_dif              ! Difference in Ci
-# ------------------------------------------------------
-  
 # --- Metabolic (demand-based) photosynthetic rate
-  
+
 # C3: Rubisco-limited photosynthesis
-flux$ac = flux$vcmax * max(ci_val - flux$cp, 0) / (ci_val + flux$kc * (1 + atmos$o2air / flux$ko));
+ac = flux$vcmax * max(ci_val - flux$cp, 0) / (ci_val + flux$kc * (1 + atmos$o2air / flux$ko));
 
 print("ac:")
-print(flux$ac)
+print(ac)
 
 # C3: RuBP regeneration-limited photosynthesis
 flux$aj = flux$je * max(ci_val - flux$cp, 0) / (4 * ci_val + 8 * flux$cp);
@@ -79,8 +26,8 @@ print(flux$aj)
 # Correct solution is the smallest of the two roots.
 
 aquad = leaf$colim_c3;
-bquad = -(flux$ac + flux$aj);
-cquad = flux$ac * flux$aj;
+bquad = -(ac + flux$aj);
+cquad = ac * flux$aj;
 pcoeff = c(aquad,bquad,cquad);
 proots = roots(pcoeff);
 
@@ -98,7 +45,7 @@ flux$ag = ai;
 
 # Prevent photosynthesis from ever being negative
 
-flux$ac = max(flux$ac, 0);
+ac = max(ac, 0);
 flux$aj = max(flux$aj, 0);
 flux$ap = max(flux$ap, 0);
 flux$ag = max(flux$ag, 0);

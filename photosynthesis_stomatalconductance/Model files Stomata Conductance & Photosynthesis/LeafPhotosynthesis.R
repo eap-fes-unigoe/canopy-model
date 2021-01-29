@@ -1,9 +1,9 @@
 LeafPhotosynthesis = function(physcon, atmos, leaf, flux){
-  
-#source("sp_12_02.R")  
-source("hybrid_root_ci.R")
-source("satvap.R")
-source("CiFunc.R")
+
+#source("sp_12_02.R")
+source("photoysnthesis_stomatalconductance/hybrid_root_ci.R")
+source("photoysnthesis_stomatalconductance/satvap.R")
+source("photoysnthesis_stomatalconductance/CiFunc.R")
 library("signal")
 library("pracma")
 
@@ -73,9 +73,9 @@ library("pracma")
 #   flux$hs             ! Leaf fractional humidity at surface (dimensionless)
 #   flux$vpd            ! Leaf vapor pressure deficit at surface (Pa)
 # ------------------------------------------------------
-  
+
   # --- Adjust photosynthetic parameters for temperature
-  
+
   # C3 temperature response
 
 ft = function(tl, ha) {exp(ha/(physcon$rgas*(physcon$tfrz+25)) * (1-(physcon$tfrz+25)/tl));}
@@ -114,7 +114,7 @@ proots = roots(pcoeff);
 flux$je = min(proots[1], proots[2]);
 
 # --- Ci calculation
-  
+
 # Initial estimates for Ci
 
 ci0 = 0.7 * atmos$co2air;
@@ -127,8 +127,8 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 # --- calculation of an and gs
 
-flux_dummy = hybrid_root_ci (physcon, atmos, leaf, flux, ci0, ci1, tol); 
-flux = flux_dummy[[1]] 
+flux_dummy = hybrid_root_ci (physcon, atmos, leaf, flux, ci0, ci1, tol);
+flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
 # --- Relative humidity and vapor pressure at leaf surface
