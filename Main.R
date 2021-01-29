@@ -14,7 +14,7 @@ rm(list=ls())
 ## Required packages
 
 # Setting some time unit variables in unit seconds
-shour  <- 3800
+shour  <- 3600
 shalfh <- shour/2
 sday   <- shour * 24
 smonth <- sday * 30
