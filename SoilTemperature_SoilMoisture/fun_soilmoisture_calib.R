@@ -1,6 +1,6 @@
 # Function calculating soil moisture changes
 
-get_theta_soil <- function(input, param_mincalib, theta.in = swc) {
+get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
 
 
   # equations
@@ -95,20 +95,17 @@ get_theta_soil <- function(input, param_mincalib, theta.in = swc) {
     evap.t <- (Ep[t] * ( (log(psi.t) - log(psi.a)) / (log(psi.fc) - log(psi.a)) )) * ((1 - theta.sat) / BD)  # (m s-1)
 
     # runoff is the excess water; if runoff is negative, no runoff occurs
-    runoff.t <- ((theta.t - sps) * V) / 180 # (m s-1)
-    if (runoff.t < 0) {runoff.t <- 0} else {runoff.t == runoff.t}
+    runoff.t <- ((theta.t - ps) * V) / 1000 / 3600 # (m s-1)
+    if (runoff.t < 0) {runoff.t <- 0} else next
 
     # infiltration (without infiltration capacity -> if there's space, water will infiltrate)
     inf.t <- p.t - runoff.t - evap.t  # - trans.t  # (m s-1)
-    if (inf.t < 0) {inf.t <- 0} else {inf.t == inf.t}
+    if (inf.t < 0) {inf.t <- 0} else next
 
     # hydraulic conductivity
     k.t <- -k.sat * ((theta.t/theta.sat)^(2*b+3))  # (m s-1)
 
     # drainage
-    # Calculating psi for given theta
-    psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m); matric potential for soil
-
     # Calculating psi for soil beneath soil layer
     s.t <- 0.5 * ((theta.sat + theta.t) / theta.sat)
     psi.n1.t <- psi.sat * (s.t^-B)  # matric potential for layer N+1 (layer beneath layer N) -> equation taken from CLM4.5
@@ -117,8 +114,8 @@ get_theta_soil <- function(input, param_mincalib, theta.in = swc) {
     drain.t <- - (k.t / SD) * (psi.t - psi.n1.t) - k.t
 
     # theta (water content) is current water content plus infiltration minus drainage
-    theta.t <- theta.t + (inf.t - drain.t) * 180  # multiplication with 180 to get infiltration/drainage volume for 30min
-    if(theta.t > sps) {theta.t <- sps} else {theta.t == theta.t}
+    theta.t <- theta.t + (inf.t - drain.t)  # multiplication with 3600 to get infiltration/drainage volume for 1h
+    if(theta.t > ps) {theta.t <- ps} else {theta.t == theta.t}
 
     theta[t] <- theta.t
     runoff[t] <- runoff.t
@@ -135,3 +132,10 @@ get_theta_soil <- function(input, param_mincalib, theta.in = swc) {
   return(data.frame(theta, runoff, k, evap, drain, psi, psi.n1, inf))
 
 }
+
+
+output <- get_theta_soil(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
+
+plot(fluxes$time, output$inf)
+plot(fluxes$time, output$theta)
+plot(fluxes$time, output$drain)

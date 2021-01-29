@@ -7,23 +7,23 @@ library(dplyr)
 
 # parameter without parameter for calibration
 
-param_mincalib <- read.csv("Parameter_Calib.csv")
+param_mincalib <- read.csv("Parameter_Calib.csv", sep = ";")
 
-  # psi.sat:  Matric potential at saturation [m]; value taken from Bonan p. 120
-  # k.sat:    Hydraulic conductivity at saturation [m s-1]; value taken from Bonan p. 120
-  # BD:       bulk density [kg m-3]; from climate data
-  # SOC:      soil organic carbon [kg m-2]; mean over layers from climate data
-  # SD:       soil sampling depth/depth of soil layer [m]; from climate data
-  # clay:     % of clay in the soil; mean over layers from climate data
-  # PD:       particle density [kg m-3]; from literature [kg m-3]
-  # B.om:     given by Lett et al. 2000 (in CLM4.5)
-  # p:        air density (kg m-3)
-  # psi.a:    water potential of air (Pa)
-  # psi.fc:   soil water potential at field capacity (Pa)
-  # b:        Exponent
-  # cp:       specific heat of air (J kg-1)
-  # lambda:   latent heat of vaporization (J kg-1)
-  # MWrat:    ratio molecular weight of water vapor/dry air
+  psi.sat <- param_mincalib$psi.sat  #Matric potential at saturation [m]; value taken from Bonan p. 120
+  k.sat <- param_mincalib$k.sat    #Hydraulic conductivity at saturation [m s-1]; value taken from Bonan p. 120
+  BD <- param_mincalib$BD       #bulk density [kg m-3]; from climate data
+  SOC <- param_mincalib$SOC      #soil organic carbon [kg m-2]; mean over layers from climate data
+  SD <- param_mincalib$SD       #soil sampling depth/depth of soil layer [m]; from climate data
+  clay <- param_mincalib$clay     #% of clay in the soil; mean over layers from climate data
+  PD <- param_mincalib$PD       #particle density [kg m-3]; from literature [kg m-3]
+  B.om <- param_mincalib$B.om     #given by Lett et al. 2000 (in CLM4.5)
+  pair <- param_mincalib$p        #air density (kg m-3)
+  psi.a <- param_mincalib$psi.a    #water potential of air (Pa)
+  psi.fc <- param_mincalib$psi.fc   #soil water potential at field capacity (Pa)
+  b <- param_mincalib$b        #Exponent
+  cp <- param_mincalib$cp       #specific heat of air (J kg-1)
+  lambda <- param_mincalib$lambda  #latent heat of vaporization (J kg-1)
+  MWrat <- param_mincalib$Mwrat    #ratio molecular weight of water vapor/dry air
 
 
 # parameter to be calibrated
@@ -34,7 +34,7 @@ param_mincalib <- read.csv("Parameter_Calib.csv")
 
 # state variable
 
-theta.in <- swc      # initial value for volumetric water content of soil [m3 m-3]
+theta.in <- fluxes$swc      # initial value for volumetric water content of soil [m3 m-3]
 
 
 # calculations
@@ -44,7 +44,7 @@ V <- 1 * 1 *SD               # volume of soil layer [m3]
 
     # for precipitation
 
-p <- p / 1000 / 180  # from [mm 30min-1 ] to [m s-1]
+p <- input$p / 1000 / 3600  # from [mm h ] to [m s-1]
 
     # for evaporation
 
@@ -65,7 +65,9 @@ time <- seq(1, h) # [h = number of hourly data]
 
 # example values for calibration (from hainich data)
 
-rn <- (sw_in - sw_out) + (lw_in - LW_OUT)
-gs <- g
+rn <- (input$sw_in - fluxes$sw_out) + (input$lw_in)
+gs <- fluxes$g
+tair <- input$tair
+rh <- input$rh
 
 
