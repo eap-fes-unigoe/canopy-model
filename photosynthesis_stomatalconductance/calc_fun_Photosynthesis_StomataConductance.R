@@ -34,9 +34,6 @@ state_last$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
 vcmaxse = 668.39 - 1.07 * met$tair
 jmaxse = 659.7 - 0.75 * met$tair
 
-
-# WE ARE HERE
-
 # --- Adjust photosynthetic parameters for temperature
 
 # C3 temperature response
@@ -44,21 +41,27 @@ jmaxse = 659.7 - 0.75 * met$tair
 ft = function(tl, ha) {exp(ha/(pars$R*(pars$tfrz+25)) * (1-(pars$tfrz+25)/tl));}
 fth = function(tl, hd, se, fc) {fc / (1 + exp((-hd+se*tl)/(pars$R*tl)));}
 
-flux$kc = leaf$kc25 * ft(flux$tleaf, leaf$kcha);
-flux$ko = leaf$ko25 * ft(flux$tleaf, leaf$koha);
-flux$cp = leaf$cp25 * ft(flux$tleaf, leaf$cpha);
+# add flux$kc,flux$ko,flux$cp,flux$vcmax,flux$jmax,flux$rd,flux$je to:
+# state variables state_last? or
+# give them to cifunc individually? or
+# use ps_sc? or
+# use different list?
 
-t1 = ft(flux$tleaf, leaf$vcmaxha);
-t2 = fth(flux$tleaf, leaf$vcmaxhd, vcmaxse, leaf$vcmaxc);
-flux$vcmax = leaf$vcmax25 * t1 * t2;
+flux$kc = pars$kc25 * ft(state_last$tleaf, pars$kcha);
+flux$ko = pars$ko25 * ft(state_last$tleaf, pars$koha);
+flux$cp = pars$cp25 * ft(state_last$tleaf, pars$cpha);
 
-t1 = ft(flux$tleaf, leaf$jmaxha);
-t2 = fth(flux$tleaf, leaf$jmaxhd, jmaxse, leaf$jmaxc);
-flux$jmax = leaf$jmax25 * t1 * t2;
+t1 = ft(state_last$tleaf, pars$vcmaxha);
+t2 = fth(state_last$tleaf, pars$vcmaxhd, vcmaxse, pars$vcmaxc);
+flux$vcmax = pars$vcmax25 * t1 * t2;
 
-t1 = ft(flux$tleaf, leaf$rdha);
-t2 = fth(flux$tleaf, leaf$rdhd, leaf$rdse, leaf$rdc);
-flux$rd = leaf$rd25 * t1 * t2;
+t1 = ft(state_last$tleaf, pars$jmaxha);
+t2 = fth(state_last$tleaf, pars$jmaxhd, jmaxse, pars$jmaxc);
+flux$jmax = pars$jmax25 * t1 * t2;
+
+t1 = ft(state_last$tleaf, pars$rdha);
+t2 = fth(state_last$tleaf, pars$rdhd, pars$rdse, pars$rdc);
+flux$rd = pars$rd25 * t1 * t2;
 
 print("rd:")
 print(flux$rd)
@@ -100,7 +103,7 @@ flux$ci = flux_dummy[[2]];
 
 # --- Relative humidity and vapor pressure at leaf surface
 
-esat = satvap ((flux$tleaf-pars$tfrz));
+esat = satvap ((state_last$tleaf-pars$tfrz));
 flux$hs = (state_last$gbw * eair + flux$gs * esat) / ((state_last$gbw + flux$gs) * esat);
 flux$vpd = max(esat - flux$hs*esat, 0.1);
 
