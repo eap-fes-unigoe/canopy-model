@@ -89,4 +89,20 @@ xi[7,7] <- 1.0
 xi[8,8] <- 1.0
 xi[9,9] <- 1.0
 
-vars_Cpools <- list(B, K, A, xi)
+# Create a matrix with size of C pools with initial state values
+initC <- with(initial_state, c(C_leaf, C_fineroot, C_wood, C_litter_m,
+                               C_litter_s, C_cwd, C_som_f, C_som_s, C_som_p))
+Cpools <- matrix(initC, npool, 1)
+
+# matrix to store changes
+dC <- matrix(0, npool, 1)
+
+# Save the names of the C pools
+names_Cpools <- c('C_leaf', 'C_fineroot', 'C_wood', 'C_litter_m',
+                 'C_litter_s', 'C_cwd', 'C_som_f', 'C_som_s', 'C_som_p')
+
+# Save other variables in a list
+vars_Cpools <- list(B=B, K=K, A=A, xi=xi, npool=npool, dC=dC)
+
+# Clean up by deleting variables
+rm(B, K, A, xi, initC)

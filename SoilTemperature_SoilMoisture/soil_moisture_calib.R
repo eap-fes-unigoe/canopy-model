@@ -1,7 +1,8 @@
 # Soil moisture calib
 
-pars_calib <- c(lambda=2260000, MWrat=0.622)
+pars_calib <- c(theta.sat = 0.482, ra = 10)
 
+source("setup_soilmoisture_calib.R")
 source("fun_soilmoisture.R")
 source("fun_costmoisture.R")
 

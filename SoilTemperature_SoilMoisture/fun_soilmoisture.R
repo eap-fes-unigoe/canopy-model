@@ -1,55 +1,9 @@
 # Function calculating soil moisture changes
 
-get_theta_soil <- function(input.test, stat.var, param) {
-
-  # time steps
-
-  time <- seq(1, 1440) # [h over data time period; example data ]
+get_theta_soil <- function(input.data, param, theta.in = ) {
 
 
-  # state variables
-
-  stat.var <- read.csv("State_Variables.csv", header = T, sep = ';')
-
-  theta.sat <- stat.var[1,1]    # Volumetric water content at saturation [m3 m-3]; value taken from Bonan p. 120 (soil defined as clay based on grain size of climate data)
-  psi.sat <- stat.var[1,2]      # Matric potential at saturation [m]; value taken from Bonan p. 120
-  k.sat <- stat.var[1,3]        # Hydraulic conductivity at saturation [m s-1]; value taken from Bonan p. 120
-  BD <- stat.var[1,4]           # bulk density [kg m-3]; from climate data
-  SOC <- stat.var[1,5]          # soil organic carbon [kg m-2]; mean over layers from climate data
-  SD <- stat.var[1,6]           # soil sampling depth/depth of soil layer [m]; from climate data
-  clay <- stat.var[1,7]         # % of clay in the soil; mean over layers from climate data
-  PD <- stat.var[1,8]           # particle density [kg m-3]; from literature [kg m-3]
-  B.om <- stat.var[1,9]         # given by Lett et al. 2000 (in CLM4.5)
-  p <- stat.var[1,10]           # air density (kg m-3)
-  psi.a <- stat.var[1,11]       # water potential of air (Pa)
-  psi.fc <-  stat.var[1,12]     # soil water potential at field capacity (Pa)
-  sps <- 1 - (BD/PD)            # soil pore space [unitless]: bulk density = 1200 kg m-3 (climate data), particle density = 2650 kg m-3 (literature)
-  V <- 1 * 1 *SD                # volume of soil layer [m3]
-
-  # parameters
-
-  b <- param[1,1]            # Exponent
-  cp <- param[1,2]           # specific heat of air (J kg-1)
-  lambda <- param[1,3]       # latent heat of vaporization (J kg-1)
-  MWrat <- param[1,4]        # ratio molecular weight of water vapor/dry air
-
-
-  # input data
-
-  prec <- input.test[ , 9]    # precipitation [mm 30min-1]
-  prec <- prec / 1000 *30*60  # precipitation [m s-1]
-
-  Rh <- input.test[ , 13]     # relative humidity [%]
-  Rh <- Rh / 100              # relative humidity
-
-  temp <- input.test[ , 3]    # air temperature [°C]
-  temp <- temp + 273          # air temperature [K]
-
-
-  # input variables and equations
-
-  # theta (volumetric water content)
-  theta.in <- mean(x = c(38.130, 33.84, 47.09)) / 100   # initial soil moisture [m3 m-3]; from climate data (mean of first row)
+  # equations
 
   # evaporation from soil
   # Penman-Monteith potential evapotranspiration
@@ -60,13 +14,13 @@ get_theta_soil <- function(input.test, stat.var, param) {
 
   # Ep: potential evapotranspiration (kg m−2 s−1)
   # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T = Tsoil?; T in K?)
-  # Rn: net radiation (J m-2 s-1) (from radiation model)
-  # Gs: ground heat flux (J m-2 s-1) (from soil temperature model)
+  # rn: net radiation (J m-2 s-1) (from radiation model)
+  # gs: ground heat flux (J m-2 s-1) (from soil temperature model)
   # cp: specific heat of air (J kg-1)
   # ρ: the air density (kg m−3)
   # es: air saturation vapor pressure (kPa)
   # ea: air actual vapour pressure (kPa)
-  # ra: aerodynamic resistance (s m-1) --> literature value?
+  # ra: aerodynamic resistance (s m-1) --> assumed to be 10
   # γ: psycrometric constant (kPa ◦C−1) --> has to be calculated, but then we assume it to be constant
   # γ = (cp * p) / (λ * MWrat)
   # λ: latent heat of vaporization (J kg−1)
@@ -80,8 +34,7 @@ get_theta_soil <- function(input.test, stat.var, param) {
   # WPa = water potential of air (-100MPa (average value))
   # WPfc = soil water potential at field capacity
 
-  # transpiration
-  # trans <-             # transpiration; from Leaf Temperature Model
+
 
   # drainage
 
@@ -113,10 +66,6 @@ get_theta_soil <- function(input.test, stat.var, param) {
   psi.n1 <- rep(NA, length(time))   # matric potential of soil beneath soil layer [m]
 
 
-  # example values to try out code #
-  Rn <- rep(200, length(time))
-  Gs <- rep(5, length(time))
-
 
   # Iterative calculations over time
 
@@ -137,9 +86,7 @@ get_theta_soil <- function(input.test, stat.var, param) {
     delta <- 4098 * (0.6108*10^3 * exp( 17.27 * temp[t] / (temp[t] + 237.3))) / (temp[t] + 237.3)^2  # (Pa K-1)
     es <- 0.6108*10^3 * exp(17.27* temp[t] / (temp[t] + 237.3)) # (Pa)
     ea <- es * Rh[t] # (Pa)
-    ra <- 10  # (s m-1)
-    gamma <- (cp * p) / (lambda * MWrat)  # (Pa K-1)
-    Ep <- (delta * (Rn - Gs) + p * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
+    Ep <- (delta * (rn - gs) + p * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
 
     # Calculating soil water potential
     psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m)
@@ -164,10 +111,6 @@ get_theta_soil <- function(input.test, stat.var, param) {
 
     # Calculating psi for soil beneath soil layer
     s.t <- 0.5 * ((theta.sat + theta.t) / theta.sat)
-    B.min <- 2.91 + 0.159 * clay
-    B.om <- 2.7
-    f <- (SOC / (BD * SD)) * 1.72 # soil organic matter fraction; f = %C * 1.72
-    B <- (1 - f) * B.min + f * B.om
     psi.n1.t <- psi.sat * (s.t^-B)  # matric potential for layer N+1 (layer beneath layer N) -> equation taken from CLM4.5
 
     # Calculating drainage
@@ -189,6 +132,6 @@ get_theta_soil <- function(input.test, stat.var, param) {
 
   }
 
-  return(data.frame(theta, runoff, k, evap, drain, psi, psi.n1, inf, prec, Rh, temp))
+  return(data.frame(theta, runoff, k, evap, drain, psi, psi.n1, inf))
 
 }
