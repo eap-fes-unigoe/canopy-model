@@ -52,3 +52,4 @@ visc0,1.33E-05,m2 s-1,physical constant,Kinematic viscosity at 0C and 1013.25 hP
 Dh0,1.89E-05,m2 s-1,physical constant,Molecular diffusivity (heat) at 0C and 1013.25 hPa
 Dv0,2.18E-05,m2 s-1,physical constant,Molecular diffusivity (H2O) at 0C and 1013.25 hPa
 Dc0,1.38E-05,m2 s-1,physical constant,Molecular diffusivity (CO2) at 0C and 1013.25 hPa
+o2air,209,mmol mol-1,atmos constant,atmospheric O2 concentration
