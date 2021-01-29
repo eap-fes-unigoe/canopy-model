@@ -1,6 +1,6 @@
 # Function calculating soil moisture changes
 
-get_theta_soil <- function(input.data, param, theta.in = ) {
+get_theta_soil <- function(input, param_mincalib, theta.in = swc) {
 
 
   # equations
@@ -13,11 +13,11 @@ get_theta_soil <- function(input.data, param, theta.in = ) {
   # where:
 
   # Ep: potential evapotranspiration (kg m−2 s−1)
-  # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T = Tsoil?; T in K?)
+  # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T in K?)
   # rn: net radiation (J m-2 s-1) (from radiation model)
   # gs: ground heat flux (J m-2 s-1) (from soil temperature model)
   # cp: specific heat of air (J kg-1)
-  # ρ: the air density (kg m−3)
+  # ρair: the air density (kg m−3)
   # es: air saturation vapor pressure (kPa)
   # ea: air actual vapour pressure (kPa)
   # ra: aerodynamic resistance (s m-1) --> assumed to be 10
@@ -83,10 +83,10 @@ get_theta_soil <- function(input.data, param, theta.in = ) {
 
     # evaporation
     # Calculating potential evaporation
-    delta <- 4098 * (0.6108*10^3 * exp( 17.27 * temp[t] / (temp[t] + 237.3))) / (temp[t] + 237.3)^2  # (Pa K-1)
-    es <- 0.6108*10^3 * exp(17.27* temp[t] / (temp[t] + 237.3)) # (Pa)
-    ea <- es * Rh[t] # (Pa)
-    Ep <- (delta * (rn - gs) + p * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
+    delta <- 4098 * (0.6108*10^3 * exp( 17.27 * tair[t] / (tair[t] + 237.3))) / (tair[t] + 237.3)^2  # (Pa K-1)
+    es <- 0.6108*10^3 * exp(17.27* tair[t] / (tair[t] + 237.3)) # (Pa)
+    ea <- es * rh[t] # (Pa)
+    Ep <- (delta * (rn - gs) + pair * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
 
     # Calculating soil water potential
     psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m)

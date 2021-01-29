@@ -7,22 +7,6 @@ library(dplyr)
 
 # input data from hainich forest
 
-input.data <- read.csv("D:/Universität/Master/git_clone/canopy-model/data/Hainich_2018_input.csv")
-
-  # required variables from measured data
-    # rh: relative humidity
-    # prec: precipitation
-    # temp.air: air temperature
-
-prec <-                     # precipitation [mm 30min-1]
-prec <- prec / 1000 *30*60  # precipitation [m s-1]
-
-Rh <-                       # relative humidity [%]
-Rh <- Rh / 100              # relative humidity
-
-temp <-                     # air temperature [°C]
-temp <- temp + 273          # air temperature [K]
-
   # required variables from other models
     #rn: net radiation (J m-2 s-1)
     #gs: ground heat flux (J m-2 s-1)
@@ -53,7 +37,7 @@ param <- read.csv("Parameter.csv")
 
 # state variable
 
-theta.in <-       # initial value for volumetric water content of soil [m3 m-3]
+theta.in <-  swc     # initial value for volumetric water content of soil [m3 m-3]
 
 
 # calculations

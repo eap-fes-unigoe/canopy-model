@@ -5,25 +5,6 @@
 library(dplyr)
 
 
-# input data from hainich forest
-
-input.data <- read.csv("D:/Universität/Master/git_clone/canopy-model/data/Hainich_2018_input.csv")
-
-    # required variables from measured data
-      # rh: relative humidity
-      # prec: precipitation
-      # temp.air: air temperature
-
-prec <- input.data[ , 10]    # precipitation [mm 30min-1]
-prec <- prec / 1000 *30*60  # precipitation [m s-1]
-
-Rh <- input.data[ , 12]     # relative humidity [%]
-Rh <- Rh / 100              # relative humidity
-
-temp <- input.data[ , 5]    # air temperature [°C]
-temp <- temp + 273          # air temperature [K]
-
-
 # parameter without parameter for calibration
 
 param_mincalib <- read.csv("Parameter_Calib.csv")
@@ -53,7 +34,7 @@ param_mincalib <- read.csv("Parameter_Calib.csv")
 
 # state variable
 
-theta.in <-       # initial value for volumetric water content of soil [m3 m-3]
+theta.in <- swc      # initial value for volumetric water content of soil [m3 m-3]
 
 
 # calculations
@@ -61,9 +42,13 @@ theta.in <-       # initial value for volumetric water content of soil [m3 m-3]
 ps <- 1 - (BD/PD)            # soil pore space [unitless]: bulk density = 1200 kg m-3 (climate data), particle density = 2650 kg m-3 (literature)
 V <- 1 * 1 *SD               # volume of soil layer [m3]
 
+    # for precipitation
+
+p <- p / 1000 / 180  # from [mm 30min-1 ] to [m s-1]
+
     # for evaporation
 
-gamma <- (cp * p) / (lambda * MWrat)  # psycrometric constant for potential evaporation [Pa K-1]
+gamma <- (cp * pair) / (lambda * MWrat)  # psycrometric constant for potential evaporation [Pa K-1]
 
     # for drainage
 
@@ -74,12 +59,13 @@ B <- (1 - f) * B.min + f * B.om
 
 # time steps
 
-time <- seq(1, h) # [h = number of half-hourly data]
+h <- nrow(input)
+time <- seq(1, h) # [h = number of hourly data]
 
 
-# example values for calibration
+# example values for calibration (from hainich data)
 
-Rn <- rep(200, length(time))
-Gs <- rep(5, length(time))
+rn <- (sw_in - sw_out) + (lw_in - LW_OUT)
+gs <- g
 
 
