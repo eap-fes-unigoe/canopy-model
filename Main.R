@@ -14,12 +14,12 @@ rm(list=ls())
 ## Required packages
 
 # Setting some time unit variables in unit seconds
-shour  <- 3600
-shalfh <- shour/2
-sday   <- shour * 24
-smonth <- sday * 30
-syear  <- sday * 365
-dt     <- shour # delta time: model time step
+t_units <- list(hour  = 3600,
+                halfh = 1800,
+                day   = 86400,
+                month = 2592000,
+                year  = 31536000)
+dt <- t_units$hour # delta time: model time step
 
 ## Load parameters and adjust units ----
 source("setup_parameters.R")
@@ -68,6 +68,7 @@ for(n in 1:length(input$time)) {
 
 }
 
+rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 # write.csv()
 

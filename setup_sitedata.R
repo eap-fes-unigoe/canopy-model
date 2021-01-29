@@ -2,8 +2,8 @@
 
 library(dplyr)
 
-input <- read.csv("data/Hainich_2018-07_input.csv")
-fluxes <- read.csv("data/Hainich_2018-07_fluxes.csv")
+input <- read.csv(file.path("data", "Hainich_2018-07_input.csv"))
+fluxes <- read.csv(file.path("data", "Hainich_2018-07_fluxes.csv"))
 
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
