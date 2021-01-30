@@ -62,7 +62,7 @@ for(n in 1:length(input$time)) {
   # This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
   radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
   radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
-  for(col in names(radiation)) {out[n, col] <- radiation[col]}
+  out[n, names(radiation)] <- radiation
 
   # Calculate soil hydrology
 
