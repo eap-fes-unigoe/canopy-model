@@ -76,7 +76,7 @@ get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
     if(t == 1) {theta.t <- theta.in} else {theta.t <- theta[t-1]}
 
     # precipitation is taken from climate data
-    p.t <- p[t]  # [m s-1]
+    p.t <- p[t]  # [m h-1]
 
     # transpiration data is taken from Leaf Temperature Model
     # trans.t <- trans[t]
@@ -92,18 +92,18 @@ get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
     psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m)
 
     # Calculating actual evaporation
-    evap.t <- (Ep[t] * ( (log(psi.t) - log(psi.a)) / (log(psi.fc) - log(psi.a)) )) * ((1 - theta.sat) / BD)  # (m s-1)
+    evap.t <- (Ep[t] * ( (log(psi.t) - log(psi.a)) / (log(psi.fc) - log(psi.a)) )) * ((1 - theta.sat) / BD) *3600  # (m h-1)
 
     # runoff is the excess water; if runoff is negative, no runoff occurs
-    runoff.t <- ((theta.t - ps) * V) / 1000 / 3600 # (m s-1)
+    runoff.t <- ((theta.t - ps) * V) / 1000  # (m h-1)
     if (runoff.t < 0) {runoff.t <- 0} else next
 
     # infiltration (without infiltration capacity -> if there's space, water will infiltrate)
-    inf.t <- p.t - runoff.t - evap.t  # - trans.t  # (m s-1)
+    inf.t <- p.t - runoff.t - evap.t  # - trans.t  # (m h-1)
     if (inf.t < 0) {inf.t <- 0} else next
 
     # hydraulic conductivity
-    k.t <- -k.sat * ((theta.t/theta.sat)^(2*b+3))  # (m s-1)
+    k.t <- -k.sat * ((theta.t/theta.sat)^(2*b+3))  # (m h-1)
 
     # drainage
     # Calculating psi for soil beneath soil layer
@@ -111,10 +111,10 @@ get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
     psi.n1.t <- psi.sat * (s.t^-B)  # matric potential for layer N+1 (layer beneath layer N) -> equation taken from CLM4.5
 
     # Calculating drainage
-    drain.t <- - (k.t / SD) * (psi.t - psi.n1.t) - k.t
+    drain.t <- (- (k.t / SD) * (psi.t - psi.n1.t) - k.t)   # (m h-1)
 
     # theta (water content) is current water content plus infiltration minus drainage
-    theta.t <- theta.t + (inf.t - drain.t)  # multiplication with 3600 to get infiltration/drainage volume for 1h
+    theta.t <- theta.t + (inf.t - drain.t)
     if(theta.t > ps) {theta.t <- ps} else {theta.t == theta.t}
 
     theta[t] <- theta.t
@@ -133,6 +133,7 @@ get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
 
 }
 
+evap
 
 output <- get_theta_soil(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
 

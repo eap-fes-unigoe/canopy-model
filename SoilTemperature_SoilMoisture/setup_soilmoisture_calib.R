@@ -10,7 +10,7 @@ library(dplyr)
 param_mincalib <- read.csv("Parameter_Calib.csv", sep = ";")
 
   psi.sat <- param_mincalib$psi.sat  #Matric potential at saturation [m]; value taken from Bonan p. 120
-  k.sat <- param_mincalib$k.sat    #Hydraulic conductivity at saturation [m s-1]; value taken from Bonan p. 120
+  k.sat <- param_mincalib$k.sat    #Hydraulic conductivity at saturation [m h-1]; value taken from Bonan p. 120
   BD <- param_mincalib$BD       #bulk density [kg m-3]; from climate data
   SOC <- param_mincalib$SOC      #soil organic carbon [kg m-2]; mean over layers from climate data
   SD <- param_mincalib$SD       #soil sampling depth/depth of soil layer [m]; from climate data
@@ -31,10 +31,14 @@ param_mincalib <- read.csv("Parameter_Calib.csv", sep = ";")
   # theta.sat:  Volumetric water content at saturation [m3 m-3]; value taken from Bonan p. 120 (soil defined as clay based on grain size of climate data)
   # ra:         aerodynamic resistance (s m-1)
 
+  pars_calib <- c(theta.sat = 0.482, ra = 10)
+  ra <- 10
+  theta.sat <- 0.482
+
 
 # state variable
 
-theta.in <- fluxes$swc      # initial value for volumetric water content of soil [m3 m-3]
+theta.in <- fluxes$swc[1]      # initial value for volumetric water content of soil [m3 m-3]
 
 
 # calculations
@@ -44,7 +48,7 @@ V <- 1 * 1 *SD               # volume of soil layer [m3]
 
     # for precipitation
 
-p <- input$p / 1000 / 3600  # from [mm h ] to [m s-1]
+p <- input$p / 1000  # from [mm h-1 ] to [m h-1]
 
     # for evaporation
 
@@ -66,7 +70,7 @@ time <- seq(1, h) # [h = number of hourly data]
 # example values for calibration (from hainich data)
 
 rn <- (input$sw_in - fluxes$sw_out) + (input$lw_in)
-gs <- fluxes$g
+gs <- fluxes$g * -1
 tair <- input$tair
 rh <- input$rh
 
