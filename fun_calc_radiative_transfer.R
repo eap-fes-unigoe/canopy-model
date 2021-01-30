@@ -57,9 +57,12 @@ Kd_2stream <- get_two_stream_Kd() # This is a costant value that depends only on
 calc_fun_radiative_transfer <- function(input, params){
 
     # Calc all the intermediate parameters
-    LAI <- get_day_LAI(input$datetime, params$max_LAI, params$min_LAI, params$leaf_out, params$leaf_full, params$leaf_fall, params$leaf_fall_complete)
-    zenith <- get_zenith(input$datetime, params$lat, params$lon) # should be 15 mins earlier because is a better average value of the half an hour interval
-    Kb <- get_Kb(zenith)
+    # Possible optimization here as not all the paramaters changes every step
+    LAI <- get_day_LAI(input$datetime, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete)
+    radiation_PAI <- max(LAI, pars$min_radiation_PAI) # During winter the are no leaves but there are still branches that interact with light
+    avg_datetime <- input$datetime - duration(dt/2) # calculating the zenith at the mid of the interval
+    zenith <- get_zenith(avg_datetime, pars$lat, pars$lon)
+    Kb <- get_Kb(zenith, max_Kb = 1000) # 1000 is an arbitraty high number
     Kd <- get_Kd(LAI)
     beta <- get_beta(params$rho_leaf, params$tau_leaf)
     beta0 <- get_beta0(zenith, Kb, Kd_2stream, params$omega_leaf)
