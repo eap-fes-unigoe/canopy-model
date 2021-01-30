@@ -29,6 +29,7 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_Cpools.R")
+source("fun_calc_radiative_transfer.R")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
@@ -52,6 +53,10 @@ for(n in 1:length(input$time)) {
 
   # Calculate radiative transfer
 
+  # This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
+  radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
+  radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
+  for(col in names(radiation)) {out[n, col] <- radiation[col]}
 
   # Calculate soil hydrology
 

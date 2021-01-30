@@ -1,6 +1,7 @@
 # Load the input data
 
 library(dplyr)
+library(lubridate)
 
 input <- read.csv(file.path("data", "Hainich_2018-07_input.csv"))
 fluxes <- read.csv(file.path("data", "Hainich_2018-07_fluxes.csv"))
@@ -8,6 +9,7 @@ fluxes <- read.csv(file.path("data", "Hainich_2018-07_fluxes.csv"))
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
   time = 1:nrow(input),
+  datetime = force_tz(as_datetime(Date.Time), "Etc/GMT+1"),
   tair = TA_F + 273.15,  # Celsius to Kelvin
   p = P_F,               # mm 30min-1 = l m-3
   sw_in = SW_IN_F,       # W m-2

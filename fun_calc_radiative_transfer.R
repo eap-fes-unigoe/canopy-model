@@ -11,11 +11,15 @@ source("radiative_transfer/calc_parameters.R")
 #'
 #' @param input A data frame row (or list) containing at least the following elements
 #' - datetime
-#' - sw_sky_b direct beam shortwave radiation incoming
-#' - sw_sky_d diffuse shortwave radiation incoming
-#' - lw_sky longwave radiation incoming
+#' - sw_in total incoming shortwave radiation
+#' - sw_dif diffuse shortwave radiation incoming
+#' - lw_in longwave radiation incoming
 #'
-#' @param params a list of the model parameters containing at least the following elements
+#' @param state A data frame row (or list) containing at least the following elements
+#' - t_soil temperature of soil (in Kelvin)
+#' - t_leaf temperature of leaves (in Kelvin)
+#'
+#' @param pars a list of the model parameters containing at least the following elements
 #' - max LAI value in the summer
 #' - min_LAI min value of LAI during winter, it is an aproximation that consider the total Plant Area Index as LAI
 #' - leaf_out day leaves start in spring
@@ -54,7 +58,7 @@ source("radiative_transfer/calc_parameters.R")
 
 # The Kd in the Two Stream model has a different value
 Kd_2stream <- get_two_stream_Kd() # This is a costant value that depends only on the leaf angle distribution
-calc_fun_radiative_transfer <- function(input, params){
+fun_calc_radiative_transfer <- function(input, state, pars, dt){
 
     # Calc all the intermediate parameters
     # Possible optimization here as not all the paramaters changes every step
@@ -64,15 +68,17 @@ calc_fun_radiative_transfer <- function(input, params){
     zenith <- get_zenith(avg_datetime, pars$lat, pars$lon)
     Kb <- get_Kb(zenith, max_Kb = 1000) # 1000 is an arbitraty high number
     Kd <- get_Kd(LAI)
-    beta <- get_beta(params$rho_leaf, params$tau_leaf)
-    beta0 <- get_beta0(zenith, Kb, Kd_2stream, params$omega_leaf)
+    omega_leaf <- pars$rho_leaf + pars$tau_leaf
+    beta <- get_beta(pars$rho_leaf, pars$tau_leaf)
+    beta0 <- get_beta0(zenith, Kb, Kd_2stream, omega_leaf)
 
+    # the incoming shortwave is the total diffure + direct. Due to sensor errors teh difference can be negative so the min possible value is set to 0
+    lw_sky_b <- max(input$sw_in - input$sw_dif, 0)
+    shortwave <- shortwave_radiation(lw_sky_b, input$sw_dif, radiation_PAI, Kb, Kd_2stream, beta, beta0 , omega_leaf,
+                                     pars$clump_OMEGA, pars$alb_soil_b, pars$alb_soil_d)
+    longwave <- longwave_radiation(input$lw_in, radiation_PAI, state$t_leaf, state$t_soil, Kb, Kd, pars$em_leaf, pars$em_soil)
 
-    shortwave <- shortwave_radiation(input$sw_sky_b, input$sw_sky_d, LAI, Kb, Kd_2stream, beta, beta0 , params$omega_leaf,
-                                     params$clump_OMEGA, params$alb_soil_b, params$alb_soil_d)
-    longwave <- longwave_radiation(input$lw_sky, LAI, input$t_leaf, input$t_soil, Kb, Kd, params$em_leaf, params$em_soil)
-
-    LAI_sunlit <- get_LAI_sunlit(LAI, Kb, params$clump_OMEGA)
+    LAI_sunlit <- get_LAI_sunlit(LAI, Kb, pars$clump_OMEGA)
     LAIs <- c(LAI=LAI, LAI_sunlit=LAI_sunlit)
 
     return(data.frame(c(shortwave, longwave, LAIs)))
