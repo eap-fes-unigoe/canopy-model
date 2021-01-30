@@ -44,6 +44,12 @@ out <- initial_state
 # Source setup scripts for different model components
 source("setup_Cpools.R")
 
+# Setup progress bar
+library(progress)
+pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                       total = length(input$time),
+                       clear = FALSE) # set to true to remove bar after finishing
+
 ## Model run (for loop) ----
 for(n in 1:length(input$time)) {
 
@@ -70,6 +76,9 @@ for(n in 1:length(input$time)) {
   # Calculate plant C pools, soil decomposition and soil C pools
   Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
   for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
+
+  # update progress bar
+  pb$tick()
 
 }
 
