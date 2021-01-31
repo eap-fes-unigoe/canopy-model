@@ -1,4 +1,4 @@
-for(i in 1:length(mydata$TIMESTAMP_START)){
+for(i in 1:length(input$Date.Time)){
   # Leaf temperature and energy fluxes
   
   # --- Latent heat of vaporization (J/mol)
@@ -42,8 +42,8 @@ for(i in 1:length(mydata$TIMESTAMP_START)){
     
     # Latent heat flux (W/m2) and temperature derivative (W/m2/K)
     
-    flux[i,"lhflx"] <- lambda_val / atmo[i,"patm"] * (esat - atmo[i,"eair"]) * gleaf
-    dlhflx <- lambda_val / atmo[i,"patm"] * desat * gleaf
+    flux[i,"lhflx"] <- lambda_val / atmo[i,"pa"] * (esat - atmo[i,"eair"]) * gleaf
+    dlhflx <- lambda_val / atmo[i,"pa"] * desat * gleaf
     
     
     # Energy balance (W/m2) and temperature derivative (W/m2/K)

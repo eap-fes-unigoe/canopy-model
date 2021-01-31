@@ -3,15 +3,15 @@ library(dplyr)
 setwd("D:/Kathina/FES/2020-21 WS/Eco-Atmo Processes/Modelling/canopy-model.2")
 
 # 1. Read Input data
-input <-read.csv("data/Hainich_2018_input.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
-flux <-read.csv("data/Hainich_2018_fluxes.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
+input <-read.csv("data/Hainich_2018-07_input.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
+flux <-read.csv("data/Hainich_2018-07_fluxes.csv",header=TRUE, sep=",", na.strings="NA", dec=".")
 
 # select: air temperature TA_F (C), vapor pressure deficit VPD_F (hPa) and air pressure PA_F (kPa)
 # incoming solar SW_IN_F and longwave radiation LW_IN_F (W m-2), soil Temp.in 2cm depth TS_F_MDS_1 (C)
 # wind speed WS_F (m s-1), relative humidity RH 
-input<- input%>%select(TIMESTAMP_START,TA_F,VPD_F,PA_F,SW_IN_F,LW_IN_F,WS_F,RH)
-flux<- flux%>%select(TIMESTAMP_START,TS_F_MDS_1)
-mydata <- merge(input,flux, by="TIMESTAMP_START")
+input<- input%>%select(Date.Time,TA_F,VPD_F,PA_F,SW_IN_F,LW_IN_F,WS_F,RH)
+flux<- flux%>%select(Date.Time,TS_F_MDS_1)
+mydata <- merge(input,flux, by="Date.Time")
 
 #2. change units from kPa to Pa and  degrees C to K
 mydata<- mydata%>%
@@ -19,8 +19,9 @@ mydata<- mydata%>%
   mutate(VPD_F = VPD_F*100)%>%
   mutate(patm = PA_F*1000)%>%
   mutate(u = WS_F)%>%
+  mutate(rh = RH/100)  # percent to fraction
   mutate(Ts = TS_F_MDS_1+273.15)%>%
-  select(TIMESTAMP_START,tair,VPD_F,patm,u,Ts,SW_IN_F,LW_IN_F,RH)
+  select(Date.Time,tair,VPD_F,patm,u,Ts,SW_IN_F,LW_IN_F,RH)
 
 #3. create dataframes physcon,atmo,leaf,flux
 #atmospheric parameters
@@ -28,9 +29,9 @@ mydata<- mydata%>%
 #select only necessary columns
 # actual vapor pressure of air: avp = vpd/(1/rh -1)
 atmo <- mydata%>%
-  select(TIMESTAMP_START,patm,tair,VPD_F,RH)%>%
-  mutate(eair=VPD_F*RH/(RH-1))%>%
-  select(TIMESTAMP_START,patm,tair,eair)
+  select(Date.Time,patm,tair,VPD_F,RH)%>%
+  mutate(eair=vpd/(1/rh-1))%>%
+  select(Date.Time,patm,tair,eair)
 
 # physical constants
 cpair <- 29.2                           # Specific heat of air at constant pressure (J/mol/K)
@@ -49,10 +50,10 @@ leaf <- data.frame(emiss)
 # radiative forcing Qa = incoming shortwave - 15% + incoming longwave radiation + longwave soil (Boltzman law)
 # longwave radiation soil = 0.97*Boltzman constant (sigma)* soil temperature (K)^4a (reference: Knohl)
 qa<- mydata%>%
-  select(TIMESTAMP_START,Ts,SW_IN_F,LW_IN_F)%>%
+  select(Date.Time,Ts,SW_IN_F,LW_IN_F)%>%
   mutate(LW_S = 0.97*physcon$sigma*Ts^4)%>% # Longwave radiation from soil
   mutate(qa = SW_IN_F-0.15*SW_IN_F + LW_IN_F + LW_S)%>% # radiative forcing
-  select(TIMESTAMP_START,qa)
+  select(Date.Time,qa)
 
 ### boundary layer conductancee for heat gbh (mol/m2 leaf/s) for FORCED convection
 ### and boundary layer conductance for water vapor (mol m-2 s-1)
@@ -69,7 +70,7 @@ R <- 8.314          # gas constant, m^3*Pa*mol-1*K-1
 DW0 <- 21.8*10^(-6) # Molecular diffusivity of mass H2o at 0?C (M m2 s-1)
 
 conduct <- mydata%>%
-  select(TIMESTAMP_START,tair,patm,u)%>%
+  select(Date.Time,tair,patm,u)%>%
   mutate(pm = patm/(R*tair))%>%           # molar density (mol m-3) according to ideal gas law n=PV/RT, pm (n/volume, mol m-3)= P(Pa)/ R(m^3*Pa/mol*K)*T(K) 
   mutate(Dh = Dh0*(P0/patm)*(tair/T0))%>% # diffusivity of heat (m2 s-1) 
   mutate(v = v0*(P0/patm)*(tair/T0))%>%      # diffusivity of momentum (m2 s-1)
@@ -84,27 +85,27 @@ conduct <- mydata%>%
   mutate(DW = DW0*(P0/patm)*(tair/T0))%>% # Molecular diffusivity of mass H2o (M m2 s-1)
   mutate(Sc = v/DW)%>%                    #Sherwood number
   mutate(gbw = 0.036*Sc^0.33*Re^0.50)%>%  #boundary layer conductance for water vapor (mol m-2 s-1) 
-  select(TIMESTAMP_START,gbh,gbw)
+  select(Date.Time,gbh,gbw)
 
 #  predefine leaf temperature
 leaftemp<- mydata%>%
-  select(TIMESTAMP_START,tair)%>%
+  select(Date.Time,tair)%>%
   mutate(tleaf = tair)%>%
-  select(TIMESTAMP_START,tleaf)
+  select(Date.Time,tleaf)
 
 #merge all flux data in one dataframe
-flux <- merge(qa, conduct, by="TIMESTAMP_START")
-flux <- merge(flux, leaftemp, by="TIMESTAMP_START")
+flux <- merge(qa, conduct, by="Date.Time")
+flux <- merge(flux, leaftemp, by="Date.Time")
 
 # Leaf stomatal conductance (mol H2O/m2 leaf/s)
 flux$gs <- -0.1
 
 #predefine fluxes from leaf temperature
-flux$rnet<-rep(0,length(flux$TIMESTAMP_START))   #Leaf net radiation (W/m2 leaf)
-flux$lwrad<-rep(0,length(flux$TIMESTAMP_START))  #Longwave radiation emitted from leaf (W/m2 leaf)
-flux$shflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf sensible heat flux (W/m2 leaf)
-flux$lhflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf latent heat flux (W/m2 leaf)
-flux$etflx<-rep(0,length(flux$TIMESTAMP_START))  #Leaf transpiration flux (mol H2O/m2 leaf/s)
+flux$rnet<-rep(0,length(flux$Date.Time))   #Leaf net radiation (W/m2 leaf)
+flux$lwrad<-rep(0,length(flux$Date.Time))  #Longwave radiation emitted from leaf (W/m2 leaf)
+flux$shflx<-rep(0,length(flux$Date.Time))  #Leaf sensible heat flux (W/m2 leaf)
+flux$lhflx<-rep(0,length(flux$Date.Time))  #Leaf latent heat flux (W/m2 leaf)
+flux$etflx<-rep(0,length(flux$Date.Time))  #Leaf transpiration flux (mol H2O/m2 leaf/s)
 
 #function of Saturation vapor pressure and temperature derivative -- satvap()
 satvap <- function (tc) {   
@@ -162,7 +163,7 @@ str(atmo)
 str(leaf)
 str(flux)
 
-for(i in 1:length(mydata$TIMESTAMP_START)){
+for(i in 1:length(mydata$Date.Time)){
   # Leaf temperature and energy fluxes
   
   # ------------------------------------------------------
