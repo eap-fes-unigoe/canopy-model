@@ -1,9 +1,12 @@
 # fun_cost_soilmoisture.R
 
 cost_soilmoisture <- function(pars_calib) {
-  source("fun_soilmoisture.R")
-  output <- get_theta_soil(input.test = input.test, stat.var = stat.var, param = param, pars_calib)
+  output <- get_theta_soil(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
 
-  resid <- output$theta - hainich_data$theta
+  resid <- output$theta - fluxes$swc
   resid <- resid[!is.na(resid)]
 }
+
+# run function
+
+cost_soilmoisture(pars_calib = pars_calib)

@@ -9,3 +9,15 @@ C_som_f,kg C m-2,carbon pool of fast soil organic matter
 C_som_s,kg C m-2,carbon pool of slow soil organic matter
 C_som_p,kg C m-2,carbon pool of passive soil organic matter
 ci,umol/mol,intercellular CO2 concentration
+theta.in,m3 m-3,initial soil moisture
+tsoil0,K,initial soil temperature
+lambda_val,J/mol,Latent heat of vaporization 
+esat,Pa,Saturation vapor pressure
+desat,Pa K-1,Temperature derivatice
+gleaf,mol H2O m-2 s-1,Leaf conductance for water vapor 
+dlwrad,W m-2 K-1,Temperature derivative (longwave)
+dshflx,W m-2 K-1,Temperature derivative (sensible heat flux)
+dlhflx,W m-2 K-1,Temperature derivative (latent heat flux)
+f0,W m-2,Energy balance
+df0,W m-2 K-1,Temperature derivative (Energy balance)
+dtleaf,K,change in leaf temperature

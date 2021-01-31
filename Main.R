@@ -14,12 +14,12 @@ rm(list=ls())
 ## Required packages
 
 # Setting some time unit variables in unit seconds
-shour  <- 3600
-shalfh <- shour/2
-sday   <- shour * 24
-smonth <- sday * 30
-syear  <- sday * 365
-dt     <- shour # delta time: model time step
+t_units <- list(hour  = 3600,
+                halfh = 1800,
+                day   = 86400,
+                month = 2592000,
+                year  = 31536000)
+dt <- t_units$hour # delta time: model time step
 
 ## Load parameters and adjust units ----
 source("setup_parameters.R")
@@ -29,6 +29,7 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_Cpools.R")
+source("fun_calc_radiative_transfer.R")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
@@ -43,6 +44,12 @@ out <- initial_state
 # Source setup scripts for different model components
 source("setup_Cpools.R")
 
+# Setup progress bar
+library(progress)
+pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                       total = length(input$time),
+                       clear = FALSE) # set to true to remove bar after finishing
+
 ## Model run (for loop) ----
 for(n in 1:length(input$time)) {
 
@@ -52,6 +59,10 @@ for(n in 1:length(input$time)) {
 
   # Calculate radiative transfer
 
+  # This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
+  radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
+  radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
+  out[n, names(radiation)] <- radiation
 
   # Calculate soil hydrology
 
@@ -66,8 +77,12 @@ for(n in 1:length(input$time)) {
   Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
   for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
 
+  # update progress bar
+  pb$tick()
+
 }
 
+rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 # write.csv()
 

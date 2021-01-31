@@ -45,7 +45,7 @@ K[7,7] <- 1.97      # fast SOM
 K[8,8] <- 0.108     # slow SOM
 K[9,9] <- 0.0024    # passive SOM
 
-K <- K / syear * dt
+K <- K / t_units$year * dt
 
 # --- carbon transfer matrix: A(i,j) = fractional carbon flow from pool j that enters pool i
 
@@ -105,4 +105,4 @@ names_Cpools <- c('C_leaf', 'C_fineroot', 'C_wood', 'C_litter_m',
 vars_Cpools <- list(B=B, K=K, A=A, xi=xi, npool=npool, dC=dC)
 
 # Clean up by deleting variables
-rm(B, K, A, xi, initC)
+rm(B, K, A, xi, initC, npool, dC)

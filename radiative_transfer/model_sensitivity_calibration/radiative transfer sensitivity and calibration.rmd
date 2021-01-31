@@ -1,0 +1,76 @@
+---
+title: "Radiative transfer model sensitivity and calibration"
+author: simone
+date: 30/01/21
+output: html_notebook
+---
+```{r}
+dt <- 3600
+source("setup_sitedata.R")
+source("setup_parameters.R")
+source("fun_calc_radiative_transfer.R")
+library(FME)
+```
+```{r}
+state <- tibble(t_leaf = input$tair, t_soil = fluxes$tsoil)
+```
+```{r}
+#' merges two list, in case of conflicts uses the second list value
+merge_lists <- function (list1, list2){
+  l <- list1
+  for (name in names(list2)){
+    l[name] <- list2[name]
+  }
+  return(l)
+}
+```
+```{r}
+rad_trans_new_p <- function (new_p=list()){
+  pars <- merge_lists(pars, new_p)
+  out <- data.frame()
+  for (i in seq_along(input$datetime)){
+    rad<- fun_calc_radiative_transfer(input[i,], state[i,], pars, dt)
+    out[i, names(rad)] <- rad
+  }
+  return(out)
+}
+```
+```{r}
+out <- rad_trans_new_p()
+```
+Need to do sensitivity analysis here
+```{r}
+
+```
+```{r}
+cal_p <- c(
+  # NB those are test parameters that make the model work. Still need to validate that they make sense
+  rho_leaf = 0.4,                     # Leaf reflectance
+  tau_leaf = 0.1                     # Leaf transmittance
+)
+
+cal_p_lower <- c(
+  # NB those are test parameters that make the model work. Still need to validate that they make sense
+  rho_leaf = 0.37,                     # Leaf reflectance
+  tau_leaf = 0.05                     # Leaf transmittance
+)
+cal_p_upper <- c(
+  # NB those are test parameters that make the model work. Still need to validate that they make sense
+  rho_leaf = 0.42,                     # Leaf reflectance
+  tau_leaf = 0.2                    # Leaf transmittance
+)
+```
+```{r}
+#' Cost function for radiative transfer model
+model_cost_sw <- function (params){
+  print(".")
+  out <- rad_trans_new_p(params)
+  return(out$i_up - fluxes$sw_out)
+}
+```
+```{r}
+mfit_sw <- modFit(model_cost_sw, cal_p, cal_p_lower, cal_p_upper)
+```
+```{r}
+summary(mfit_sw)
+```

@@ -1,6 +1,6 @@
 # Function calculating soil moisture changes
 
-get_theta_soil <- function(input.data, param, theta.in = ) {
+get_theta_soil <- function(input, param_mincalib, theta.in, pars_calib) {
 
 
   # equations
@@ -13,11 +13,11 @@ get_theta_soil <- function(input.data, param, theta.in = ) {
   # where:
 
   # Ep: potential evapotranspiration (kg m−2 s−1)
-  # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T = Tsoil?; T in K?)
+  # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T in K?)
   # rn: net radiation (J m-2 s-1) (from radiation model)
   # gs: ground heat flux (J m-2 s-1) (from soil temperature model)
   # cp: specific heat of air (J kg-1)
-  # ρ: the air density (kg m−3)
+  # ρair: the air density (kg m−3)
   # es: air saturation vapor pressure (kPa)
   # ea: air actual vapour pressure (kPa)
   # ra: aerodynamic resistance (s m-1) --> assumed to be 10
@@ -76,49 +76,46 @@ get_theta_soil <- function(input.data, param, theta.in = ) {
     if(t == 1) {theta.t <- theta.in} else {theta.t <- theta[t-1]}
 
     # precipitation is taken from climate data
-    p.t <- p[t]  # [m s-1]
+    p.t <- p[t]  # [m h-1]
 
     # transpiration data is taken from Leaf Temperature Model
     # trans.t <- trans[t]
 
     # evaporation
     # Calculating potential evaporation
-    delta <- 4098 * (0.6108*10^3 * exp( 17.27 * temp[t] / (temp[t] + 237.3))) / (temp[t] + 237.3)^2  # (Pa K-1)
-    es <- 0.6108*10^3 * exp(17.27* temp[t] / (temp[t] + 237.3)) # (Pa)
-    ea <- es * Rh[t] # (Pa)
-    Ep <- (delta * (rn - gs) + p * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
+    delta <- 4098 * (0.6108*10^3 * exp( 17.27 * tair[t] / (tair[t] + 237.3))) / (tair[t] + 237.3)^2  # (Pa K-1)
+    es <- 0.6108*10^3 * exp(17.27* tair[t] / (tair[t] + 237.3)) # (Pa)
+    ea <- es * rh[t] # (Pa)
+    Ep <- (delta * (rn - gs) + pair * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
 
     # Calculating soil water potential
     psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m)
 
     # Calculating actual evaporation
-    evap.t <- (Ep[t] * ( (log(psi.t) - log(psi.a)) / (log(psi.fc) - log(psi.a)) )) * ((1 - theta.sat) / BD)  # (m s-1)
+    evap.t <- (Ep[t] * ( (log(psi.t) - log(psi.a)) / (log(psi.fc) - log(psi.a)) )) * ((1 - theta.sat) / BD) *3600  # (m h-1)
 
     # runoff is the excess water; if runoff is negative, no runoff occurs
-    runoff.t <- ((theta.t - sps) * V) / 180 # (m s-1)
-    if (runoff.t < 0) {runoff.t <- 0} else {runoff.t == runoff.t}
+    runoff.t <- ((theta.t - ps) * V) / 1000  # (m h-1)
+    if (runoff.t < 0) {runoff.t <- 0} else next
 
     # infiltration (without infiltration capacity -> if there's space, water will infiltrate)
-    inf.t <- p.t - runoff.t - evap.t  # - trans.t  # (m s-1)
-    if (inf.t < 0) {inf.t <- 0} else {inf.t == inf.t}
+    inf.t <- p.t - runoff.t - evap.t  # - trans.t  # (m h-1)
+    if (inf.t < 0) {inf.t <- 0} else next
 
     # hydraulic conductivity
-    k.t <- -k.sat * ((theta.t/theta.sat)^(2*b+3))  # (m s-1)
+    k.t <- -k.sat * ((theta.t/theta.sat)^(2*b+3))  # (m h-1)
 
     # drainage
-    # Calculating psi for given theta
-    psi.t <- psi.sat * (theta.t / theta.sat)^-b   # (m); matric potential for soil
-
     # Calculating psi for soil beneath soil layer
     s.t <- 0.5 * ((theta.sat + theta.t) / theta.sat)
     psi.n1.t <- psi.sat * (s.t^-B)  # matric potential for layer N+1 (layer beneath layer N) -> equation taken from CLM4.5
 
     # Calculating drainage
-    drain.t <- - (k.t / SD) * (psi.t - psi.n1.t) - k.t
+    drain.t <- (- (k.t / SD) * (psi.t - psi.n1.t) - k.t)   # (m h-1)
 
     # theta (water content) is current water content plus infiltration minus drainage
-    theta.t <- theta.t + (inf.t - drain.t) * 180  # multiplication with 180 to get infiltration/drainage volume for 30min
-    if(theta.t > sps) {theta.t <- sps} else {theta.t == theta.t}
+    theta.t <- theta.t + (inf.t - drain.t)
+    if(theta.t > ps) {theta.t <- ps} else {theta.t == theta.t}
 
     theta[t] <- theta.t
     runoff[t] <- runoff.t
@@ -135,3 +132,11 @@ get_theta_soil <- function(input.data, param, theta.in = ) {
   return(data.frame(theta, runoff, k, evap, drain, psi, psi.n1, inf))
 
 }
+
+evap
+
+output <- get_theta_soil(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
+
+plot(fluxes$time, output$inf)
+plot(fluxes$time, output$theta)
+plot(fluxes$time, output$drain)
