@@ -94,7 +94,7 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 # --- calculation of an and gs
 
-flux_dummy = hybrid_root_ci (physcon, atmos, leaf, flux, ci0, ci1, tol);
+flux_dummy = hybrid_root_ci (met,state_last,pars,ps_sc,ci0, ci1,tol);
 flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
