@@ -9,3 +9,5 @@ C_som_f,kg C m-2,carbon pool of fast soil organic matter
 C_som_s,kg C m-2,carbon pool of slow soil organic matter
 C_som_p,kg C m-2,carbon pool of passive soil organic matter
 ci,umol/mol,intercellular CO2 concentration
+theta.in,m3 m-3,initial soil moisture
+tsoil0,K,initial soil temperature
