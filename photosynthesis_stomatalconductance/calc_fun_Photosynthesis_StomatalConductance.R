@@ -14,8 +14,8 @@ library("pracma")
 # Vapor pressure (Pa) and specific humidity (kg/kg)
 # where does esat come from? state_last ?
 
-flux$esat = satvap ((met$tair-pars$tfrz));
-flux$eair = flux$esat * (met$rh);
+esat = satvap ((met$tair-pars$tfrz));
+flux$eair = esat * (met$rh);
 #qair = pars$mmh2o / pars$mmdry * eair / (met$pa - (1 - pars$mmh2o/pars$mmdry) * eair);
 
 # Boundary layer conductance for CO2
@@ -105,9 +105,9 @@ flux$ci = flux_dummy[[2]];
 
 # --- Relative humidity and vapor pressure at leaf surface
 
-#esat = satvap ((state_last$tleaf-pars$tfrz));
-flux$hs = (state_last$gbw * flux$eair + flux$gs * flux$esat) / ((state_last$gbw + flux$gs) * flux$esat);
-flux$vpd = max(flux$esat - flux$hs*flux$esat, 0.1);
+esat = satvap ((state_last$tleaf-pars$tfrz));
+flux$hs = (state_last$gbw * flux$eair + flux$gs * esat) / ((state_last$gbw + flux$gs) * esat);
+flux$vpd = max(esat - flux$hs*esat, 0.1);
 
 # --- Make sure iterative solution is correct
 
