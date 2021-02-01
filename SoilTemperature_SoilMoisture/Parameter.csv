@@ -1,4 +1,4 @@
-Name;Value;Unit;Type;Description
+﻿Name;Value;Unit;Type;Description
 b;11.4;unitless;soil temperature/moisture;exponent used in Campbell relationships
 cp;1013;J kg-1;soil temperature/moisture;specific heat of air
 lambda;2260000;J kg-1;soil temperature/moisture;latent heat of vaporization
