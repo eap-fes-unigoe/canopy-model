@@ -1,14 +1,15 @@
 calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,ps_sc){
 
 #source("sp_12_02.R")
-source("photoysnthesis_stomatalconductance/hybrid_root_ci.R")
-source("photoysnthesis_stomatalconductance/satvap.R")
-source("photoysnthesis_stomatalconductance/CiFunc.R")
+# photosynthesis_stomatalconductance/
+source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
+source("photosynthesis_stomatalconductance/satvap.R")
+#source("photosynthesis_stomatalconductance/CiFunc.R")
+source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R")
+source("photosynthesis_stomatalconductance/PAR.R")
 library("signal")
 library("pracma")
 
-
-source("CO2LeafBoundaryLayer.R")
 
 # Vapor pressure (Pa) and specific humidity (kg/kg)
 # where does esat come from? state_last ?
@@ -21,7 +22,7 @@ flux$eair = flux$esat * (met$rh);
 # --- Initial leaf temperature
 #initial_state$tleaf = met$tair;
 
-state_last$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
+flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
 
 # Boundary layer conductance and leaf tempereatur form group 4
 
@@ -59,19 +60,19 @@ flux$ko = pars$ko25 * ft(state_last$tleaf, pars$koha);
 flux$cp = pars$cp25 * ft(state_last$tleaf, pars$cpha);
 
 t1 = ft(state_last$tleaf, pars$vcmaxha);
-t2 = fth(state_last$tleaf, pars$vcmaxhd, vcmaxse, pars$vcmaxc);
+t2 = fth(state_last$tleaf, pars$vcmaxhd, flux$vcmaxse, flux$vcmaxc);
 flux$vcmax = pars$vcmax25 * t1 * t2;
 
 t1 = ft(state_last$tleaf, pars$jmaxha);
-t2 = fth(state_last$tleaf, pars$jmaxhd, jmaxse, pars$jmaxc);
+t2 = fth(state_last$tleaf, pars$jmaxhd, flux$jmaxse, flux$jmaxc);
 flux$jmax = pars$jmax25 * t1 * t2;
 
 t1 = ft(state_last$tleaf, pars$rdha);
-t2 = fth(state_last$tleaf, pars$rdhd, pars$rdse, pars$rdc);
+t2 = fth(state_last$tleaf, pars$rdhd, ps_sc$rdse, flux$rdc);
 flux$rd = pars$rd25 * t1 * t2;
 
-print("rd:")
-print(flux$rd)
+#print("rd:")
+#print(flux$rd)
 
 # calculating apar from sw_in
 
@@ -90,11 +91,12 @@ pcoeff = c(aquad,bquad,cquad);
 proots = roots(pcoeff);
 flux$je = min(proots[1], proots[2]);
 
+print(c("flux$je:", flux$je))
 # --- Ci calculation
 
 # Initial estimates for Ci
 
-ci0 = 0.7 * met$co2air;
+ci0 = 0.7 * met$co2;
 ci1 = ci0 * 0.99;
 
 # Solve for Ci: Use CiFunc to iterate photosynthesis calculations
@@ -110,9 +112,9 @@ flux$ci = flux_dummy[[2]];
 
 # --- Relative humidity and vapor pressure at leaf surface
 
-esat = satvap ((state_last$tleaf-pars$tfrz));
-flux$hs = (state_last$gbw * eair + flux$gs * esat) / ((state_last$gbw + flux$gs) * esat);
-flux$vpd = max(esat - flux$hs*esat, 0.1);
+#esat = satvap ((state_last$tleaf-pars$tfrz));
+flux$hs = (state_last$gbw * flux$eair + flux$gs * flux$esat) / ((state_last$gbw + flux$gs) * flux$esat);
+flux$vpd = max(flux$esat - flux$hs*flux$esat, 0.1);
 
 # --- Make sure iterative solution is correct
 
@@ -123,42 +125,40 @@ if (flux$gs < 0) {
 # Compare with Ball-Berry model. The solution blows up with low eair. In input
 # data, eair should be > 0.05*esat to ensure that hs does not go to zero.
 
-gs_err = leaf$g1 * max(flux$an, 0) * flux$hs / flux$cs + leaf$g0;
-if (abs(flux$gs-gs_err)*1e06 > 1e-04) {
-  fprintf('gs = #15.4f\n', flux$gs)
-  fprintf('gs_err = #15.4f\n', gs_err)
-  stop ('LeafPhotosynthesis: failed Ball-Berry error check')
-}
-
-# Compare with Medlyn model. The solutions blows up with vpd = 0. The
-# quadratic calcuation of gsw in CiFunc constrains vpd > 50 Pa, so this
-# comparison is only valid for those conditions.
-
-# if (leaf$gstyp == 0)
-#  if ((esat - eair) > 50)
-#    gs_err = 1.6 * (1 + leaf$g1 / sqrt(flux$vpd*0.001)) * max(flux$an, 0) / flux$cs + leaf$g0;
-#if (abs(flux$gs-gs_err)*1e06 > 1e-04)
+#gs_err = pars$g1 * max(flux$an, 0) * flux$hs / flux$cs + pars$g0;
+#if (abs(flux$gs-gs_err)*1e06 > 1e-04) {
 #  fprintf('gs = #15.4f\n', flux$gs)
-#fprintf('gs_err = #15.4f\n', gs_err)
-#error ('LeafPhotosynthesis: failed Medlyn error check')
-#end
-#end
-#end
+#  fprintf('gs_err = #15.4f\n', gs_err)
+#  stop ('LeafPhotosynthesis: failed Ball-Berry error check')
+#}
 
 # Compare with diffusion equation: An = (ca - ci) * gleaf
 
-an_err = (met$co2air - flux$ci) / (1 / flux$gbc + 1.6 / flux$gs);
-if (flux$an > 0 & abs(flux$an-an_err) > 0.01){
-  fprintf('An = #15.4f\n', flux$an)
-  fprintf('An_err = #15.4f\n', an_err)
-  stop ('LeafPhotosynthesis: failed diffusion error check')
-}
+#an_err = (met$co2 - flux$ci) / (1 / flux$gbc + 1.6 / flux$gs);
+#if (flux$an > 0 & abs(flux$an-an_err) > 0.01){
+#  fprintf('An = #15.4f\n', flux$an)
+#  fprintf('An_err = #15.4f\n', an_err)
+#  stop ('LeafPhotosynthesis: failed diffusion error check')
+#}
 
 
 
   # write state variables
   #state_last$ = ...
+#write.csv(out,file = "photosynthesis_testrun_01")
 
-  return(c(flux$an,flux$gs,flux$gbc))
+#plot(out$an ~ out$gs)
+#plot(out$an ~ atmos$tair_i)
+#plot(out$an ~ atmos$eair)
+#plot(out$an ~ Hainich5Days$NIGHT)
+#plot(out$an[1:24] ~ c(1:24))
 
+#plot(out$gs ~ out$gs)
+#plot(out$gs ~ atmos$tair_i)
+#plot(out$gs ~ atmos$eair)
+#plot(out$gs ~ Hainich5Days$NIGHT)
+#plot(out$gs ~ Hainich5Days$TIMESTAMP_END, type = "l")
+
+  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc,ci = flux$ci))
 }
+

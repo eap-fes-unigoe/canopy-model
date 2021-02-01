@@ -57,14 +57,14 @@ for(n in 1:length(input$time)) {
 
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
-  site <- fluxes[n,]
+  #site <- fluxes[n,]
 
   # Calculate radiative transfer
 
   # This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
-  radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
-  radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
-  out[n, names(radiation)] <- radiation
+  #radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
+ # radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
+ # out[n, names(radiation)] <- radiation
 
   # Calculate soil hydrology
 
@@ -79,13 +79,14 @@ for(n in 1:length(input$time)) {
 
   # tleaf substitute
   state_last$tleaf = met$tair
+  state_last$gbw =  0.702
   photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
 
   # Calculate plant C pools, soil decomposition and soil C pools
-  Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
-  for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
+#  Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
+#  for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
 
   # update progress bar
   pb$tick()
