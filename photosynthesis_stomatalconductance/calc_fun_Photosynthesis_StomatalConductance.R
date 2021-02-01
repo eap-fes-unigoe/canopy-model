@@ -18,16 +18,9 @@ flux$esat = satvap ((met$tair-pars$tfrz));
 flux$eair = flux$esat * (met$rh);
 #qair = pars$mmh2o / pars$mmdry * eair / (met$pa - (1 - pars$mmh2o/pars$mmdry) * eair);
 
-
-# --- Initial leaf temperature
-#initial_state$tleaf = met$tair;
+# Boundary layer conductance for CO2
 
 flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
-
-# Boundary layer conductance and leaf tempereatur form group 4
-
-#state_last$gbw = # boundary layer conductance for water from group 4
-#state_last$tleaf = # leaf temperature from group 4
 
 # entropy terms in dependence of air T
 

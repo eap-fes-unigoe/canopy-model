@@ -1,12 +1,12 @@
 PAR = function(pars,met,ps_sc){
 
-# --- Waveband indices for visible and near-infrared
-
-ps_sc$vis = 1;
-
-print(c("sw_in:", met$sw_in))
 # Solar radiation (W/m2)
 fsds = met$sw_in
+
+# --- Waveband indices for visible
+
+ps_sc$rho = 0.057;
+ps_sc$tau = 0.048;
 
 # par to W m^-2 ?
 # radiation replaced
@@ -25,7 +25,7 @@ swincvis = swskyvis * (1 + albsoi);
 
 # vis Solar radiation absorbed by leaf
 
-swflxvis = swincvis * (1 - ps_sc$rho[ps_sc$vis] - ps_sc$tau[ps_sc$vis]);
+swflxvis = swincvis * (1 - ps_sc$rho - ps_sc$tau);
 apar = swflxvis * 4.6;
 print(c("apar:", apar))
 
