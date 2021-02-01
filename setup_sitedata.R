@@ -11,7 +11,7 @@ input <- input %>% mutate(
   time = 1:nrow(input),
   datetime = force_tz(as_datetime(Date.Time), "Etc/GMT+1"),
   tair = TA_F + 273.15,  # Celsius to Kelvin
-  p = P_F,               # mm 30min-1 = l m-3
+  p = P_F,               # mm / time_step = l m-2 / time_step
   sw_in = SW_IN_F,       # W m-2
   lw_in = LW_IN_F,       # W m-2
   ppfd_in = PPFD_IN,     # µmol m-2 s-1
