@@ -1,41 +1,7 @@
-#StomatalConductanceLeafPhotosynthesis = function(flux,leaf,physcon,atmos){
-
-
-# call these:
-source("satvap.R")
 
 
 
-# Read input data from read in Data
-atmos$tair_i = Hainich5Days$TA_F + physcon$tfrz #air temperature in Kelvin
-atmos$co2air_i = Hainich5Days$CO2 #! Atmospheric CO2 (umol/mol)
-atmos$relhum_i = Hainich5Days$RH
-atmos$eair_i = Hainich5Days$ea * 1000
-#atmos$wind_i = Hainich5Days$WS_F ! Wind speed (m/s)
-#atmos$patm_i = Hainich5Days$PA_F * 1000 ! Atmospheric pressure (Pa)
-#atmos$irsky_i = Hainich5Days$LW_IN_F  #from group 3 #! Atmospheric longwave radiation (W/m2)
 
-
-# Vapor pressure (Pa) and specific humidity (kg/kg)
-#atmos$eair = 0.61094*exp((17.625*atmos$tair_i)/(atmos$tair_i+243.04))  # magnus_formula - use satvap instead? ! Vapor pressure of air (Pa)
-#atmos$qair = physcon$mmh2o / physcon$mmdry * atmos$eair / (atmos$patm - (1 - physcon$mmh2o/physcon$mmdry) * atmos$eair);  #! specific humidity (kg/kg)
-
-
-# Test values for PAR
-#   flux$apar           ! Leaf absorbed PAR (umol photon/m2 leaf/s)
-#flux$apar_i = flux$apar
-flux$apar_i = PAR(leaf,fsds)
-
-# Test value leaf temperature
-flux$tleaf_i = atmos$tair_i;
-
-#####
-
-# eair calculation
-#for (i in 1:240){
-#  esat[i] = satvap (atmos$tair_i[i]-physcon$tfrz); # vector
-#  atmos$eair_i[i] = esat[i] * (atmos$relhum_i[i] / 100); #! Vapor pressure of air (Pa)
-#}
 
 #creating output files for an and gs
 output_an = c()

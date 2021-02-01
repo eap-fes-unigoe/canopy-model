@@ -30,6 +30,7 @@ source("setup_sitedata.R")
 ## Load functions ----
 source("fun_calc_Cpools.R")
 source("fun_calc_radiative_transfer.R")
+source("calc_fun_Photosynthesis_StomatalConductance.R")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
@@ -43,6 +44,7 @@ out <- initial_state
 
 # Source setup scripts for different model components
 source("setup_Cpools.R")
+source("setup_Photosynthesis_StomatalConductance.R")
 
 # Setup progress bar
 library(progress)
@@ -67,10 +69,18 @@ for(n in 1:length(input$time)) {
   # Calculate soil hydrology
 
 
-  # Calculate soil temperature
+  # Calculate soil temperatur
 
 
-  # Calculate leaf temperature, photosynthesis and stomatal conductance
+  # Calculate leaf temperature,
+
+
+  # calculate photosynthesis and stomatal conductance
+  # state_last$tleaf = met$tair
+  photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,ps_sc)
+  out[n, an] <- photosynthesis_stomatalconductance[1]
+  out[n, gs] <- photosynthesis_stomatalconductance[2]
+  out[n, gbc] <- photosynthesis_stomatalconductance[3]
 
 
   # Calculate plant C pools, soil decomposition and soil C pools

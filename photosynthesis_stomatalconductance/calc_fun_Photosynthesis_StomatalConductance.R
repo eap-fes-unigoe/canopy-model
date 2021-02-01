@@ -1,5 +1,4 @@
-
-Photosynthesis_Stomatalconductance = function(met,state_last,pars,ps_sc){
+calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,ps_sc){
 
 #source("sp_12_02.R")
 source("photoysnthesis_stomatalconductance/hybrid_root_ci.R")
@@ -11,11 +10,11 @@ library("pracma")
 
 source("CO2LeafBoundaryLayer.R")
 
-
 # Vapor pressure (Pa) and specific humidity (kg/kg)
+# where does esat come from? state_last ?
 
-esat = satvap ((met$tair-pars$tfrz));
-eair = esat * (met$rh);
+flux$esat = satvap ((met$tair-pars$tfrz));
+flux$eair = flux$esat * (met$rh);
 #qair = pars$mmh2o / pars$mmdry * eair / (met$pa - (1 - pars$mmh2o/pars$mmdry) * eair);
 
 
@@ -31,8 +30,16 @@ state_last$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
 
 # entropy terms in dependence of air T
 
-vcmaxse = 668.39 - 1.07 * met$tair
-jmaxse = 659.7 - 0.75 * met$tair
+flux$vcmaxse = 668.39 - 1.07 * met$tair
+flux$jmaxse = 659.7 - 0.75 * met$tair
+
+#from LeafPhydiologyParams.R
+# done with LeafPhysiologyParams.R
+
+fth25 = function(hd, se) {1 + exp((-hd + se*(pars$tfrz+25)) / (pars$R *(pars$tfrz+25)))};
+flux$vcmaxc = fth25 (pars$vcmaxhd, flux$vcmaxse);
+flux$jmaxc  = fth25 (pars$jmaxhd, flux$jmaxse);
+flux$rdc    = fth25 (pars$rdhd, ps_sc$rdse);
 
 # --- Adjust photosynthetic parameters for temperature
 
@@ -68,15 +75,15 @@ print(flux$rd)
 
 # calculating apar from sw_in
 
-apar = PAR(pars,met,ps_sc)
+flux$apar = PAR(pars,met,ps_sc)
 
 # --- Electron transport rate for C3 plants
 
 # Solve the polynomial: aquad*Je^2 + bquad*Je + cquad = 0
 # for Je. Correct solution is the smallest of the two roots.
 
-qabs = 0.5 * leaf$phi_psii * apar;
-aquad = leaf$theta_j;
+qabs = 0.5 * pars$phi_psii * flux$apar;
+aquad = pars$theta_j;
 bquad = -(qabs + flux$jmax);
 cquad = qabs * flux$jmax;
 pcoeff = c(aquad,bquad,cquad);
@@ -87,7 +94,7 @@ flux$je = min(proots[1], proots[2]);
 
 # Initial estimates for Ci
 
-ci0 = 0.7 * atmos$co2air;
+ci0 = 0.7 * met$co2air;
 ci1 = ci0 * 0.99;
 
 # Solve for Ci: Use CiFunc to iterate photosynthesis calculations
@@ -97,7 +104,7 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 # --- calculation of an and gs
 
-flux_dummy = hybrid_root_ci (met,state_last,pars,ps_sc,ci0, ci1,tol);
+flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
 flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
@@ -140,7 +147,7 @@ if (abs(flux$gs-gs_err)*1e06 > 1e-04) {
 
 # Compare with diffusion equation: An = (ca - ci) * gleaf
 
-an_err = (atmos$co2air - flux$ci) / (1 / flux$gbc + 1.6 / flux$gs);
+an_err = (met$co2air - flux$ci) / (1 / flux$gbc + 1.6 / flux$gs);
 if (flux$an > 0 & abs(flux$an-an_err) > 0.01){
   fprintf('An = #15.4f\n', flux$an)
   fprintf('An_err = #15.4f\n', an_err)
@@ -152,6 +159,6 @@ if (flux$an > 0 & abs(flux$an-an_err) > 0.01){
   # write state variables
   #state_last$ = ...
 
-  return(flux)
+  return(c(flux$an,flux$gs,flux$gbc))
 
 }
