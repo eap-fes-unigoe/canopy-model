@@ -11,10 +11,10 @@ Kq;7.7;W m-1 k-1;soil temperature/moisture;Thermal conductivity of quartz
 q;3;W m-1 k-1;soil temperature/moisture;Quartz content as a graction of the total soil solids
 Ko;2;W m-1 k-1;soil temperature/moisture;Thermal conductivity of other minerals of soil
 Ksol;910.066;W m-1 k-1;soil temperature/moisture;Thermal conductivity of soil
-Ksat;26.00946608;W m-1 k-1;soil temperature/moisture;Thermal conductivity for saturated unfrozen soils
+Ksat;2.600.946.608;W m-1 k-1;soil temperature/moisture;Thermal conductivity for saturated unfrozen soils
 Se;0.06;Unitless;soil temperature/moisture;Relative soil Moisture
 Ke;0.144705875;Unitless;soil temperature/moisture;Weighting factor dimensionless Kersten number
-K;3.784277905;W m-1 K-1;soil temperature/moisture;Thermal conduyctivity of soil that varies between dry and saturated values
+K;3.784.277.905;W m-1 K-1;soil temperature/moisture;Thermal conduyctivity of soil that varies between dry and saturated values
 Cv;1984500;J m-3 k-1;soil temperature/moisture;Heat capacity of soil
 theta.sat;0.482;m3 m-3;soil temperature/moisture;volumetric water content at saturation
 psi.sat;0.405;m;soil temperature/moisture;matric potential at saturation
