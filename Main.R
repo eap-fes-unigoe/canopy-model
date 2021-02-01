@@ -79,6 +79,7 @@ for(n in 1:length(input$time)) {
 
   # tleaf substitute
   state_last$tleaf = met$tair
+  state_last$gbw =  0.702
   photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
