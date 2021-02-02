@@ -69,10 +69,7 @@ for(n in 1:length(input$time)) {
   # Calculate soil hydrology
 
 
-  # Calculate soil temperatur
-
-
-  # Calculate leaf temperature,
+  # Calculate soil temperature
 
 
   # calculate photosynthesis and stomatal conductance
@@ -82,6 +79,8 @@ for(n in 1:length(input$time)) {
   state_last$gbw =  0.702
   photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
+
+  # Calculate leaf temperature and latent and sensible heat fluxes
 
 
   # Calculate plant C pools, soil decomposition and soil C pools
