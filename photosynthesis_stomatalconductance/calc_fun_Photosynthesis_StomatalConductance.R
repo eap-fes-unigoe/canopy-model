@@ -70,6 +70,8 @@ flux$rd = pars$rd25 * t1 * t2;
 # calculating apar from sw_in
 
 flux$apar = PAR(pars,met,ps_sc)
+#ifelse(ps_sc$leaftype == 1,flux$apar = radiation$ic_sun,flux$apar = diffuse)
+#  #state_last$PAR <- radiation$ic_sun
 
 # --- Electron transport rate for C3 plants
 

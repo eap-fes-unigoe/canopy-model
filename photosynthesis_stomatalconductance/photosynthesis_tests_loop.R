@@ -6,7 +6,7 @@
 ## 2. Initial calculations and definition of variables
 ## 3. Running a for loop that calculates fluxes and stocks over the simulation time
 ## 4. Writing out model output
-
+testfun_photosynthesis = function()
 
 ##
 rm(list=ls())
@@ -78,9 +78,15 @@ for(n in 1:length(input$time)) {
   # calculate photosynthesis and stomatal conductance
 
   # tleaf substitute
-  state_last$tleaf = met$tair
-  state_last$gbw =  0.702
+  state_last$tleaf <- met$tair
+  state_last$gbw <- 0.702
+  #ps_sc$leaftype <- 1 #sunlit leafs
+  # put in out?
   photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
+  #state_last$PAR <- radiation$ic_sun
+  #ps_sc$leaftype <- 2 #shaded leafs
+  #photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
+  #photosynthesis_stomatalconductance$an <- photosynthesis_stomatalconductance$an * #LAI
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
 
