@@ -6,7 +6,7 @@
 ## 2. Initial calculations and definition of variables
 ## 3. Running a for loop that calculates fluxes and stocks over the simulation time
 ## 4. Writing out model output
-testfun_photosynthesis = function()
+#testfun_photosynthesis = function()
 
 ##
 rm(list=ls())
