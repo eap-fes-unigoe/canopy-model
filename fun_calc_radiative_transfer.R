@@ -59,7 +59,6 @@ source("radiative_transfer/calc_parameters.R")
 # The Kd in the Two Stream model has a different value
 Kd_2stream <- get_two_stream_Kd() # This is a costant value that depends only on the leaf angle distribution
 fun_calc_radiative_transfer <- function(input, state, pars, dt){
-
     # Calc all the intermediate parameters
     # Possible optimization here as not all the paramaters changes every step
     LAI <- get_day_LAI(input$datetime, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete)
@@ -82,5 +81,4 @@ fun_calc_radiative_transfer <- function(input, state, pars, dt){
     LAIs <- c(LAI=LAI, LAI_sunlit=LAI_sunlit)
 
     return(data.frame(c(shortwave, longwave, LAIs)))
-
 }

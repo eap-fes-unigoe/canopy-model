@@ -1,6 +1,6 @@
 ---
 title: "Radiative transfer model sensitivity and calibration"
-author: simone
+author: Simone Massaro
 date: 30/01/21
 output: html_notebook
 ---
@@ -10,6 +10,7 @@ source("setup_sitedata.R")
 source("setup_parameters.R")
 source("fun_calc_radiative_transfer.R")
 library(FME)
+library(tidyverse)
 ```
 ```{r}
 state <- tibble(t_leaf = input$tair, t_soil = fluxes$tsoil)
@@ -32,16 +33,62 @@ rad_trans_new_p <- function (new_p=list()){
     rad<- fun_calc_radiative_transfer(input[i,], state[i,], pars, dt)
     out[i, names(rad)] <- rad
   }
+  print(".") # Progress
   return(out)
 }
 ```
 ```{r}
 out <- rad_trans_new_p()
 ```
-Need to do sensitivity analysis here
-```{r}
 
+
+
+```{r}
+sens_p_sw <- pars[c("rho_leaf", "tau_leaf", "alb_soil_b", "alb_soil_d", "max_LAI")]
+sens_sw_model <-  function(pars) select(rad_trans_new_p(pars), "ic", "i_up")
+sens_sw <- sensFun(rad_trans_new_p, sens_p_sw, map=NULL)
 ```
+```{r}
+sens_sum <- summary(sens_sw)
+cbind(par = attr(sens_sum, "row.names"), sens_sum) #little hack because pycharm doesn't show row names properly
+```
+
+```{r}
+invert_sens <- function(df){
+    vars <- df$var
+    pars <- names(df)
+    df <- as.data.frame(t(df))
+    df <- cbind(pars, df)
+    names(df) <- c("var", vars)
+    return(df[-1, ])
+}
+```
+mean
+```{r}
+sens_sw %>% group_by(var) %>%
+        summarize_all(mean) %>%
+        select(-x) %>%
+        invert_sens
+```
+L1 (according to FME paper)
+```{r}
+sens_sw %>% group_by(var) %>%
+        summarize_all(function(x) mean(abs(x))) %>%
+        select(-x) %>%
+        invert_sens()
+```
+L2 (according to FME paper)
+```{r}
+sens_sw %>% group_by(var) %>%
+        summarize_all(function(x) sqrt(mean(x^2))) %>%
+        select(-x) %>%
+        invert_sens()
+```
+
+
+
+we can see that the rho_leaf is much more important than the tau_leaf
+
 ```{r}
 cal_p <- c(
   # NB those are test parameters that make the model work. Still need to validate that they make sense
@@ -61,9 +108,25 @@ cal_p_upper <- c(
 )
 ```
 ```{r}
+model_cost <- function (params){
+  out <- rad_trans_new_p(params)
+  out <- rename(out,sw_out=i_up)
+  modCost(out, fluxes, x="datetime", y="sw_out")
+}
+```
+```{r}
+out$time <- fluxes$time
+```
+```{r}
+tout <- select(out, time, sw_out)
+tflux <- select(fluxes, time, sw_out)
+```
+```{r}
+modCost(tout, tflux, x="time", y="sw_out")
+```
+```{r}
 #' Cost function for radiative transfer model
 model_cost_sw <- function (params){
-  print(".")
   out <- rad_trans_new_p(params)
   return(out$i_up - fluxes$sw_out)
 }
