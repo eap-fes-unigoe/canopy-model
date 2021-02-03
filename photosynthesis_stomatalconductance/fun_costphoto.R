@@ -1,12 +1,15 @@
 # fun_cost_soilmoisture.R
 
-cost_photosynthesis <- function(pars_calib) {
-  output <- calc_fun_Photosynthesis_StomatalConductance(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
 
-  resid <- output$theta - fluxes$swc
+cost_photo <- function(pars_calib) {
+  output <- fun_photosynthesis_calib(input = input, param_mincalib = param_mincalib, pars_calib = pars_calib, theta.in = fluxes$swc)
+
+  resid <- output$an - fluxes$gpp
   resid <- resid[!is.na(resid)]
+
+ # return(resid)
 }
 
 # run function
 
-cost_soilmoisture(pars_calib = pars_calib)
+costphoto(pars_calib = pars_calib)
