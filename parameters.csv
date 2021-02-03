@@ -55,3 +55,30 @@ Dh0,1.89E-05,m2 s-1,physical constant,Molecular diffusivity (heat) at 0C and 101
 Dv0,2.18E-05,m2 s-1,physical constant,Molecular diffusivity (H2O) at 0C and 1013.25 hPa
 Dc0,1.38E-05,m2 s-1,physical constant,Molecular diffusivity (CO2) at 0C and 1013.25 hPa
 o2air,209,mmol mol-1,atmos constant,atmospheric O2 concentration
+cp,1013,J kg-1,soil temperature/moisture,specific heat of air
+lambda,2260000,J kg-1,soil temperature/moisture,latent heat of vaporization
+MWrat,0.62,unitless,soil temperature/moisture,ratio molecular weight of water vapor/dry air
+Cvwat,4.19,MJ m-3 K-1,soil temperature/moisture,Heat capacity of water
+Cvsoil,1.93,MJ m-3 K-1,soil temperature/moisture,Heat capacity of soil
+Kdry,0.02,W m-1 K-1,soil temperature/moisture,Thermal conductivity of dry soil
+Kwat,0.57,W m-1 K-1,soil temperature/moisture,Thermal conductivity of water
+Kq,7.7,W m-1 K-1,soil temperature/moisture,Thermal conductivity of quartz
+q,3,W m-1 K-1,soil temperature/moisture,Quartz content as a fraction of the total soil solids
+Ko,2,W m-1 K-1,soil temperature/moisture,Thermal conductivity of other minerals of soil
+Ksat,2600946608,W m-1 K-1,soil temperature/moisture,Thermal conductivity for saturated unfrozen soils
+Se,0.06,Unitless,soil temperature/moisture,Relative soil Moisture
+Ke,0.14,Unitless,soil temperature/moisture,Weighting factor dimensionless Kersten number
+K,3784277905,W m-1 K-1,soil temperature/moisture,Thermal conduyctivity of soil that varies between dry and saturated values
+theta.sat,0.48,m3 m-3,soil temperature/moisture,volumetric water content at saturation
+psi.sat,-3960,Pa,soil temperature/moisture,-40.5 cm H2O in Bonan book p. 120 converted to Pa
+k.sat,1.28e-06,m s-1,soil temperature/moisture,Hydraulic conductivity at saturation
+BD,1200,kg m-3,soil temperature/moisture,bulk density
+SOC,13.16,kg m-2,soil temperature/moisture,soil organic carbon
+SD,0.6,m,soil temperature/moisture,soil sampling depth/depth of soil layer [m]
+clay,0.59,unitless,soil temperature/moisture,fraction of clay
+PD,2650,kg m-3,soil temperature/moisture,particle density
+B.om,2.7,unitless,soil temperature/moisture,given by Lett et al. 2000 (in CLM4.5)
+p,1.23,kg m-3,soil temperature/moisture,air density
+psi.a,-1e+08,Pa,soil temperature/moisture,water potential of air
+psi.fc,-33000,Pa,soil temperature/moisture,soil water potential at field capacity
+psi.n1,-33000,Pa,soil temperature/moisture,subsoil water potential
