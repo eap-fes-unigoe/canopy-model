@@ -33,6 +33,11 @@ source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 source("leafTemperature/fun_calc_LeafTemperature.R")
 
+#function of Saturation vapor pressure and temperature derivative 
+source("satvap.R")
+#function of Latent heat of vaporization 
+source("latvap.R")
+
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
 
