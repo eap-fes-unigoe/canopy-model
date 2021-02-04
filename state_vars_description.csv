@@ -21,4 +21,10 @@ dlhflx,W m-2 K-1,Temperature derivative (latent heat flux)
 f0,W m-2,Energy balance
 df0,W m-2 K-1,Temperature derivative (Energy balance)
 dtleaf,K,change in leaf temperature
+tleaf,K,leaf temperature
+rnet,W m-2,net radiation
+lwrad,W m-2,Emitted longwave radiation
+shflx,W m-2,sensible heat flux
+lhflx,W m-2,latent heat flux
+etflx,mol H2O m-2 s-1,water vapor flux
 ci,umol mol-1,intracellular CO2 concentration
