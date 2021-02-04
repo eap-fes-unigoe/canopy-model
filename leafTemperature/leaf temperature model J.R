@@ -254,8 +254,6 @@ for(i in 1:length(mydata$Date.Time)){
   # --- Net radiation
   
   flux[i,"rnet"] <- flux[i,"qa"] - flux[i,"lwrad"]
-  browser()
-  
   
   # --- Error check
   
