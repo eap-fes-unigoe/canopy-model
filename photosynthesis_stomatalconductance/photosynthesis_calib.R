@@ -1,6 +1,9 @@
-# Soil moisture calib
+# clear environment
+rm(list=ls())
 
+# Soil moisture calib
 library(FME)
+
 
 #pars_calib <- c(theta.sat = 0.482, ra = 10)
 pars_calib <- c(vcmax25 = 60 , g1 = 9)
@@ -11,9 +14,14 @@ source("photosynthesis_stomatalconductance/setup_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_costphoto.R")
 
-myfit <- modFit(cost_photo, pars_calib, lower = pars_low , upper = pars_up )
-exp(coef(myfit))
+myfit <- modFit(f = cost_photo, p = pars_calib, lower = pars_low , upper = pars_up )
+#myfit <- modFit(f = cost_photo, p = pars_calib)
 
-# gs:
+#exp(coef(myfit))
+#exp(myfit$par)
+#myfit$par
+coef(myfit)
+#myfit$ssr
+#gs:
 # 0-0.25 molcm^-2s^-1
 # +-50% is okay

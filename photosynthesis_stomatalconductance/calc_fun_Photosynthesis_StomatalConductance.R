@@ -13,7 +13,7 @@ library("pracma")
 
 # Vapor pressure (Pa) and specific humidity (kg/kg)
 # where does esat come from? state_last ?
-
+print(c("tair",met$tair,"tfrz",pars$tfrz))
 esat = satvap ((met$tair-pars$tfrz));
 flux$eair = esat * (met$rh);
 #qair = pars$mmh2o / pars$mmdry * eair / (met$pa - (1 - pars$mmh2o/pars$mmdry) * eair);
@@ -78,13 +78,19 @@ flux$apar = PAR(pars,met,ps_sc)
 # Solve the polynomial: aquad*Je^2 + bquad*Je + cquad = 0
 # for Je. Correct solution is the smallest of the two roots.
 
+print(c("apar",flux$apar,"jmax",flux$jmax))
+
 qabs = 0.5 * pars$phi_psii * flux$apar;
 aquad = pars$theta_j;
 bquad = -(qabs + flux$jmax);
 cquad = qabs * flux$jmax;
 pcoeff = c(aquad,bquad,cquad);
 proots = roots(pcoeff);
-flux$je = min(proots[1], proots[2]);
+print(c("proots",proots))
+proots[1] = as.integer(proots[1])
+print(c("proots",proots))
+print(c("proots_re",Im(proots[1])))
+flux$je = min(Re(proots[[1]]), Re(proots[[2]]));
 
 print(c("flux$je:", flux$je))
 # --- Ci calculation

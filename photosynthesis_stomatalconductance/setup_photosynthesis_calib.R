@@ -9,7 +9,7 @@
 #testfun_photosynthesis = function()
 
   ##
-  rm(list=ls())
+#  rm(list=ls())
 
 ## Required packages
 

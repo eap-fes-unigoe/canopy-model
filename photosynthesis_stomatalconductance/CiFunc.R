@@ -28,14 +28,9 @@ bquad = -(flux$ac + flux$aj);
 cquad = flux$ac * flux$aj;
 pcoeff = c(aquad,bquad,cquad);
 proots = roots(pcoeff);
-
-
 print(c("pcoeff:",pcoeff))
-
-flux$ai = min(proots[1], proots[2]);
-
+flux$ai = min(Re(proots[[1]]), Re(proots[[2]]));
 print(c("flux$ai:",flux$ai))
-
 flux$ag = flux$ai;
 #}
 
@@ -61,7 +56,7 @@ flux$cs = max(flux$cs, 1);
 
 # Saturation vapor pressure at leaf temperature
 
-esat = satvap ((state_last$tleaf-physcon$tfrz));
+esat = satvap ((state_last$tleaf-pars$tfrz));
 
 # Ball-Berry stomatal conductance is a quadratic equation
 # for gs given An: aquad*gs^2 + bquad*gs + cquad = 0. Correct
@@ -79,7 +74,7 @@ if (flux$an > 0){
   cquad = -1 * state_last$gbw * (pars$g0 + pars$g1 * term * flux$eair / esat);
   pcoeff = c(aquad,bquad,cquad);
   proots = roots(pcoeff);
-  flux$gs = max(proots[1], proots[2]);
+  flux$gs = max(Re(proots[[1]]), Re(proots[[2]]));
 } else {
   flux$gs = pars$g0;
 }

@@ -2,14 +2,15 @@
 
 # initial_state,pars,ps_sc)
 cost_photo <- function(pars_calib) {
-  output <- fun_photosynthesis_calib(input = input, initial_state = initial_state, pars = pars, ps_sc = ps_sc)
-
-  resid <- output$an - fluxes$gpp
+  output <- fun_photosynthesis_calib(input = input, initial_state = initial_state, pars = pars, ps_sc = ps_sc,pars_calib)
+  print(c("an",output$an))
+  resid <- output$an * (12 / 1000000 / 1000 * 3600) - fluxes$gpp
   resid <- resid[!is.na(resid)]
-
- # return(resid)
+  print(c("resid",resid))
+  return(resid)
 }
 
 # run function
 
-cost_photo(pars_calib = pars_calib)
+res = cost_photo(pars_calib = pars_calib)
+res_list = as.list(res)

@@ -1,11 +1,15 @@
 
-fun_photosynthesis_calib <- function(input,initial_state,pars,ps_sc)
-{
+fun_photosynthesis_calib <- function(input,initial_state,pars,ps_sc,pars_calib){
+
 #source("setup_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
+#print(c("input",input))
+pars$vcmax25 = pars_calib[1]
+pars$g1 = pars_calib[2]
 ## Model run (for loop) ----
 for(n in 1:length(input$time)) {
+#for(n in 1:20) {
 
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
@@ -34,6 +38,8 @@ for(n in 1:length(input$time)) {
   state_last$gbw <- 0.702
   #ps_sc$leaftype <- 1 #sunlit leafs
   # put in out?
+  #print(c("input",input))
+  #print(c("met",met))
   photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
   #state_last$PAR <- radiation$ic_sun
   #ps_sc$leaftype <- 2 #shaded leafs
@@ -47,7 +53,7 @@ for(n in 1:length(input$time)) {
   #  for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
 
   # update progress bar
-  pb$tick()
+  #pb$tick()
 
 }
 
