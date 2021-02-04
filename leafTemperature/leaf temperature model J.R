@@ -19,7 +19,7 @@ mydata<- mydata%>%
   mutate(VPD_F = VPD_F*100)%>%
   mutate(patm = PA_F*1000)%>%
   mutate(u = WS_F)%>%
-  mutate(rh = RH/100)  # percent to fraction
+  mutate(rh = RH/100)%>%  # percent to fraction
   mutate(Ts = TS_F_MDS_1+273.15)%>%
   select(Date.Time,tair,VPD_F,patm,u,Ts,SW_IN_F,LW_IN_F,RH)
 
@@ -30,7 +30,7 @@ mydata<- mydata%>%
 # actual vapor pressure of air: avp = vpd/(1/rh -1)
 atmo <- mydata%>%
   select(Date.Time,patm,tair,VPD_F,RH)%>%
-  mutate(eair=vpd/(1/rh-1))%>%
+  mutate(eair=VPD_F/(1/RH-1))%>%
   select(Date.Time,patm,tair,eair)
 
 # physical constants
@@ -215,21 +215,21 @@ for(i in 1:length(mydata$Date.Time)){
     satvap_out <- satvap (flux[i,"tleaf"]-tfrz)
     esat <- satvap_out[[1]]
     desat <- satvap_out[[2]]
-    
+
     # Leaf conductance for water vapor (mol H2O/m2/s)
     
     gleaf <- flux[i,"gs"] * flux[i,"gbw"]/ (flux[i,"gs"] + flux[i,"gbw"])
-    
+
     # Emitted longwave radiation (W/m2) and temperature derivative (W/m2/K)
     
     flux[i,"lwrad"] <- 2 * emiss * sigma* flux[i,"tleaf"]^4
     dlwrad <- 8 * emiss * sigma * flux[i,"tleaf"]^3
-    
+
     # Sensible heat flux (W/m2) and temperature derivative (W/m2/K)
     
     flux[i,"shflx"] <- 2 * cpair * (flux[i,"tleaf"] - atmo[i,"tair"] )* flux[i,"gbh"]
     dshflx <- 2 * cpair * flux[i,"gbh"]
-    
+
     # Latent heat flux (W/m2) and temperature derivative (W/m2/K)
     
     flux[i,"lhflx"] <- lambda_val / atmo[i,"patm"] * (esat - atmo[i,"eair"]) * gleaf
@@ -244,17 +244,17 @@ for(i in 1:length(mydata$Date.Time)){
     # Change in leaf temperature
     
     dtleaf <- -f0 / df0
-    
+        
     # Update leaf temperature
     
     flux[i,"tleaf"] <- flux[i,"tleaf"] + dtleaf
-    
 
   }
   
   # --- Net radiation
   
   flux[i,"rnet"] <- flux[i,"qa"] - flux[i,"lwrad"]
+  browser()
   
   
   # --- Error check
@@ -272,7 +272,6 @@ for(i in 1:length(mydata$Date.Time)){
   # Water vapor flux: W/m2 -> mol H2O/m2/s
   
   flux[i,"etflx"] <- flux[i,"lhflx"] / lambda_val
-  
   
   #print for every loop
   print(paste0("gleaf: ", gleaf[1]))
