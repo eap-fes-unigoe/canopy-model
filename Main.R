@@ -31,6 +31,7 @@ source("setup_sitedata.R")
 source("fun_calc_Cpools.R")
 source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
+source("leafTemperature/fun_calc_LeafTemperature.R")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
@@ -45,6 +46,7 @@ out <- initial_state
 # Source setup scripts for different model components
 source("setup_Cpools.R")
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
+source("leafTemperature/setup_LeafTemperature.R")
 
 # Setup progress bar
 library(progress)
@@ -81,7 +83,8 @@ for(n in 1:length(input$time)) {
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # Calculate leaf temperature and latent and sensible heat fluxes
-
+  Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature, satvap, latvap)
+  for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- vars_LeafTemperature[i]}
 
   # Calculate plant C pools, soil decomposition and soil C pools
   Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
