@@ -32,6 +32,7 @@ input <- input %>% mutate(
 fluxes <- fluxes %>% mutate(
   time = 1:nrow(fluxes),
   sw_out = SW_OUT,          # W m-2
+  lw_out = LW_OUT,          # W m-2
   tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4) / 4) + 273.15, # 30cm depth mean. Celsius to Kelvin
   swc = ((SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3) / 100, # 30cm depth mean. Percent to fraction
   g = G_F_MDS,              # W m-2
@@ -43,7 +44,6 @@ fluxes <- fluxes %>% mutate(
   TIMESTAMP_START = NULL,
   TIMESTAMP_END = NULL,
   NIGHT = NULL,
-  LW_OUT = NULL,
   TS_F_MDS_5 = NULL,
   LE_RANDUNC = NULL,
   H_RANDUNC = NULL,
