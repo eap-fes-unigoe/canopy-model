@@ -30,5 +30,5 @@ input$Rn <- input$sw_in + input$lw_in - fluxes$sw_out - input$lw_out
 initial_state <- list(Tsoil=fluxes$tsoil[1])  # initial value for volumetric water content of soil [m3 m-3]
 
 ## Load parameters and adjust units ----
-source("setup_parameters1.R")
+source("setup_parameters.R")
 
