@@ -1,0 +1,29 @@
+name,value,units,description;
+b,11.4,,exponent of …;
+B.om,2.7,,given by Lett et al. 2000 (in CLM4.5);
+BD,1200,kg m-3,bulk density; from site data
+clay,0.59,unitless,fraction of clay;
+cp,1013,J kg-1,specific heat of air;
+Cvsoil,2.6,MJ m-3 K,Heat capacity of soil;
+Cvwat,4.19,MJ m-3 K,Heat capacity of water;
+k.sat,1.28E-06,m s-1,Hydraulic conductivity at saturation; value taken from Bonan p. 120
+Kdry,0.02,,Thermal conductivity of dry soil
+Ke,0.14,,;
+Ko,1,,;
+Kq,7.7,,;
+Kwat,0.57,,;
+lambda,2260000,J kg-1,latent heat of vaporization;
+MWrat,0.62,,ratio molecular weight of water vapor/dry air;
+p,1.23,kg m-3,air density;
+PD,2650,kg m-3,particle density; from literature
+psi.a,-100000000,Pa,water potential of air;
+psi.fc,-33000,Pa,soil water potential at field capacity;
+psi.n1,-33000,Pa,subsoil water potential;
+psi.sat,-3960,Pa,-40.5 cm H2O in Bonan book p. 120 converted to Pa;
+q,0.03,,fraction of quartz in soil minerals
+SD,0.6,m,soil sampling depth/depth of soil layer [m]; from site data
+Se,0.06,,;
+SOC,13.16,kg m-2,soil organic carbon; sum over layers from site data
+Theta.sat,0.48,m3 m-3,Volumetric water content at saturation; value taken from Bonan p. 120 (soil defined as clay based on grain size of climate data)
+theta.sat,0.48,,;
+Tsubsoil,283,K,subsoil temperature
