@@ -32,18 +32,18 @@ qa<- merge(input,fluxes,by="Date.Time")%>%
 # (from 29.0 appendices in Eco-Atmo Bonan)
 conduct <- input%>%
   select(Date.Time,tair,pa,ws)%>%
-  mutate(pm = pa/(R*tair))%>%           # molar density (mol m-3) according to ideal gas law n=PV/RT, pm (n/volume, mol m-3)= P(Pa)/ R(m^3*Pa/mol*K)*T(K) 
-  mutate(Dh = Dh0*(P0/pa)*(tair/T0))%>% # diffusivity of heat (m2 s-1) 
-  mutate(v = v0*(P0/pa)*(tair/T0))%>%      # diffusivity of momentum (m2 s-1)
+  mutate(pm = pa/(pars$R*tair))%>%           # molar density (mol m-3) according to ideal gas law n=PV/RT, pm (n/volume, mol m-3)= P(Pa)/ R(m^3*Pa/mol*K)*T(K) 
+  mutate(Dh = pars$Dh0*(pars$P0/pa)*(tair/pars$T0))%>% # diffusivity of heat (m2 s-1) 
+  mutate(v = pars$v0*(pars$P0/pa)*(tair/pars$T0))%>%      # diffusivity of momentum (m2 s-1)
   mutate(Pr = v/Dh)%>%                    # Prandtl number
-  mutate(Re = ws*dl/v)%>%                  # Reynolds number 
+  mutate(Re = ws*pars$dleaf/v)%>%                  # Reynolds number 
   mutate(Nu = 0.66*Pr^0.33*Re^0.5)%>%     # Nusselt number for forced conv.
-  mutate(gbh = (Nu*pm*Dh)/dl)%>%            # Boundary layer conductance for heat (mol/m2 leaf/s)
+  mutate(gbh = (Nu*pm*Dh)/pars$dleaf)%>%            # Boundary layer conductance for heat (mol/m2 leaf/s)
   mutate(Pr = v/Dh)%>%                    # Prandtl number
-  mutate(Re = ws*dl/v)%>%                  # Reynolds number 
+  mutate(Re = ws*pars$dleaf/v)%>%                  # Reynolds number 
   mutate(Nu = 0.66*Pr^0.33*Re^0.5)%>%     # Nusselt number for forced conv.
-  mutate(gbh = (Nu*pm*Dh)/dl)%>%          # Boundary layer conductance for heat (mol/m2 leaf/s)
-  mutate(DW = DW0*(P0/pa)*(tair/T0))%>% # Molecular diffusivity of mass H2o (M m2 s-1)
+  mutate(gbh = (Nu*pm*Dh)/pars$dleaf)%>%          # Boundary layer conductance for heat (mol/m2 leaf/s)
+  mutate(DW = pars$Dv0*(pars$P0/pa)*(tair/pars$T0))%>% # Molecular diffusivity of mass H2o (M m2 s-1)
   mutate(Sc = v/DW)%>%                    #Sherwood number
   mutate(gbw = 0.036*Sc^0.33*Re^0.50)%>%  #boundary layer conductance for water vapor (mol m-2 s-1) 
   select(Date.Time,gbh,gbw)
