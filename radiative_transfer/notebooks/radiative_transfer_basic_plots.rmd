@@ -1,0 +1,126 @@
+---
+title: "Plots for radiative transfer plot"
+author: "Simone Massaro"
+date: "01/02/21"
+output:
+  html_document:
+    df_print: paged
+---
+```{r "setup", include=FALSE}
+knitr::opts_knit$set(root.dir = "../../")
+```
+
+```{r, message = F}
+source('radiative_transfer/notebooks/setup_radiation_test_data.R')
+```
+
+```{r}
+out <- rad_transf_new_p()
+
+out_plot <- tibble(datetime = input$datetime, model_sw_out = out$i_up, observed_sw_out = fluxes$sw_out, model_lw_out = out$l_up, observed_lw_out = fluxes$lw_out)
+
+time_out <- cbind(input, select(fluxes,-time, -Date.Time), out) %>%
+  filter(datetime < as_date("2018-07-8"))
+
+g_out <- gather(out_plot, key = "type", value="radiation", -datetime) %>% filter(datetime < as_date("2018-07-8"))
+
+out
+```
+```{r}
+time_out %>%
+  gather(key = "type", value = "radiation", sw_in, i_up, ic, ig, factor_key = T) %>%
+  ggplot() +
+  geom_line(aes(x = datetime, y = radiation, color = type)) +
+  labs(y = "Shortwave radiation (w m-2)", colour = "") +
+  scale_color_hue(labels = c("Incoming sw", "Upward sw", "Absorbed sw canopy", "Absorbed sw soil"))
+```
+```{r}
+time_out %>%
+  gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
+  ggplot() +
+  geom_line(aes(x = datetime, y = radiation, color = type)) +
+  labs(y = "Longwave radiation (w m-2)", colour = "") +
+  scale_color_hue(labels = c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
+```
+## LAI over the year
+```{r}
+days <- seq.Date(as.Date("2020-01-01"), as.Date("2020-12-31"), by=1)
+LAI <- pmax(Vectorize(get_day_LAI, "datetime")
+            (days, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete), pars$min_radiation_PAI)
+
+ggplot() + geom_line(aes(x=days, y=LAI)) + ylim(c(0,pars$max_LAI)) + labs(title="LAI over the year")
+```
+# Test with sample
+In this section we create some sample in put and we change only one variable to see how the model output respond to this
+
+## Absorbed radiation vs LAI
+
+The increase in LAI increase the amount of radiation absorbed, but then it reaches a peak at even if the LAI increase no more light is absorbed.
+```{r}
+# fake_input_2 <- tibble(
+#     datetime = as.Date("2020-07-15 12:00"), # Summer day
+#     sw_in = 900,
+#     sw_dif = 100,
+#     lw_in = 200,
+#     t_soil = 300,
+#     t_leaf = 300,
+#     LAI = 1:10,
+#     zenith = 30,
+# )
+# out_2 <- rad_transf(input = fake_input_2)
+#
+# out_2 %>%
+#         gather("Radiation_type", "Absorbed_radiation", c("ic", "ic_sun", "ic_sha")) %>%
+#         ggplot() +
+#         geom_line(aes(x=LAI, y=Absorbed_radiation, color=Radiation_type, linetype=Radiation_type))
+```
+
+# Real data
+
+```{r}
+(out <- rad_transf_new_p())
+
+out_plot <- tibble(datetime = input$datetime, model_sw_out = out$i_up, observed_sw_out = fluxes$sw_out, model_lw_out = out$l_up, observed_lw_out = fluxes$lw_out)
+```
+
+```{r}
+ggplot(data = out_plot) +
+        geom_abline(intercept = 0, slope = 1, color="red", linetype="dotted") +
+        geom_point(aes(x=model_sw_out, y=observed_sw_out)) +
+        geom_smooth(aes(x=model_sw_out, y=observed_sw_out), method='lm')
+```
+
+```{r}
+g_out %>%
+  filter(type %in% c("model_sw_out", "observed_sw_out")) %>%
+  ggplot() +
+  geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y="Outgoing shortwave radiation (w m-2)", colour = "")
+```
+
+### Longwave
+```{r}
+ggplot(data = out_plot) +
+        geom_abline(intercept = 0, slope = 1, color="red", linetype="dotted") +
+        geom_point(aes(x=model_lw_out, y=observed_lw_out)) +
+        geom_smooth(aes(x=model_lw_out, y=observed_lw_out), method='lm')
+```
+```{r}
+g_out %>%
+  filter(type %in% c("model_lw_out", "observed_lw_out")) %>%
+  ggplot() +
+  geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y="Outgoing longwave radiation (w m-2)", colour = "")
+```
+
+### Extra
+LAI sunlit
+
+```{r}
+time_out %>%
+  ggplot() +
+  geom_line(aes(x = datetime, y = LAI_sunlit)) +
+  geom_hline(yintercept = 5, linetype = "dotted")
+  labs(y = "LAI sunlit (m2 m-2)")
+```
+

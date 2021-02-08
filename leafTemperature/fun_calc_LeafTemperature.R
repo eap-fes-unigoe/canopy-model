@@ -1,9 +1,8 @@
-for(i in 1:length(input$Date.Time)){
-  # Leaf temperature and energy fluxes
+LeafTemperature <- function(pars, state_last, vars_LeafTemperature){
   
   # --- Latent heat of vaporization (J/mol)
   
-  lambda_val<- latvap ((atmo[i,"tair"]-tfrz), mmh2o)
+  lambda_val <- latvap ((atmos$tair-pars$tfrz), pars$mmh2o)
   
   # --- Newton-Raphson iteration until leaf energy balance is less than
   # f0_max or to niter_max iterations
@@ -22,33 +21,32 @@ for(i in 1:length(input$Date.Time)){
     
     # Saturation vapor pressure (Pa) and temperature derivative (Pa/K)
     
-    satvap_out <- satvap (flux[i,"tleaf"]-tfrz)
+    satvap_out <- satvap (flux$tleaf-pars$tfrz)
     esat <- satvap_out[[1]]
-    desat <- satvap_out[[2]]
+    desat <- satvap_out[[2]];
     
     # Leaf conductance for water vapor (mol H2O/m2/s)
     
-    gleaf <- flux[i,"gs"] * flux[i,"gbw"]/ (flux[i,"gs"] + flux[i,"gbw"])
+    gleaf <- state_last$gs * flux$gbw / (state_last$gs + flux$gbw)
     
     # Emitted longwave radiation (W/m2) and temperature derivative (W/m2/K)
     
-    flux[i,"lwrad"] <- 2 * emiss * sigma* flux[i,"tleaf"]^4
-    dlwrad <- 8 * emiss * sigma * flux[i,"tleaf"]^3
+    flux$lwrad <- 2 * leaf$emiss * pars$sigma * flux$tleaf^4
+    dlwrad <- 8 * leaf$emiss * pars$sigma * flux$tleaf^3
     
     # Sensible heat flux (W/m2) and temperature derivative (W/m2/K)
     
-    flux[i,"shflx"] <- 2 * cpair * (flux[i,"tleaf"] - atmo[i,"tair"] )* flux[i,"gbh"]
-    dshflx <- 2 * cpair * flux[i,"gbh"]
+    flux$shflx <- 2 * atmos$cpair * (flux$tleaf - atmos$tair) * flux$gbh
+    dshflx <- 2 * atmos$cpair * flux$gbh
     
     # Latent heat flux (W/m2) and temperature derivative (W/m2/K)
     
-    flux[i,"lhflx"] <- lambda_val / atmo[i,"pa"] * (esat - atmo[i,"eair"]) * gleaf
-    dlhflx <- lambda_val / atmo[i,"pa"] * desat * gleaf
-    
+    flux$lhflx <- lambda_val / atmos$patm * (esat - atmos$eair) * gleaf
+    dlhflx <- lambda_val / atmos$patm * desat * gleaf
     
     # Energy balance (W/m2) and temperature derivative (W/m2/K)
     
-    f0 <- flux[i,"qa"] - flux[i,"lwrad"] - flux[i,"shflx"] - flux[i,"lhflx"]
+    f0 <- flux$qa - flux$lwrad - flux$shflx - flux$lhflx
     df0 <- -dlwrad - dshflx - dlhflx
     
     # Change in leaf temperature
@@ -57,39 +55,30 @@ for(i in 1:length(input$Date.Time)){
     
     # Update leaf temperature
     
-    flux[i,"tleaf"] <- flux[i,"tleaf"] + dtleaf
-    
+    flux$tleaf <- flux$tleaf + dtleaf
     
   }
   
   # --- Net radiation
   
-  flux[i,"rnet"] <- flux[i,"qa"] - flux[i,"lwrad"]
+  flux$rnet <- flux$qa - flux$lwrad
   
   
   # --- Error check
   
-  err <- flux[i,"rnet"] - flux[i,"shflx"] - flux[i,"lhflx"]
+  err <- flux$rnet - flux$shflx - flux$lhflx
   if (abs(err) > f0_max){
     cat('err  = ', err, '\n',
-        'qa  = ',flux[i,"qa"], '\n',
-        'lwrad  = ',flux[i,"lwrad"], '\n',
-        'sh  = ',flux[i,"shflx"], '\n',
-        'lh  = ',flux[i,"lhflx"])
+        'qa  = ',flux$qa, '\n',
+        'lwrad  = ',flux$lwrad, '\n',
+        'sh  = ',flux$shflx, '\n',
+        'lh  = ',flux$lhflx)
     stop ('LeafTemperature error')
   }
   
   # Water vapor flux: W/m2 -> mol H2O/m2/s
   
-  flux[i,"etflx"] <- flux[i,"lhflx"] / lambda_val
+  flux$etflx <- flux$lhflx / lambda_val
   
-  
-  #print for every loop
-  print(paste0("gleaf: ", gleaf[1]))
-  print(paste("lambda_val:", lambda_val[1]))
-  print(paste("esat:", esat[1]))
-  print(paste("eair:", atmo[i,"eair"][1]))
-  print(paste0("lhflx: ", flux[i,"lhflx"][1]))
-  print(paste0("tleaf: ", flux[i,"tleaf"][1]))
-  print(paste0("tair: ", atmo[i,"tair"][1]))
+  return(list(flux$tleaf, flux$rnet, flux$lwrad, flux$shflx, flux$lhflx, flux$etflx))
 }

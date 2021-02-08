@@ -72,8 +72,8 @@ fun_calc_radiative_transfer <- function(input, state, pars, dt){
     beta0 <- get_beta0(zenith, Kb, Kd_2stream, omega_leaf)
 
     # the incoming shortwave is the total diffure + direct. Due to sensor errors teh difference can be negative so the min possible value is set to 0
-    lw_sky_b <- max(input$sw_in - input$sw_dif, 0)
-    shortwave <- shortwave_radiation(lw_sky_b, input$sw_dif, radiation_PAI, Kb, Kd_2stream, beta, beta0 , omega_leaf,
+    sw_sky_b <- max(input$sw_in - input$sw_dif, 0)
+    shortwave <- shortwave_radiation(sw_sky_b, input$sw_dif, radiation_PAI, Kb, Kd_2stream, beta, beta0 , omega_leaf,
                                      pars$clump_OMEGA, pars$alb_soil_b, pars$alb_soil_d)
     longwave <- longwave_radiation(input$lw_in, radiation_PAI, state$t_leaf, state$t_soil, Kb, Kd, pars$em_leaf, pars$em_soil)
 
