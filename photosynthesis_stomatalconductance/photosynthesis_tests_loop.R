@@ -107,3 +107,13 @@ rm(met, site, state_last, names_Cpools, ipool)
 #write.csv(out, file="testoutput_calib_07_2018.csv")
 
 }
+
+
+
+#### Plotmaker ####
+
+Filename <- "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs_General.pdf"
+Plottitle <- "Photosynthesis Model Output General"
+
+source("photosynthesis_stomatalconductance/plotmaker_ps_sc.R")
+plotmaker_ps_sc(out)
