@@ -1,0 +1,51 @@
+---
+title: "Plots for radiative transfer plot"
+author: Simone Massaro
+date: 01/02/21
+output: html_notebook
+---
+```{r, message = F}
+source('radiative_transfer/notebooks/setup_radiation_test_data.R')
+```
+## LAI over the year
+```{r}
+days <- seq.Date(as.Date("2020-01-01"), as.Date("2020-12-31"), by=1)
+LAI <- pmax(Vectorize(get_day_LAI, "datetime")
+            (days, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete), pars$min_radiation_PAI)
+
+ggplot() + geom_line(aes(x=days, y=LAI)) + ylim(c(0,pars$max_LAI)) + labs(title="LAI over the year")
+```
+# Test with sample
+In this section we create some sample in put and we change only one variable to see how the model output respond to this
+
+## Absorbed radiation vs LAI
+
+The increase in LAI increase the amount of radiation absorbed, but then it reaches a peak at even if the LAI increase no more light is absorbed.
+```{r}
+fake_input_2 <- tibble(
+    datetime = as.Date("2020-07-15 12:00"), # Summer day
+    sw_in = 900,
+    sw_dif = 100,
+    lw_in = 200,
+    t_soil = 300,
+    t_leaf = 300,
+    LAI = 1:10,
+    zenith = 30,
+)
+out_2 <- rad_transf(input = fake_input_2)
+
+out_2 %>%
+        gather("Radiation_type", "Absorbed_radiation", c("ic", "ic_sun", "ic_sha")) %>%
+        ggplot() +
+        geom_line(aes(x=LAI, y=Absorbed_radiation, color=Radiation_type, linetype=Radiation_type))
+```
+### Shortwave
+```{r}
+ggplot() +
+        geom_abline(intercept = 0, slope = 1, color = "red", size = .3) +
+        geom_point(aes(x = out$i_up, y = input$sw_out)) +
+        geom_smooth(aes(x = out$i_up, y = input$sw_out), method = 'lm')
+```
+
+
+
