@@ -10,6 +10,7 @@ pars$g1 = pars_calib[2]
 for(n in 1:length(input$time)) {
 #for(n in 10:15) {
 
+  print(n)
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
   #site <- fluxes[n,]
@@ -36,6 +37,7 @@ for(n in 1:length(input$time)) {
   photosynthesis_stomatalconductance_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*out[n,]$LAI-out[n,]$LAI_sunlit)
   photosynthesis_stomatalconductance <- photosynthesis_stomatalconductance_sun + photosynthesis_stomatalconductance_sha
   #photosynthesis_stomatalconductance$an <- photosynthesis_stomatalconductance$an * #LAI
+  # an <- photosynthesis_stomatalconductance_sun * out[n,]$LAI_sunlit + photosynthesis_stomatalconductance_sha * out[n,]$LAI-out[n,]$LAI_sunlit
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # update progress bar
@@ -47,4 +49,5 @@ rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 # write.csv()
  return(out)
+ #return(an)
 }

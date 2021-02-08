@@ -1,5 +1,4 @@
 calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR){
-#calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars){
 
 source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
 source("photosynthesis_stomatalconductance/satvap.R")
@@ -59,7 +58,7 @@ flux$rd = pars$rd25 * t1 * t2;
 # Photosynthetically active radiation: calcuted from input data or taken from radiation group
 
 #flux$apar = PAR(pars,met)
-print(c("PAR:",PAR))
+#print(c("PAR:",PAR))
 flux$apar = PAR # umol photon/m2 leaf/s
 
 # --- Electron transport rate je for C3 plants
@@ -98,14 +97,15 @@ flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
 flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
-print(c("ci:",flux$ci))
+#print(c("ci:",flux$ci))
+#print(c("gs",flux$gs))
 
 # --- Make sure iterative solution is correct
 
 if (flux$gs < 0) {
   stop ('LeafPhotosynthesis: negative stomatal conductance')
 }
-
+# add cs?
   return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc,ci = flux$ci))
 }
 

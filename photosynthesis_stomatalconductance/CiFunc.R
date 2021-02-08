@@ -51,7 +51,7 @@ flux$cs = max(flux$cs, 1);
 # for gs given An: aquad*gs^2 + bquad*gs + cquad = 0. Correct
 # solution is the larger of the two roots. This solution is
 # valid for An >= 0. With An <= 0, gs = g0.
-print(c("an:",flux$an))
+#print(c("an:",flux$an))
 
 term = flux$an / flux$cs;
 if (flux$an > 0){
@@ -65,7 +65,7 @@ if (flux$an > 0){
   flux$gs = pars$g0;
 }
 
-print(c("gs",flux$gs))
+#print(c("gs",flux$gs))
 
 # --- Diffusion (supply-based) photosynthetic rate
 

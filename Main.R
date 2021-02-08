@@ -80,18 +80,11 @@ for(n in 1:length(input$time)) {
 
 
   # calculate photosynthesis and stomatal conductance
-
-
-  #state_last$tleaf = met$tair
-  #state_last$gbw =  0.702
-  # ic_sun * LAI_sunlit? ic_sha * LAI - LAI-sunlit?
-  #photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars)
-  photosynthesis_stomatalconductance_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun)
-  photosynthesis_stomatalconductance_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha)
-  # photosynthesis_stomatalconductance_sun$an <-
-  # add LAI multiplication *out[n,]$LAI_sunlit *out[n,]$LAI-out[n,]$LAI_sunlit
-  # give interesting  values, also  ci, ca
-  photosynthesis_stomatalconductance <- photosynthesis_stomatalconductance_sun + photosynthesis_stomatalconductance_sha
+  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun)
+  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha)
+  photosynthesis_stomatalconductance <- ps_sc_sun
+  photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
+  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # Calculate leaf temperature and latent and sensible heat fluxes
