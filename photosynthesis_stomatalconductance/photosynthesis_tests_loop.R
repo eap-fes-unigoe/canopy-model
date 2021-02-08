@@ -114,6 +114,6 @@ rm(met, site, state_last, names_Cpools, ipool)
 
 Filename <- "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs_General.pdf"
 Plottitle <- "Photosynthesis Model Output General"
-
+Sitedata = data.frame(c(input,fluxes))
 source("photosynthesis_stomatalconductance/plotmaker_ps_sc.R")
 plotmaker_ps_sc(out)
