@@ -8,6 +8,9 @@
 ## 4. Writing out model output
 #testfun_photosynthesis = function()
 
+photosynthesis_tests_loop <- function(met,state_last,pars,ps_sc) {
+
+
 ##
 rm(list=ls())
 
@@ -29,7 +32,7 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_Cpools.R")
-source("fun_calc_radiative_transfer.R")
+#source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
 ## Load initial state ----
@@ -43,7 +46,7 @@ initial_state <- read.csv("initial_state.csv")
 out <- initial_state
 
 # Source setup scripts for different model components
-source("setup_Cpools.R")
+#source("setup_Cpools.R")
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
 
 # Setup progress bar
@@ -101,5 +104,6 @@ for(n in 1:length(input$time)) {
 
 rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
-# write.csv()
+#write.csv(out, file="testoutput_calib_07_2018.csv")
 
+}

@@ -21,7 +21,26 @@ myfit <- modFit(f = cost_photo, p = pars_calib, lower = pars_low , upper = pars_
 #exp(myfit$par)
 #myfit$par
 coef(myfit)
+plot(myfit)
 #myfit$ssr
 #gs:
 # 0-0.25 molcm^-2s^-1
 # +-50% is okay
+
+
+
+
+##### First Calibration (1:20)
+#Parameters:
+ # Estimate Std. Error t value Pr(>|t|)
+#vcmax25  83.8457    20.3836   4.113 4.34e-05 ***
+#g1        5.8868     0.5968   9.864  < 2e-16 ***
+  #---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#Residual standard error: 0.0001485 on 742 degrees of freedom
+
+#Parameter correlation:
+#  vcmax25      g1
+#vcmax25  1.0000 -0.9761
+#g1      -0.9761  1.0000
