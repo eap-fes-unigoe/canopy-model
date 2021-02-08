@@ -1,92 +1,125 @@
 ---
 title: "Radiative transfer model sensitivity and calibration"
-author: Simone Massaro
-date: 30/01/21
-output: html_notebook
+author: "Simone Massaro"
+date: "30/01/21"
+output:
+  html_document:
+    df_print: paged
 ---
+
 ```{r "setup", include=FALSE}
 knitr::opts_knit$set(root.dir = "../../")
 ```
+
 ```{r, message = FALSE}
 source('radiative_transfer/notebooks/setup_radiation_test_data.R')
 library(FME)
 ```
+
 The model is using all the data from July 2018. The leaf temperature was assumed equal to the air temperature, while the soil temperature is the average of the first 30 cm
+
 ```{r}
 (out <- rad_transf_new_p())
 ```
+
 We are doing a sensivity analysis for the whole model
+
 ```{r}
 sens_p <- pars[c("rho_leaf", "tau_leaf", "alb_soil_b", "alb_soil_d", "max_LAI", "em_leaf", "em_soil")]
 sens_model <- sensFun(rad_transf_new_p, sens_p, map=NULL)
 ```
+
 THis is the `FME` sensitivity summary table that makes the mean for all the output variable
+
 ```{r}
 sens_sum <- summary(sens_model)
 cbind(par = attr(sens_sum, "row.names"), sens_sum) #little hack because pycharm doesn't show row names properly
 ```
+
 Here we analyze the sensitivity of the parameters for each output variable, which allows to divide between sw and lw submodels and better understan the effect of each parameter
 
 ### Shortwave sensitivity
+
 ```{r}
 sens_sw <- filter_sens(sens_model, vars = c("i_down", "i_up", "ic", "ic_sha", "ic_sun", "ig"),
                        pars = c("rho_leaf", "tau_leaf" ,"alb_soil_b", "alb_soil_d", "max_LAI"))
 ```
+
 Mean
+
 ```{r}
 detailed_sens(sens_sw, mean)
 ```
+
 L1
+
 ```{r}
 detailed_sens(sens_sw, function(x) mean(abs(x)))
 ```
+
 L2
+
 ```{r}
 detailed_sens(sens_sw, function(x) sqrt(mean(x^2)))
 ```
 
-The parameter with the biggest influence is the LAI value. The model is also sensible to rho_leaf is the smallest and tau_leaf for almost all output variables.
-Soil albedo parameters have an important influence only on the radiation reflected above the canopy.
-
+The parameter with the biggest influence is the LAI value. The model is also sensible to rho\_leaf is the smallest and tau\_leaf for almost all output variables. Soil albedo parameters have virtually no influence
 
 ### Longwave sensitivity
+
 ```{r}
 sens_lw <- filter_sens(sens_model, vars = c("l_down", "l_up", "lc", "lc_sha", "lc_sun", "lg"),
                        pars = c("em_leaf", "em_soil", "max_LAI"))
 ```
+
 Mean
+
 ```{r}
 detailed_sens(sens_lw, mean)
 ```
+
 L1
+
 ```{r}
 detailed_sens(sens_lw, function(x) mean(abs(x)))
 ```
+
 L2
+
 ```{r}
 detailed_sens(sens_lw, function(x) sqrt(mean(x^2)))
 ```
 
-# Model calibration
+Model calibration
+=================
 
 ```{r}
 cal_p_sw <- c(rho_leaf = 0.4, tau_leaf = 0.1)
 cal_p_sw_lower <- c(rho_leaf = 0.38, tau_leaf = 0.05 )
 cal_p_sw_upper <- c(rho_leaf = 0.42, tau_leaf = 0.2)
 ```
+
 ```{r}
 model_cost_sw <- function (params){
   out <- rad_transf_new_p(params)
   return(out$i_up - fluxes$sw_out)
 }
 ```
+
 ```{r}
 mfit_sw <- modFit(model_cost_sw, cal_p_sw, cal_p_sw_lower, cal_p_sw_upper)
 ```
-```{r}
+
+```{r, error = T}
 summary(mfit_sw)
 ```
+
+------------------------------------------------------------------------
+
+**End of complete section**
+
 test albedo fit
+
 ```{r}
 cal_p_sw <- c(alb_soil_b = 0.1, alb_soil_d= 0.1)
 cal_p_sw_lower <- c(alb_soil_b = 0.04, alb_soil_d = 0.04)
@@ -101,14 +134,20 @@ model_cost_sw2 <- function (params){
   return(res)
 }
 ```
+
 ```{r}
 mfit_sw2 <- modFit(model_cost_sw2, cal_p_sw, cal_p_sw_lower, cal_p_sw_upper)
 ```
-```{r}
+
+```{r, error = T}
 summary(mfit_sw2)
 ```
-## Longwave
-the only parameter used is the emissivity of the leaf because the em_soil have an important impact on the model has virtually no impact on the lw_out which is the only variable we can use for calibration.
+
+Longwave
+--------
+
+the only parameter used is the emissivity of the leaf because the em\_soil have an important impact on the model has virtually no impact on the lw\_out which is the only variable we can use for calibration.
+
 ```{r}
 cal_p_lw <- c(em_leaf = 0.97)
 cal_p_lw_lower <- c(em_leaf = 0.95)
@@ -119,12 +158,15 @@ model_cost_lw <- function (params){
   return(out$l_up - fluxes$lw_out)
 }
 ```
+
 ```{r}
 mfit_lw <- modFit(model_cost_lw, cal_p_lw, cal_p_lw_lower, cal_p_lw_upper)
 ```
+
 ```{r, error = T}
 summary(mfit_lw)
 ```
+
 ```{r}
 # cal_p_lai <- c(max_LAI = 5, alb_soil_b = .1, alb_soil_d = .1)
 # cal_p_lai_lower <- c(max_LAI = 4, alb_soil_b = .08, alb_soil_d = .08)
@@ -133,13 +175,14 @@ cal_p_lai <- c(max_LAI = 4)
 cal_p_lai_lower <- c(max_LAI = 3)
 cal_p_lai_upper <- c(max_LAI = 7 )
 ```
+
 ```{r}
 mfit_lai <- modFit(model_cost_sw, cal_p_lai, cal_p_lai_lower, cal_p_lai_upper)
 ```
-```{r}
+
+```{r, error = T}
 summary(mfit_lai)
 ```
-
 
 ```{r}
 model_cost <- function (params){
