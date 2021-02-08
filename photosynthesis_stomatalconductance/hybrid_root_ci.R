@@ -1,17 +1,3 @@
-# function [flux, root] = hybrid_root (func, physcon, atmos, leaf, flux, xa, xb, tol)
-# set func = CiFunc
-
-
-#testing_values
-#ci0 = 0.7 * atmos$co2air;
-#ci1 = ci0 * 0.99;
-
-#xa = ci0
-#xb = ci1
-#tol = 0.1;
-
-# function hybrid_root specifically for CiFunc
-
 hybrid_root_ci = function(met,state_last,pars,flux, xa, xb, tol){
 
 # Solve for the root of a function using the secant and Brent's methods given
@@ -37,31 +23,25 @@ source("photosynthesis_stomatalconductance/CiFunc.R")
 
 x0 = xa;
 flux_f0 = CiFunc(met,state_last,pars,flux, x0);
-#print(c("flux_f0", flux_f0))
 flux = flux_f0[[1]]
-#print(c("flux:",flux))
 f0 = flux_f0[[2]]
-print(c("f0:",f0))
 if (f0 == 0) {
   root = x0;
   hybrid_root_ci_output = list(flux,root)
-  return(hybrid_root_ci_output) #what about this return?
+  return(hybrid_root_ci_output)
 }
-
-
 
 # --- Evaluate func at xb and see if this is the root
 # xb = t1
 
 x1 = xb;
-print(c("x1",x1))
 flux_f1 = CiFunc(met,state_last,pars,flux, x1);
 flux = flux_f1[[1]]
 f1 = flux_f1[[2]]
 if (f1 == 0) {
   root = x1;
   hybrid_root_ci_output = list(flux,root)
-  return(hybrid_root_ci_output) #same as above
+  return(hybrid_root_ci_output)
 }
 
 # --- Order initial root estimates correctly
@@ -125,9 +105,6 @@ for (iter in 1:itmax){
 }
 
 root = x0;
-
-#flux$ci = root
-
 hybrid_root_ci_output = list(flux,root)
 
 return(hybrid_root_ci_output)

@@ -33,9 +33,9 @@ source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 source("leafTemperature/fun_calc_LeafTemperature.R")
 
-#function of Saturation vapor pressure and temperature derivative 
+#function of Saturation vapor pressure and temperature derivative
 source("satvap.R")
-#function of Latent heat of vaporization 
+#function of Latent heat of vaporization
 source("latvap.R")
 
 ## Load initial state ----
@@ -81,10 +81,17 @@ for(n in 1:length(input$time)) {
 
   # calculate photosynthesis and stomatal conductance
 
-  # tleaf substitute
-  state_last$tleaf = met$tair
-  state_last$gbw =  0.702
-  photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
+
+  #state_last$tleaf = met$tair
+  #state_last$gbw =  0.702
+  # ic_sun * LAI_sunlit? ic_sha * LAI - LAI-sunlit?
+  #photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars)
+  photosynthesis_stomatalconductance_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun)
+  photosynthesis_stomatalconductance_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha)
+  # photosynthesis_stomatalconductance_sun$an <-
+  # add LAI multiplication *out[n,]$LAI_sunlit *out[n,]$LAI-out[n,]$LAI_sunlit
+  # give interesting  values, also  ci, ca
+  photosynthesis_stomatalconductance <- photosynthesis_stomatalconductance_sun + photosynthesis_stomatalconductance_sha
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # Calculate leaf temperature and latent and sensible heat fluxes
@@ -103,4 +110,3 @@ for(n in 1:length(input$time)) {
 rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 # write.csv()
-

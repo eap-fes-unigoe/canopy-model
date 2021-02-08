@@ -1,10 +1,5 @@
-# function [flux, root] = brent_root (func, physcon, atmos, leaf, flux, xa, xb, tol)
-
 brent_root_ci = function(met,state_last,pars,flux, xa, xb, tol) {
 
-# funcc = TleafFunc
-
-# source("TleafFunc.R")
 source("photosynthesis_stomatalconductance/CiFunc.R")
 
 # Use Brent's method to find the root of a function, which is known to exist between
