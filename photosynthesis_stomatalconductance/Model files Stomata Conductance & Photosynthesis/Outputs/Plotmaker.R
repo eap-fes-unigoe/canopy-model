@@ -62,7 +62,7 @@ plot(d4$an ~ Hainich5Days$SW_IN_F, xlab = "Incoming shortwave radiation (W/m2)",
 dev.off()
 
 d5 <- read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/testoutput_calib_07_2018.csv", header = T, sep=",", dec = ".")
-pdf (file="photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs calibrated (Vcmax25 = 83.8457  & g1 = 5.8868 ).pdf", title= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
+pdf (file="photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/New Photosynthesis Model Outputs calibrated (Vcmax25 = 83.8457  & g1 = 5.8868 ).pdf", title= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
 
 plot(d5$an ~ c(1:length(Sitedata$time)), xlab = "Timesteps", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= "Net assimilation over time", sub= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
 plot(d5$gs ~ c(1:length(Sitedata$time)), xlab = "Timesteps", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main= "stomata conductance over time", sub= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
@@ -71,5 +71,5 @@ plot(d5$gs ~ Sitedata$tair, xlab = "Temperature (°C)", ylab = "Leaf stomatal co
 plot(d5$an ~ Sitedata$co2, xlab = "Ambient CO2 concentration (µmol mol-1)", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main ="Net assimilation over ambient CO2 concentration", sub= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
 plot(d5$gs ~ Sitedata$co2, xlab = "Ambient CO2 concentration (µmol mol-1)", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)" , main ="stomata conductance over ambient CO2 concentration", sub= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
 plot(d5$an ~ Sitedata$sw_in, xlab = "Incoming shortwave radiation (W/m2)", ylab ="Leaf net photosynthesis (umol CO2/m2 leaf/s)", main ="Net assimilation over shortwave radiation", sub= "Calibrated Output (Vcmax25 = 83.8457  & g1 = 5.8868 )")
-
+plot(d5$an*12 / 1000000 / 1000 * 3600 ~ Sitedata$gpp, xlab = "Observed Assimilation (µmol m-2 s-1 to kg m-2 dt-1)", ylab = "Modelled Assimilation (µmol m-2 s-1 to kg m-2 dt-1)", main= "Modelled over Observed")
 dev.off()
