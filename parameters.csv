@@ -82,3 +82,6 @@ p,1.23,kg m-3,soil temperature/moisture,air density
 psi.a,-1e+08,Pa,soil temperature/moisture,water potential of air
 psi.fc,-33000,Pa,soil temperature/moisture,soil water potential at field capacity
 psi.n1,-33000,Pa,soil temperature/moisture,subsoil water potential
+T0,273.15,K,Temperature 0 C in Kelvin
+P0,101325,Pa,air Pressure at 0 C
+v0,13.3E-06,m2 s-1,reference diffusivity of momentum v at 0 C
