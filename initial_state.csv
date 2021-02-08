@@ -1,2 +1,2 @@
-Time,C_leaf,C_fineroot,C_wood,C_litter_m,C_litter_s,C_cwd,C_som_f,C_som_s,C_som_p,ci,theta.in,tsoil0,an,gs,gbc,lambda_val,esat,desat,gleaf,dlwrad,dshflx,dlhflx,f0,df0,dtleaf,tleaf,rnet,lwrad,shflx,lhflx,etflx
-0,221,5500,8000,121,825,1020,481,5740,3148,301.4606,0.242,286,0,0,0,44520.24,1525795,99.60103,-0.1020799,10.23395,46.45012,-4.700403,-4.83E-13,-51.98367,-9.29E-15,286.4333,-82.96523,732.8359,23.98028,-106.9455,0
+Time,C_leaf,C_fineroot,C_wood,C_litter_m,C_litter_s,C_cwd,C_som_f,C_som_s,C_som_p,ci,theta.in,tsoil0,an,gs,gbc,lambda_val,esat,desat,gleaf,dlwrad,dshflx,dlhflx,f0,df0,dtleaf,tleaf,rnet,lwrad,shflx,lhflx,etflx,gbw
+0,221,5500,8000,121,825,1020,481,5740,3148,301.4606,0.242,286,0,0,0,44520.24,1525795,99.60103,-0.1020799,10.23395,46.45012,-4.700403,-4.83E-13,-51.98367,-9.29E-15,286.4333,-82.96523,732.8359,23.98028,-106.9455,0,0.702

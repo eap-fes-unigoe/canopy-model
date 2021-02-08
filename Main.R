@@ -33,9 +33,9 @@ source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 source("leafTemperature/fun_calc_LeafTemperature.R")
 
-#function of Saturation vapor pressure and temperature derivative 
+#function of Saturation vapor pressure and temperature derivative
 source("satvap.R")
-#function of Latent heat of vaporization 
+#function of Latent heat of vaporization
 source("latvap.R")
 
 ## Load initial state ----
@@ -88,8 +88,8 @@ for(n in 1:length(input$time)) {
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # Calculate leaf temperature and latent and sensible heat fluxes
-  Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature, satvap, latvap)
-  for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- vars_LeafTemperature[i]}
+  Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)
+  for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- flux[i]}
 
   # Calculate plant C pools, soil decomposition and soil C pools
   Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
@@ -103,4 +103,3 @@ for(n in 1:length(input$time)) {
 rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 # write.csv()
-
