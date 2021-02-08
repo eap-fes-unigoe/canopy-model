@@ -89,7 +89,7 @@ for(n in 1:length(input$time)) {
 
   # Calculate leaf temperature and latent and sensible heat fluxes
   Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)
-  for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- vars_LeafTemperature[i]}
+  for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- flux[i]}
 
   # Calculate plant C pools, soil decomposition and soil C pools
   Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)

@@ -27,7 +27,7 @@ LeafTemperature <- function(pars, state_last, vars_LeafTemperature){
     
     # Leaf conductance for water vapor (mol H2O/m2/s)
     
-    gleaf <- gs * flux$gbw / (gs + flux$gbw)
+    gleaf <- state_last$gs * flux$gbw / (state_last$gs + flux$gbw)
     
     # Emitted longwave radiation (W/m2) and temperature derivative (W/m2/K)
     
