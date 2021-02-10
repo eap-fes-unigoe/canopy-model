@@ -24,7 +24,7 @@ get_theta_soil <- function(input, pars, initial_state) {
   # f <- (SOC / (BD * SD)) * 1.72        # soil organic matter fraction; f = (%C * 1.72)/100
   # b.sm <- (1 - f) * b.min + f * b.om
   
-  sps <- Theta.sat * SD
+  sps <- theta.sat * SD
   
   # equations
 
