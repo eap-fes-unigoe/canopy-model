@@ -7,7 +7,8 @@ fluxes <- read.csv(file.path('..','..','data','Hainich_2018-07_fluxes.csv'))
 
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
-  time = 1:nrow(input),
+  time = seq_len(nrow(input)),
+  datetime = force_tz(as_datetime(Date.Time), "Etc/GMT+1"),
   tair = TA_F + 273.15,  # Celsius to Kelvin
   p = P_F/1000,          # mm time_step-1 to m3 m-2 time_step-1
   sw_in = SW_IN_F,       # W m-2
@@ -28,8 +29,9 @@ input <- input %>% mutate(
 # tsoil and swc means across soil depths don't take into account layer thickness or properties.
 # We ignore this for the purpose of this excersice.
 fluxes <- fluxes %>% mutate(
-  time = 1:nrow(fluxes),
+  time = seq_len(nrow(fluxes)),
   sw_out = SW_OUT,          # W m-2
+  lw_out = LW_OUT,          # W m-2
   tsoil = ((TS_F_MDS_1 + TS_F_MDS_2 + TS_F_MDS_3 + TS_F_MDS_4 + TS_F_MDS_5) / 5) + 273.15, # 30cm depth mean. Celsius to Kelvin
   swc = ((SWC_F_MDS_1 + SWC_F_MDS_2 + SWC_F_MDS_3) / 3) / 100, # 30cm depth mean. Percent to fraction
   g = G_F_MDS,              # W m-2
@@ -41,7 +43,6 @@ fluxes <- fluxes %>% mutate(
   TIMESTAMP_START = NULL,
   TIMESTAMP_END = NULL,
   NIGHT = NULL,
-  LW_OUT = NULL,
   TS_F_MDS_5 = NULL,
   LE_RANDUNC = NULL,
   H_RANDUNC = NULL,
