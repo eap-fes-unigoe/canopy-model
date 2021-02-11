@@ -6,12 +6,13 @@ source("setup_parameters.R")
 
 source("fun_calc_radiative_transfer.R")
 
-input <- read.csv(file.path('..','..','data','Hainich_2018-07_input.csv'))
-fluxes <- read.csv(file.path('..','..','data','Hainich_2018-07_fluxes.csv'))
+input <- read.csv(file.path('data','Hainich_2018_input.csv'))
+fluxes <- read.csv(file.path('data','Hainich_2018_fluxes.csv'))
 
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
   time = 1:nrow(input),
+  datetime = force_tz(as_datetime(Date.Time), "Etc/GMT+1"),
   tair = TA_F + 273.15,  # Celsius to Kelvin
   p = P_F/1000,          # mm time_step-1 to m3 m-2 time_step-1
   sw_in = SW_IN_F,       # W m-2
@@ -23,7 +24,7 @@ input <- input %>% mutate(
   rh = RH / 100,         # percent to fraction
   sw_dif = SW_DIF,       # W m-2
   co2 = CO2_F_MDS,       # µmol mol-1
-  NIGHT = NULL,
+  night = as_factor(as.integer(NIGHT)),
   .keep = "unused"
 )
 
@@ -44,8 +45,8 @@ fluxes <- fluxes %>% mutate(
   gpp = GPP_NT_VUT_REF * 12 / 1000000 / 1000 * dt,     # µmol m-2 s-1 to kg m-2 dt-1
   TIMESTAMP_START = NULL,
   TIMESTAMP_END = NULL,
-  night = NIGHT,
-  LW_OUT = NULL,
+  NIGHT = NULL,
+  lw_out = LW_OUT,
   TS_F_MDS_5 = NULL,
   LE_RANDUNC = NULL,
   H_RANDUNC = NULL,
@@ -130,14 +131,14 @@ radiative_transfer_step_debug <- function(input, state, pars, dt){
     LAI <- ifelse("LAI" %in% names(input), input$LAI, get_day_LAI(input$datetime, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete))
     radiation_PAI <- max(LAI, pars$min_radiation_PAI) # During winter the are no leaves but there are still branches that interact with light
     avg_datetime <- input$datetime - duration(dt/2) # calculating the zenith at the mid of the interval
-    zenith <- ifelse("zenith" %in% names(input), input$LAI, get_zenith(avg_datetime, pars$lat, pars$lon))
+    zenith <- ifelse("zenith" %in% names(input), input$zenith, get_zenith(avg_datetime, pars$lat, pars$lon))
     Kb <- ifelse("Kb" %in% names(input), input$Kd, get_Kb(zenith, max_Kb = 1000)) # 1000 is an arbitraty high number
     Kd <- ifelse("kd" %in% names(input), input$Kb, get_Kd(LAI))
     omega_leaf <- pars$rho_leaf + pars$tau_leaf
     beta <- get_beta(pars$rho_leaf, pars$tau_leaf)
     beta0 <- get_beta0(zenith, Kb, Kd_2stream, omega_leaf)
 
-    # the incoming shortwave is the total diffure + direct. Due to sensor errors teh difference can be negative so the min possible value is set to 0
+    # the incoming shortwave is the total diffure + direct. Due to sensor errors the difference can be negative so the min possible value is set to 0
     sw_sky_b <- max(input$sw_in - input$sw_dif, 0)
     shortwave <- shortwave_radiation(sw_sky_b, input$sw_dif, radiation_PAI, Kb, Kd_2stream, beta, beta0 , omega_leaf,
                                      pars$clump_OMEGA, pars$alb_soil_b, pars$alb_soil_d)
