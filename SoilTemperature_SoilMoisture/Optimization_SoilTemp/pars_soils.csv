@@ -6,7 +6,7 @@ clay,0.59,unitless,fraction of clay;
 cp,1013,J kg-1,specific heat of air;
 Cvsoil,1.93,MJ m-3 K,Heat capacity of soil;
 Cvwat,4.19,MJ m-3 K,Heat capacity of water;
-k.sat,1.28E-06,W m s-1,Thermal conductivity for saturated unfrozen soils;
+Ksat,1.28E-06,W m K-1,Thermal conductivity for saturated unfrozen soils;
 Kdry,0.02,W m-1 K-1,Thermal conductivity of dry soil;
 Ke,0.14,unitless,Weighting factor dimensionless Jersten number;
 Kq,7.7,W m-1 K-1,Thermal conductivity of quartz;
