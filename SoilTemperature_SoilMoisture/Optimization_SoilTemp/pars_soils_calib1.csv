@@ -4,7 +4,7 @@ B.om,2.7,unitless,organic matter in soil given by Lett et al. 2000 (in CLM4.5);
 BD,1200,kg m-3,bulk density; 
 clay,0.59,unitless,fraction of clay;
 cp,1013,J kg-1,specific heat of air;
-Cvsoil,1.93,MJ m-3 K,Heat capacity of soil;
+Cvsoil,2.6,MJ m-3 K,Heat capacity of soil;
 Cvwat,4.19,MJ m-3 K,Heat capacity of water;
 Ksat,1.28E-06,W m K-1,Thermal conductivity for saturated unfrozen soils;
 Kdry,0.02,W m-1 K-1,Thermal conductivity of dry soil;
@@ -24,5 +24,5 @@ SD,0.6,m,soil sampling depth/depth of soil layer [m];
 Se,0.06,unitless,Relative soil Moisture;
 SOC,13.16,kg m-2,soil organic carbon;
 theta.sat,0.48,m3 m-3,Volumetric water content at saturation; 
-Ko,3,W m-1 K-1,Thermal conductivity of other minerals for soils;
+Ko,1,W m-1 K-1,Thermal conductivity of other minerals for soils;
 Tsubsoil,283,K,subsoil temperature
