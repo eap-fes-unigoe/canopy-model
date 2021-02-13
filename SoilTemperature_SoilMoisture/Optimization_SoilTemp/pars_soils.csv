@@ -23,4 +23,4 @@ q,0.03,W m s-1,Quartz fraction;
 SD,0.6,m,soil sampling depth/depth of soil layer [m];
 Se,0.06,unitless,Relative soil Moisture;
 SOC,13.16,kg m-2,soil organic carbon;
-Theta.sat,0.48,m3 m-3,Volumetric water content at saturation; 
+theta.sat,0.48,m3 m-3,Volumetric water content at saturation; 
