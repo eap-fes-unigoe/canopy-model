@@ -24,3 +24,5 @@ SD,0.6,m,soil sampling depth/depth of soil layer [m];
 Se,0.06,unitless,Relative soil Moisture;
 SOC,13.16,kg m-2,soil organic carbon;
 theta.sat,0.48,m3 m-3,Volumetric water content at saturation; 
+Ko,3,W m-1 K-1,Thermal conductivity of other minerals for soils;
+Tsubsoil,290,K,subsoil temperature
