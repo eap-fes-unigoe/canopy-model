@@ -8,7 +8,7 @@
 ## 4. Writing out model output
 #testfun_photosynthesis = function()
 
-photosynthesis_tests_loop <- function(met,state_last,pars,ps_sc) {
+# photosynthesis_tests_loop <- function(met,state_last,pars,ps_sc) {
 
 
 ##
@@ -32,7 +32,7 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_Cpools.R")
-#source("fun_calc_radiative_transfer.R")
+source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
 ## Load initial state ----
@@ -64,10 +64,10 @@ for(n in 1:length(input$time)) {
 
   # Calculate radiative transfer
 
-  # This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
-  #radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
- # radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
- # out[n, names(radiation)] <- radiation
+  #This is a really temporary workaround, before we calculate the tsoil and tleaf from the other submodels
+  radiation_state <- list(t_leaf = met$tair, t_soil = met$tair)
+  radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
+  out[n, names(radiation)] <- radiation
 
   # Calculate soil hydrology
 
@@ -79,18 +79,15 @@ for(n in 1:length(input$time)) {
 
 
   # calculate photosynthesis and stomatal conductance
-
-  # tleaf substitute
-  state_last$tleaf <- met$tair
-  state_last$gbw <- 0.702
-  #ps_sc$leaftype <- 1 #sunlit leafs
-  # put in out?
-  photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
-  #state_last$PAR <- radiation$ic_sun
-  #ps_sc$leaftype <- 2 #shaded leafs
-  #photosynthesis_stomatalconductance <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,ps_sc)
-  #photosynthesis_stomatalconductance$an <- photosynthesis_stomatalconductance$an * #LAI
+  # state_last$gbw <- 0.702
+  state_last$tleaf <- met$tair # leaftemeperature placeholder
+  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  photosynthesis_stomatalconductance <- ps_sc_sun
+  photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
+  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
+
 
 
   # Calculate plant C pools, soil decomposition and soil C pools
@@ -108,7 +105,9 @@ rm(met, site, state_last, names_Cpools, ipool)
 
 }
 
+plot(out$an * (12 / 1000000 / 1000 * 3600),fluxes$gpp, xlim = c(0,0.003),ylim = c(0,0.003))
 
+write.csv(out,file = "test_output_LAI_01_1602")
 
 #### Plotmaker ####
 
@@ -117,3 +116,5 @@ Plottitle <- "Photosynthesis Model Output General"
 Sitedata = data.frame(c(input,fluxes))
 source("photosynthesis_stomatalconductance/plotmaker_ps_sc.R")
 plotmaker_ps_sc(out)
+
+

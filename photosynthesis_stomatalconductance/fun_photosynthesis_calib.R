@@ -4,11 +4,11 @@ fun_photosynthesis_calib <- function(input,initial_state,pars,pars_calib){
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
 #print(c("input",input))
-pars$vcmax25 = pars_calib[1]
-pars$g1 = pars_calib[2]
+pars$vcmax25 = pars_calib #[1]
+# pars$g1 = pars_calib[2]
 ## Model run (for loop) ----
-for(n in 1:length(input$time)) {
-#for(n in 10:15) {
+#for(n in 1:length(input$time)) {
+for(n in 1:168) {
 
   print(n)
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
@@ -23,21 +23,12 @@ for(n in 1:length(input$time)) {
   out[n, names(radiation)] <- radiation
 
   # calculate photosynthesis and stomatal conductance
-
-  # tleaf substitute
   state_last$tleaf <- met$tair
-  state_last$gbw <- 0.702
-  # put in out?
-  #print(c("input",input))
-  #print(c("met",met))
-  #photosynthesis_stomatalconductance_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun)
-  photosynthesis_stomatalconductance_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*out[n,]$LAI_sunlit)
-  #state_last$PAR <- radiation$ic_sun
-  #photosynthesis_stomatalconductance_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha)
-  photosynthesis_stomatalconductance_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*out[n,]$LAI-out[n,]$LAI_sunlit)
-  photosynthesis_stomatalconductance <- photosynthesis_stomatalconductance_sun + photosynthesis_stomatalconductance_sha
-  #photosynthesis_stomatalconductance$an <- photosynthesis_stomatalconductance$an * #LAI
-  # an <- photosynthesis_stomatalconductance_sun * out[n,]$LAI_sunlit + photosynthesis_stomatalconductance_sha * out[n,]$LAI-out[n,]$LAI_sunlit
+  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  photosynthesis_stomatalconductance <- ps_sc_sun
+  photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
+  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
   # update progress bar

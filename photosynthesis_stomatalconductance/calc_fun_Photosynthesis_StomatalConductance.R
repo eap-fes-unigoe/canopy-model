@@ -2,8 +2,8 @@ calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR){
 
 source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
 source("photosynthesis_stomatalconductance/satvap.R")
-source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R")
-# source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R")
+# source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R")
+source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R")
 source("photosynthesis_stomatalconductance/PAR.R")
 library("signal")
 library("pracma")
@@ -15,9 +15,9 @@ flux$eair = esat * met$rh; # Vapor pressure (Pa)
 
 # Boundary layer conductance for CO2
 
-flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
-# flux$gbw = LeafBoundaryLayer(state_last,met,pars)[1]
-# flux$gbc = LeafBoundaryLayer(state_last,met,pars)[2]
+# flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
+flux$gbw = LeafBoundaryLayer(state_last,met,pars)[1]
+flux$gbc = LeafBoundaryLayer(state_last,met,pars)[2]
 
 # entropy terms in dependence of air T
 

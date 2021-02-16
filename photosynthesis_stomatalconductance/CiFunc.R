@@ -52,13 +52,19 @@ flux$cs = max(flux$cs, 1);
 # solution is the larger of the two roots. This solution is
 # valid for An >= 0. With An <= 0, gs = g0.
 #print(c("an:",flux$an))
+#print(c("cs:",flux$cs))
 
 term = flux$an / flux$cs;
 if (flux$an > 0){
   aquad = 1;
-  bquad = state_last$gbw - pars$g0 - pars$g1 * term;
-  cquad = -1 * state_last$gbw * (pars$g0 + pars$g1 * term * flux$eair / flux$esat);
+  bquad = flux$gbw - pars$g0 - pars$g1 * term;
+  cquad = -1 * flux$gbw * (pars$g0 + pars$g1 * term * flux$eair / flux$esat);
   pcoeff = c(aquad,bquad,cquad);
+  #print(c("gbw",flux$gbw))
+  #print(c("eair",flux$eair))
+  #print(c("esat",flux$esat))
+  #print(c("abc",aquad,bquad,cquad))
+  #print(c("pcoeff",pcoeff))
   proots = roots(pcoeff);
   flux$gs = max(Re(proots[[1]]), Re(proots[[2]]));
 } else {

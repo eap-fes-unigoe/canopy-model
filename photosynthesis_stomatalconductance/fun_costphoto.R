@@ -19,3 +19,5 @@ cost_photo <- function(pars_calib) {
 #res = cost_photo(pars_calib = pars_calib)
 #res_list = as.list(res)
 # 17:03
+# started roughly 13:00 08.02.2021
+# still running at 17:50

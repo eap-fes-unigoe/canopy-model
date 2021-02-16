@@ -1,8 +1,10 @@
-  LeafBoundaryLayer = function(state_last,met,pars) {
+LeafBoundaryLayer = function(state_last,met,pars) {
 
   # --- Adjust diffusivity for temperature and pressure
 
-  fac = 101325 / met$patm * (met$tair / pars$tfrz)^1.81;
+  fac = 101325 / met$pa * (met$tair / pars$tfrz)^1.81;
+
+  #print(c("vis0",pars$visc0,"fac",fac))
 
   visc = pars$visc0 * fac; # Kinematic viscosity (m2/s)
   Dh = pars$Dh0 * fac;     # Molecular diffusivity, heat (m2/s)
@@ -11,7 +13,7 @@
 
   # --- Dimensionless numbers
 
-  Re = met$wind * pars$dleaf / visc; # Reynolds number
+  Re = met$ws * pars$dleaf / visc; # Reynolds number
   Pr = visc / Dh;                      # Prandtl number
   Scv = visc / Dv;                     # Schmidt number for H2O
   Scc = visc / Dc;                     # Schmidt number for CO2
