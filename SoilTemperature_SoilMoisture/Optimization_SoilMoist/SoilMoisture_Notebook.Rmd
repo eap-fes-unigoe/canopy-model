@@ -1,0 +1,481 @@
+---
+title: "Soilmoisture"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+
+# 1. Setup
+
+As implemented in every submodel, we first have to setup the basics - time variable, site data, parameters and some prior calculations of example values.
+
+```{r}
+# Setup soil moisture 
+
+### Load packages, defines time units, and set up site data and parameters ----
+
+## Required packages
+library(dplyr)
+library(FME)
+
+# Setting some time unit variables in unit seconds ----
+t_units <- list(hour  = 3600,
+                halfh = 1800,
+                day   = 86400,
+                month = 2592000,
+                year  = 31536000)
+dt <- t_units$hour # delta time: model time step
+
+## Load and prepare input ----
+# required variables from measured data
+# rh: relative humidity
+# prec: precipitation
+# temp.air: air temperature
+source("setup_sitedata.R")
+
+# example values for calibration
+input$lw_out <- 0.95 * 5.670373e-8 * input$tair^4 # no data for lw_out, so making a rough approximation using tair
+input$Rn <- input$sw_in + input$lw_in - fluxes$sw_out - input$lw_out
+
+## Set initial values ----
+initial_state <- list(theta=fluxes$swc[1])  # initial value for volumetric water content of soil [m3 m-3]
+
+## Load parameters and adjust units ----
+parsfile <- "pars_soil.csv"
+source("setup_parameters.R")
+```
+  
+  
+
+# 2. Main function
+
+The main function for modeling soil moisture contains soil moisture-specific calculations and a for-loop in which the soil water content is calculated in dependence of precipitation, evaporation and drainage.  
+
+```{r}
+# Function calculating soil moisture changes
+
+get_theta_soil <- function(input, pars, initial_state) {
+
+  list2env(pars, envir = environment())
+  
+  # Getting variables used
+  theta.in <- initial_state$theta
+  prec <- input$p
+  Rh <- input$rh
+  temp <- input$tair - 273.15
+  time <- input$time
+  gs <- fluxes$g
+  rn <- input$Rn
+  
+  # calculations
+  ps <- 1 - (BD/PD)       # soil pore space [unitless]: bulk density = 1200 kg m-3 (climate data), particle density = 2650 kg m-3 (literature)
+  V <- 1 * 1 * SD         # volume of soil layer [m3]
+  
+  # for evaporation
+  gamma <- (cp * 101.325) / (lambda * MWrat)  # psycrometric constant for potential evaporation [kPa K-1]
+  # for drainage
+  # b.min <- 2.91 + 0.159 * (clay * 100)
+  # f <- (SOC / (BD * SD)) * 1.72        # soil organic matter fraction; f = (%C * 1.72)/100
+  # b.sm <- (1 - f) * b.min + f * b.om
+  
+  sps <- theta.sat * SD
+  
+  # equations
+
+  # evaporation from soil
+  # Penman-Monteith potential evapotranspiration
+
+  # Ep = (Δ(Rn – Gs) + ρ cp(es – ea)/ra) / (λ(Δ+γ))
+
+  # where:
+
+  # Ep: potential evapotranspiration (kg m−2 s−1)
+  # Δ: slope of the es to T curve = 4098 * (0.6108 * exp( 17.27 * T / (T + 237.3))) / (T + 237.3)^2 (kPa ºC-1) (T = Tsoil?; T in Celsius!)
+  # rn: net radiation (J m-2 s-1) (from radiation model)
+  # gs: ground heat flux (J m-2 s-1) (from soil temperature model)
+  # cp: specific heat of air (J kg-1)
+  # ρ: the air density (kg m−3)
+  # es: air saturation vapor pressure (kPa)
+  # ea: air actual vapour pressure (kPa)
+  # ra: aerodynamic resistance (s m-1) --> assumed to be 10
+  # γ: psycrometric constant (kPa ◦C−1) --> has to be calculated, but then we assume it to be constant
+  # γ = (cp * air_pressure) / (λ * MWrat)
+  # λ: latent heat of vaporization (J kg−1)
+
+
+  # Actual soil evaporation (adapted from Aydin et. al 2005)
+
+  # Ea = Ep * ( (log[WP] – log[WPa]) / (log[WPfc] – log[WPa]) ) / (Vsoil/BD)
+
+  # WP = soil water potential
+  # WPa = water potential of air (-100MPa (average value))
+  # WPfc = soil water potential at field capacity
+
+
+
+  # drainage
+
+  # drain.t = -(k / SD )*(psi - psi.n1) - k (equation 8.27 from Bonan p. 125 )
+  # k: hydraulic conductivity  [m s-1]
+  # SD: soil layer thickness  [m]
+  # psi: matric potential of soil  [m]
+  # psi.n1: matric potential of soil beneath soil layer [m]
+  # psi.n1 <- psi.sat * (s^-B) (equation from CLM4.5 p. 172)
+  # s <- 0.5 ((theta.sat + theta)/theta.sat) [unitless]
+  # B <- (1 - f) * B.min + f * B.om  [unitless]
+  # B.min <- 2.91 + 0.159 * clay  [unitless]
+  # B.om <- 2.7  [unitless]
+  # f <- (SOC(kg m-2) / (BD * SD)) * 1.72    # soil organic matter fraction; f = %C * 1.72
+  # SOC(kg/m-2) = SOC (%)× BD (kg/m3)× SD (m) x 1000
+  # where,  SOC - Concentration of soil organic carbon (%);   BD - Bulk density (kg/m3); SD-   soil sampling depth (m)
+
+
+  # output variables
+
+  theta <- rep(NA, length(time))    # soil moisture [m3 m-3]
+  drain <- rep(NA, length(time))    # drainage [m s-1]
+  runoff <- rep(NA, length(time))   # runoff [m s-1]
+  k <- rep(NA, length(time))        # hydraulic conductivity [m s-1]
+  evap <- rep(NA, length(time))     # evaporation [m s-1]
+  psi <- rep(NA, length(time))      # matric potential [m]
+  s <- rep(NA, length(time))        # coefficient for drainage
+  # psi.n1 <- rep(NA, length(time))   # matric potential of soil beneath soil layer [m]
+
+
+  # Iterative calculations over time
+
+  for(t in time) {
+    
+    # if(t==1) browser()
+    # print(t)
+
+    # first water content is taken from climate data, then theta from previous time step is taken for calculation
+    # theta.in is the measured soil water content (averaged for the whole soil) at the start of the time series
+    if(t == 1) {theta.t <- theta.in} else {theta.t <- theta[t-1]}
+
+    # precipitation is taken from climate data
+    prec.t <- prec[t]  # [m3 dt-1]
+    
+    rn.t <- rn[t]
+    gs.t <- gs[t]
+    temp.t <- temp[t]
+
+    # transpiration data is taken from Leaf Temperature Model
+    # trans.t <- trans[t]
+
+    # evaporation
+    # Calculating potential evaporation
+    delta <- 4098 * (0.6108 * exp( 17.27 * temp.t / (temp.t + 237.3))) / (temp.t + 237.3)^2  # (kPa K-1) temp must be in Celsius
+    es <- 0.6108 * exp(17.27* temp.t / (temp.t + 237.3)) # (kPa)
+    ea <- es * Rh[t] # (kPa)
+    Ep <- (delta * (rn.t - gs.t) + d_air * cp * (es - ea) / ra) / (lambda * (delta + gamma)) # (kg m−2 s−1)
+    Ep <- Ep / 1000 # transform units to m3 m-2 s-1
+
+    # Calculating soil water potential
+    psi.t <- psi.sat * (theta.t / theta.sat)^-b.sm   # (m)
+    if(psi.t < psi.a) {psi.t <- psi.a} 
+
+    # Calculating actual evaporation
+    evap.t <- epmod * (Ep * ( (log(-psi.t) - log(-psi.a)) / (log(-psi.ep) - log(-psi.a)) ))  # (m s-1)
+
+    # hydraulic conductivity
+    k.t <- k.sat * ((theta.t/theta.sat)^(2*b.sm+3))  # (m s-1)
+
+    # drainage
+    
+    # Calculating psi for soil beneath soil layer
+    # s.t <- 0.5 * ((theta.sat + theta.t) / theta.sat)
+    # if(s.t < 0.01) {s.t <- 0.01}; if(s.t > 1) {s.t <- 1}
+    # psi.n1.t <- psi.sat * (s.t^-B)  # matric potential for layer N+1 (layer beneath layer N) -> equation taken from CLM4.5
+
+    # Calculating drainage
+    # drain.t <- - (k.t / SD) * (psi.t - psi.n1.t) - k.t
+    drain.t <- (k.t / SD / 2) * (psi.t - psi.n1) - k.t # new approach using psi.n1 as parameter (F.)
+    # if(drain.t > x) drain.t <- x
+    
+    theta.l <- theta.t * SD
+    
+    # theta (water content) is current water content plus infiltration minus drainage
+    theta.l <- theta.l - (evap.t + drain.t) * dt  # multiplication with dt to get infiltration/drainage volume for model time step
+    if(theta.l > sps) {theta.l <- sps}; if(theta.l < 0.03) {theta.l <- 0.03} # making sure there are no impossible results
+    
+    # Precipitation and runoff as excess water
+    theta.l <- theta.l + prec.t # only precipitation can become running
+    if(theta.l > sps) {
+      runoff.t <- theta.l - sps      # (m3 dt-1)
+      theta.l <- sps
+    } else {runoff.t <- 0}
+    
+
+    
+    theta.t <- theta.l / SD
+
+    theta[t] <- theta.t
+    runoff[t] <- runoff.t
+    k[t] <- k.t
+    evap[t] <- evap.t
+    drain[t] <- drain.t
+    psi[t] <- psi.t
+  }
+
+  out <- data.frame(theta, runoff, k, evap, drain, psi, psi.n1)
+  out$swc <- out$theta
+  return(out)
+
+}
+```
+
+```{r}
+# Run model with uncalibrated parameters
+
+parsfile <- "pars_soil.csv"
+source("setup_soilmoisture.R")
+source("fun_soilmoisture.R")
+
+output <- get_theta_soil(input = input, pars = pars, initial_state = initial_state)
+```
+  
+  
+# 3. Sensitivity analysis
+  
+
+### 3.1 Cost function
+
+
+```{r}
+# cost function for soil moisture
+
+cost_soilmoisture <- function(pars_calib, params = pars) {
+  
+  print(pars_calib)
+  # Calibrated pars replace default values
+  for(i in names(pars_calib)) {params[[i]] <- pars_calib[[i]]}
+  
+  # Call the model function
+  output <- get_theta_soil(input = input, pars = params, initial_state = initial_state)
+  # browser()
+  # Calculate residuals
+  resid <- output$swc - fluxes$swc
+  resid <- resid[!is.na(resid)]
+  
+  return(resid)
+}
+```
+
+  
+### 3.2 Running sensitivity analysis
+
+```{r}
+## sensitivity analysis for soil moisture ##
+
+pars_calib <- c(b.sm = 11.4, epmod = 1, psi.n1 = -3.4, ra = 10, theta.sat = 0.48)
+
+Sens <- sensFun(cost_soilmoisture, pars_calib)
+summary(Sens)
+```
+
+
+```{r}
+## Plotting ##
+
+library(ggplot2)
+library(gridExtra)
+library(tidyr)
+
+
+# Sensitivity analysis
+
+# plot sensitivity functions of model output to parameters
+
+date <- fluxes[2][1:743, ]
+par_sens <- cbind(date, Sens[, 3:7])
+
+gg_df <- gather(par_sens, key = "type", value = "theta", epmod, b.sm, psi.n1, ra, theta.sat, factor_key = T)
+
+ggplot() +
+  geom_line(aes(gg_df$date, gg_df$theta, color = gg_df$type), size = 1) +
+  labs(y = "", x = "time", color = "")
+
+```
+  
+  
+# 4. Calibration
+  
+
+Calibration was done for 
+
+      - saturated soil water content (theta.sat) [m3 m-3]
+      - exponent for soil hydraulic equations (b.sm) [unitless]
+
+
+
+```{r}
+
+rm(list = ls())
+
+parsfile <- "pars_soil.csv"
+
+pars_calib <- c(b.sm = 11.4, theta.sat = 0.48)
+pars_low <- c(b.sm = 5, theta.sat = 0.3)
+pars_high <- c(b.sm = 13, theta.sat = 0.6)
+
+source("setup_soilmoisture.R")
+source("fun_soilmoisture.R")
+source("fun_costmoisture.R")
+
+myfit <- modFit(f = cost_soilmoisture, p = pars_calib, lower = pars_low, upper = pars_high)
+summary(myfit)
+```
+  
+  
+
+# 4. Output
+
+
+### 4.1 Run model
+  
+
+Finally, we run the model with the calibrated parameters and visualize the output.
+
+```{r}
+## Run model ##
+
+
+# Run model with uncalibrated parameters
+
+parsfile <- "pars_soil.csv"
+source("setup_soilmoisture.R")
+source("fun_soilmoisture.R")
+
+output <- get_theta_soil(input = input, pars = pars, initial_state = initial_state)
+
+
+# Run model choosing calibrated parameter file
+
+parsfile <- "pars_soil_calib1.csv"
+pars_soil_calib1 <- read.csv(parsfile)
+
+pars_soil_calib1[2,2] <- 9.85
+pars_soil_calib1[33,2] <- 0.6
+
+
+source("setup_soilmoisture.R")
+source("fun_soilmoisture.R")
+
+output_cal <- get_theta_soil(input = input, pars = pars, initial_state = initial_state)
+
+```
+
+  
+### 4.2 Plotting
+
+```{r}
+## Plotting ##
+
+library(ggplot2)
+library(gridExtra)
+library(tidyr)
+
+
+# Compare measured data to modeled data and pre-calibrated data
+
+out_theta <- data.frame(fluxes$time, fluxes$swc, output_cal$theta, output$theta)
+names(out_theta) <- c("time", "swc", "theta_cal", "theta")
+
+gg_theta <- gather(out_theta, key = "type", value = "theta", swc, theta_cal, theta, factor_key = T)
+
+ggplot() +
+  geom_line(aes(gg_theta$time, gg_theta$theta, color = gg_theta$type), size = 1) +
+  labs(y = "soil water content [m3 m-3]", x = "time", color = "")
+
+```
+
+```{r}
+# Plotting output variables
+
+out <- data.frame(fluxes$time, output_cal[ , -8], input$p)
+names(out) <- c("time", "theta", "runoff", "hyd_conductivity", "evaporation", "drainage", "water_potential", "water_potential_sub", "precipitation")
+
+
+# evaporation
+
+gg_theta <- gather(out, key = "type", value = "theta", evaporation, factor_key = T)
+
+ggplot() +
+  geom_line(aes(gg_theta$time, gg_theta$theta, color = gg_theta$type), size = 1) +
+  labs(y = "evaporation [m s-1]", x = "time", color = "")
+
+```
+
+```{r}
+# drainage against hydraulic conductivity
+
+gg_theta <- gather(out, key = "type", value = "theta", drainage, factor_key = T)
+
+ggplot() +
+  geom_line(aes(gg_theta$hyd_conductivity, gg_theta$theta, color = gg_theta$type), size = 1) +
+  labs(y = "drainage [m s-1]", x = "hydraulic conductivity [m s-1]", color = "")
+
+
+```
+
+```{r}
+# water potential and precipitation
+
+gg_thetaWP <- gather(out, key = "type", value = "theta", water_potential, factor_key = T)
+
+WP <- ggplot() +
+  geom_line(aes(gg_thetaWP$time, gg_thetaWP$theta, color = gg_thetaWP$type), size = 1) +
+  labs(y = "water potential [m]", x = "time", color = "")
+
+
+gg_thetaP <- gather(out, key = "type", value = "theta", precipitation, factor_key = T)
+
+P <- ggplot() +
+  geom_line(aes(gg_thetaP$time, gg_thetaP$theta, color = gg_thetaP$type), size = 1) +
+  labs(y = "precipitation [m3 dt-1]", x = "time", color = "")
+
+grid.arrange(WP, P)
+
+```
+
+```{r}
+# multiple plots together for comparison
+
+gg_thetaA <- gather(out, key = "type", value = "theta", theta, factor_key = T)
+
+A <- ggplot() +
+  geom_line(aes(gg_thetaA$time, gg_thetaA$theta, color = gg_thetaA$type), size = 1) +
+  labs(y = "theta [m3 m-3]", x = "time", color = "")
+
+gg_thetaB <- gather(out, key = "type", value = "theta", precipitation, factor_key = T)
+
+B <- ggplot() +
+  geom_line(aes(gg_thetaB$time, gg_thetaB$theta, color = gg_thetaB$type), size = 1) +
+  labs(y = "precipitation [m3 dt-1]", x = "time", color = "")
+
+gg_thetaC <- gather(out, key = "type", value = "theta", water_potential, factor_key = T)
+
+C <- ggplot() +
+  geom_line(aes(gg_thetaC$time, gg_thetaC$theta, color = gg_thetaC$type), size = 1) +
+  labs(y = "water potential [m]", x = "time", color = "")
+
+gg_thetaD <- gather(out, key = "type", value = "theta", drainage, factor_key = T)
+
+D <- ggplot() +
+  geom_line(aes(gg_thetaD$time, gg_thetaD$theta, color = gg_thetaD$type), size = 1) +
+  labs(y = "drainage [m s-1]", x = "time", color = "")
+
+gg_thetaE <- gather(out, key = "type", value = "theta", hyd_conductivity, factor_key = T)
+
+E <- ggplot() +
+  geom_line(aes(gg_thetaE$time, gg_thetaE$theta, color = gg_thetaE$type), size = 1) +
+  labs(y = "hydraulic conductivity [m s-1]", x = "time", color = "")
+
+grid.arrange(A, B, C, D, E, ncol = 2)
+```
+

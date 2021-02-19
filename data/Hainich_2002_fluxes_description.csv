@@ -1,0 +1,11 @@
+Variable,Description,Units
+DOY,Day of Year,DOY
+hour,Hour,hour
+DateTime,DateTime,DateTime
+Rn,net radiation,W/m2
+H,sensible heat flux density,W/m2
+LE,latent heat flux density,W/m2
+NEE,net ecosystem CO2 exchange,umol/m2s
+GPP,gross primary productivity,umol/m2s
+RE,ecosystem respiration,umol/m2s
+missing data,-9999,

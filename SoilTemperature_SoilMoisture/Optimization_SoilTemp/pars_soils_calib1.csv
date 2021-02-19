@@ -1,0 +1,28 @@
+name,value,units,description;
+b,11.4,unitless,exponent used in Campbell relationships;
+B.om,2.7,unitless,organic matter in soil given by Lett et al. 2000 (in CLM4.5);
+BD,1200,kg m-3,bulk density; 
+clay,0.59,unitless,fraction of clay;
+cp,1013,J kg-1,specific heat of air;
+Cvsoil,2.6,MJ m-3 K,Heat capacity of soil;
+Cvwat,4.19,MJ m-3 K,Heat capacity of water;
+Ksat,1.28E-06,W m K-1,Thermal conductivity for saturated unfrozen soils;
+Kdry,0.02,W m-1 K-1,Thermal conductivity of dry soil;
+Ke,0.14,unitless,Weighting factor dimensionless Jersten number;
+Kq,7.7,W m-1 K-1,Thermal conductivity of quartz;
+Kwat,0.57,W m-1 K-1,Thermal conductivity of water;
+lambda,2260000,J kg-1,latent heat of vaporization;
+MWrat,0.62,unitless,ratio molecular weight of water vapor/dry air;
+p,1.23,kg m-3,air density;
+PD,2650,kg m-3,particle density;
+psi.a,-100000000,Pa,water potential of air;
+psi.fc,-33000,Pa,soil water potential at field capacity;
+psi.n1,-33000,Pa,subsoil water potential;
+psi.sat,-3960,Pa,-40.5 cm H2O in Bonan book p. 120 converted to Pa;
+q,0.03,W m s-1,Quartz fraction;
+SD,0.6,m,soil sampling depth/depth of soil layer [m];
+Se,0.06,unitless,Relative soil Moisture;
+SOC,13.16,kg m-2,soil organic carbon;
+theta.sat,0.48,m3 m-3,Volumetric water content at saturation; 
+Ko,1,W m-1 K-1,Thermal conductivity of other minerals for soils;
+Tsubsoil,283,K,subsoil temperature

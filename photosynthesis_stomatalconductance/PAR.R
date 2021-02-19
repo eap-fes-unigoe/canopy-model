@@ -24,7 +24,7 @@ swincvis = swskyvis * (1 + albsoi);
 # vis Solar radiation absorbed by leaf
 
 swflxvis = swincvis * (1 - rho - tau);
-apar = swflxvis * 2;    # unit conversion W/m^2 to umol/m^2s
+apar = swflxvis * 4.6;
 print(c("apar:", apar))
 
 return(apar)
