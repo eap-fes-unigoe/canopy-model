@@ -4,11 +4,11 @@ fun_photosynthesis_calib <- function(input,initial_state,pars,pars_calib){
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
 #print(c("input",input))
-pars$vcmax25 = pars_calib #[1]
-# pars$g1 = pars_calib[2]
+pars$vcmax25 = pars_calib[1]
+pars$g1 = pars_calib[2]
 ## Model run (for loop) ----
-#for(n in 1:length(input$time)) {
-for(n in 1:168) {
+for(n in 1:length(input$time)) {
+#for(n in 1:168) {
 
   print(n)
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step

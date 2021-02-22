@@ -10,7 +10,8 @@ cost_photo <- function(pars_calib) {
   resid <- output$an * (12 / 1000000 / 1000 * 3600) - fluxes$gpp
   resid <- resid[!is.na(resid)]
   # print(c("resid",resid))
-  print(c("another_round", runif(1)))
+  o = o + 1
+  print(c("another_round", o))
   return(resid)
 }
 

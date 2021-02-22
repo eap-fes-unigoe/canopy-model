@@ -6,14 +6,16 @@ library(FME)
 
 
 #pars_calib <- c(theta.sat = 0.482, ra = 10)
-# pars_calib <- c(vcmax25 = 60 , g1 = 9)
-pars_calib <- c(vcmax25 = 60)
-pars_up <- c(vcmax25 = 90) #, g1 = 13.5)
-pars_low <- c(vcmax25 = 30) # , g1 = 4.5)
+pars_calib <- c(vcmax25 = 60 , g1 = 9)
+#pars_calib <- c(vcmax25 = 60)
+pars_up <- c(vcmax25 = 70, g1 = 11)
+pars_low <- c(vcmax25 = 50, g1 = 7)
 
 source("photosynthesis_stomatalconductance/setup_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_costphoto.R")
+
+o = 0
 
 myfit <- modFit(f = cost_photo, p = pars_calib, lower = pars_low , upper = pars_up )
 #myfit <- modFit(f = cost_photo, p = pars_calib)
@@ -27,8 +29,9 @@ plot(myfit)
 #gs:
 # 0-0.25 molcm^-2s^-1
 # +-50% is okay
-
-
+#started roughly 13:30 for one wwek
+#done before 17:17
+summary(myfit)
 
 
 ##### First Calibration (1:20)
@@ -45,3 +48,34 @@ plot(myfit)
 #  vcmax25      g1
 #vcmax25  1.0000 -0.9761
 #g1      -0.9761  1.0000
+
+# one week, only vcmax25, including radiation and LAI, calculation time < 4h
+#Parameters:
+#  Estimate Std. Error t value Pr(>|t|)
+#vcmax25  30.0000     0.7671   39.11   <2e-16 ***
+#  ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+#
+#Residual standard error: 0.0005159 on 743 degrees of freedom
+
+#Parameter correlation:
+#  vcmax25
+#vcmax25       1
+
+
+# start: roughly 11:00 ?
+# end  after <24 hours
+
+#Parameters:
+#  Estimate Std. Error t value Pr(>|t|)
+#vcmax25  50.0000     4.0596  12.316   <2e-16 ***
+#  g1        7.0000     0.7319   9.565   <2e-16 ***
+#  ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#Residual standard error: 0.001157 on 742 degrees of freedom
+
+#Parameter correlation:
+#  vcmax25      g1
+#vcmax25  1.0000 -0.9028
+#g1      -0.9028  1.0000
