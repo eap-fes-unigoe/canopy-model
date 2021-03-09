@@ -12,8 +12,9 @@ output <- get_theta_soil(input = input, pars = pars, initial_state = initial_sta
 
 # Run model choosing calibrated parameter file
 
-pars_soil_calib1[2,2] <- 9.85
-pars_soil_calib1[33,2] <- 0.6
+pars_soil_calib1[2,2] <- 10.14
+pars_soil_calib1[33,2] <- 0.5
+pars_soil_calib1[28,2] <- 80
 
 parsfile <- "pars_soil_calib1.csv"
 source("setup_soilmoisture.R")
