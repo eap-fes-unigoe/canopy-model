@@ -79,3 +79,20 @@ summary(myfit)
 #  vcmax25      g1
 #vcmax25  1.0000 -0.9028
 #g1      -0.9028  1.0000
+
+#run on 12.3. ~13:00 - before 13.3. ~8:00
+#over whole month
+
+#Parameters:
+#  Estimate Std. Error t value Pr(>|t|)
+#vcmax25  40.0000     2.7862  14.357   <2e-16 ***
+#  g1        8.0000     0.9337   8.568   <2e-16 ***
+#  ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#Residual standard error: 0.0009061 on 742 degrees of freedom
+
+#Parameter correlation:
+#  vcmax25      g1
+#vcmax25  1.0000 -0.9009
+#g1      -0.9009  1.0000

@@ -69,23 +69,19 @@ for(n in 1:length(input$time)) {
   radiation <- fun_calc_radiative_transfer(met, radiation_state, pars, dt)
   out[n, names(radiation)] <- radiation
 
-  # Calculate soil hydrology
-
-
-  # Calculate soil temperatur
-
-
-  # Calculate leaf temperature,
-
-
   # calculate photosynthesis and stomatal conductance
   # state_last$gbw <- 0.702
   state_last$tleaf <- met$tair # leaftemeperature placeholder
-  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
-  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  #calculating photosynthesis and stomatal conductance for sunlit leaves.
+  ps_sc_sun <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  #calculating photosynthesis and stomatal conductance for shaded leaves
+  ps_sc_sha <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  ##conversion from per leaf area to per ground area by use of LAI
   photosynthesis_stomatalconductance <- ps_sc_sun
   photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
-  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
+  # gs in umol H2o m-2 leaf s-1. no need for conversoin?
+  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
+  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
 
@@ -103,9 +99,42 @@ rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 #write.csv(out, file="testoutput_calib_07_2018.csv")
 
-}
+#}
 
-plot(out$an * (12 / 1000000 / 1000 * 3600),fluxes$gpp, xlim = c(0,0.003),ylim = c(0,0.003))
+# comparing An and gpp
+gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 (ground?) dt-1 to µmol m-2 (ground?) s-1 reversion
+an_kg = out$an * 12 / 1000000 / 1000 * 3600 #µmol m-2 (leaf?) s-1
+gpp_An_comparison = data.frame(An = an_kg , GPP = fluxes$gpp)
+# compare LAI factor with gpp an
+gpp_An_comparison$LAI = out$LAI
+gpp_An_comparison$LAI_sun = out$LAI_sunlit
+gpp_An_comparison$LAI_sha = out$LAI - out$LAI_sunlit
+gpp_An_comparison$div_an_gpp = gpp_An_comparison$GPP/gpp_An_comparison$An
+
+#plot(out$an * (12 / 1000000 / 1000 * 3600),fluxes$gpp, xlim = c(0,0.003),ylim = c(0,0.003))
+plot(out$an)
+plot(out$an)
+plot(gpp_umol)
+plot(fluxes$gpp)
+
+#turning off "e" notations
+options(scipen = 999)
+
+#comüparing radiation values
+rad_compare = data.frame(sim_rad_sha = out$ic_sha, sim_rad_sun = out$ic_sun, apar = apar)
+rad_compare$div = rad_compare$apar/rad_compare$sim_rad_sun
+rad_compare$adj_sun = rad_compare$sim_rad_sun * 4.6
+rad_compare$adj_sha = rad_compare$sim_rad_sha * 4.6
+
+
+#plot gs
+#gs is usually 4 mm s−1 to 20 mm s−1 for water vapor
+# jack pines: 5 - 45 umol m-2 s-1
+plot(out$gs)
+
+#outputs: with 2 as conversion factor: up to 60 an in umol Co2m-2, should be in the are of 10-12, comparison off by a lot
+# 4.6, as found online and is found in PAR.r, the matlab bonan script
+
 
 write.csv(out,file = "test_output_LAI_01_1602")
 

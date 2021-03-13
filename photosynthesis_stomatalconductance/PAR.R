@@ -1,7 +1,8 @@
-PAR = function(pars,met){
+PAR = function(pars,input){
 
 # Solar radiation (W/m2)
-fsds = met$sw_in
+#fsds = met$sw_in
+fsds = input$sw_in #for testing purposes input$sw_in = met$sw_in
 
 rho = 0.057;
 tau = 0.048;
@@ -25,6 +26,8 @@ swincvis = swskyvis * (1 + albsoi);
 
 swflxvis = swincvis * (1 - rho - tau);
 apar = swflxvis * 4.6;
+# 4.6 conversion W m-2 to photon also confirmed by
+#https://www.researchgate.net/post/Can-I-convert-PAR-photo-active-radiation-value-of-micro-mole-M2-S-to-Solar-radiation-in-Watt-m2
 print(c("apar:", apar))
 
 return(apar)
