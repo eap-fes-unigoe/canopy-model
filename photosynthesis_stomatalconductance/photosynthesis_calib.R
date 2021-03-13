@@ -96,3 +96,19 @@ summary(myfit)
 #  vcmax25      g1
 #vcmax25  1.0000 -0.9009
 #g1      -0.9009  1.0000
+
+
+#for one day, (without doing LAI twice)
+#Parameters:
+#  Estimate Std. Error t value            Pr(>|t|)
+#vcmax25  38.4429     2.3026   16.70 <0.0000000000000002 ***
+#  g1        5.7897     0.5405   10.71 <0.0000000000000002 ***
+#  ---
+#  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+#Residual standard error: 3.925 on 742 degrees of freedom
+
+#Parameter correlation:
+#  vcmax25     g1
+#vcmax25   1.000 -0.914
+#g1       -0.914  1.000

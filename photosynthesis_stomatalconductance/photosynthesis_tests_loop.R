@@ -76,12 +76,14 @@ for(n in 1:length(input$time)) {
   ps_sc_sun <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   #calculating photosynthesis and stomatal conductance for shaded leaves
   ps_sc_sha <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
-  ##conversion from per leaf area to per ground area by use of LAI
+  ##conversion from per leaf area to per ground area by use of LAI and the proportion of each
   photosynthesis_stomatalconductance <- ps_sc_sun
-  photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
-  # gs in umol H2o m-2 leaf s-1. no need for conversoin?
-  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
+  photosynthesis_stomatalconductance$an <- ps_sc_sun$an + ps_sc_sha$an
   photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
+  #photosynthesis_stomatalconductance <- ps_sc_sun
+  #photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
+  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
+  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
 
@@ -101,24 +103,35 @@ rm(met, site, state_last, names_Cpools, ipool)
 
 #}
 
+#turning off "e" notations
+options(scipen = 999)
+
 # comparing An and gpp
 gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 (ground?) dt-1 to µmol m-2 (ground?) s-1 reversion
 an_kg = out$an * 12 / 1000000 / 1000 * 3600 #µmol m-2 (leaf?) s-1
-gpp_An_comparison = data.frame(An = an_kg , GPP = fluxes$gpp)
+gpp_An_comparison = data.frame(An_kg = an_kg , GPP_kg = fluxes$gpp)
 # compare LAI factor with gpp an
 gpp_An_comparison$LAI = out$LAI
 gpp_An_comparison$LAI_sun = out$LAI_sunlit
 gpp_An_comparison$LAI_sha = out$LAI - out$LAI_sunlit
 gpp_An_comparison$div_an_gpp = gpp_An_comparison$GPP/gpp_An_comparison$An
-
+gpp_An_comparison$div_an_gpp_10 = gpp_An_comparison$div_an_gpp * 10
+gpp_An_comparison$an_umol = out$an
+gpp_An_comparison$gpp_umol = gpp_umol
+#out$an-gpp_umol
+#an_kg-fluxes$gpp
+#summary(gpp_An_comparison)
 #plot(out$an * (12 / 1000000 / 1000 * 3600),fluxes$gpp, xlim = c(0,0.003),ylim = c(0,0.003))
-plot(out$an)
-plot(out$an)
-plot(gpp_umol)
-plot(fluxes$gpp)
+par(mfrow = c(1,2))
+plot(an_kg,ylim = c(0,0.0015)) #photosyntheis in kg
+plot(fluxes$gpp,ylim = c(0,0.0015)) #gpp in kg
+plot(out$an,ylim = c(0,30)) #photosynthesis in umol
+plot(gpp_umol,ylim = c(0,30)) #gpp in umol
+plot(gpp_An_comparison$div_an_gpp, ylim = c(-1,1))
+plot(gpp_An_comparison$div_an_gpp_10, ylim = c(-10,10))
+mean(gpp_An_comparison$div_an_gpp)
+mean(gpp_An_comparison$div_an_gpp_10)
 
-#turning off "e" notations
-options(scipen = 999)
 
 #comüparing radiation values
 rad_compare = data.frame(sim_rad_sha = out$ic_sha, sim_rad_sun = out$ic_sun, apar = apar)
@@ -128,10 +141,9 @@ rad_compare$adj_sha = rad_compare$sim_rad_sha * 4.6
 
 
 #plot gs
-#gs is usually 4 mm s−1 to 20 mm s−1 for water vapor
-# jack pines: 5 - 45 umol m-2 s-1
-plot(out$gs)
-
+plot(out$gs) # in mol h2o m-2 leaf s-1, base is 0.01
+plot(out$gs, out $an) # in mol h2o m-2 leaf s-1, base is 0.01
+mean(out$gs/out$an) # slope of -5.97 -> similar to simulation
 #outputs: with 2 as conversion factor: up to 60 an in umol Co2m-2, should be in the are of 10-12, comparison off by a lot
 # 4.6, as found online and is found in PAR.r, the matlab bonan script
 

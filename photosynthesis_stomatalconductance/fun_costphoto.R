@@ -7,11 +7,12 @@ cost_photo <- function(pars_calib) {
   # print(c("an",output))
   # multiple to make an comparabale with gpp
   # resid <- output * (12 / 1000000 / 1000 * 3600) - fluxes$gpp
-  resid <- output$an * (12 / 1000000 / 1000 * 3600) - fluxes$gpp
+  resid <- output$an - fluxes$gpp/(12 / 1000000 / 1000 * 3600)
   resid <- resid[!is.na(resid)]
   # print(c("resid",resid))
   o = o + 1
   print(c("another_round", o))
+  print(resid)
   return(resid)
 }
 
