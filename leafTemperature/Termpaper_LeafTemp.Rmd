@@ -1,0 +1,31 @@
+---
+title: "Ecosystem-Atmosphere Processes"
+author: "Chou I, Felix Häffner, Kathina Müssig"
+date: "31st of March 2021"
+output: pdf_document
+toc: yes
+  word_document:
+    toc: yes
+subtitle: "Termpaper 2020/21"
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Packages -------------------------------------------------------------------
+suppressPackageStartupMessages({
+  suppressWarnings({
+    library(dplyr)
+    library(FME)
+  })
+})
+```
+
+## 
+
+
+```{r}
+
+```
+
