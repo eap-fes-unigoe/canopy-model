@@ -150,7 +150,22 @@ radiative_transfer_step_debug <- function(input, state, pars, dt){
     return(data.frame(c(shortwave, longwave, vars)))
 }
 
+#' Adds a white and black background when is night
+night_bg <- function(){
+  list(
+    geom_tile(aes(x= datetime, width = dt, y = (max(radiation) + min(radiation))/2, height = max(radiation) - min(radiation) +50, fill = night), alpha = .1, linetype = 0),
+  scale_fill_manual(name = NULL, values = c("#ececec", "#555555"), labels = c("day", "night"),
+                    guide = guide_legend(override.aes = list(colour = c("#ececec", "#b9b9b9"), alpha = .4))),
+    scale_y_continuous(expand = c(0,0))
+  )
+}
 
+legend_labels <- function(labels, name="", max_width = 10){
+  list(
+  scale_color_hue(labels = str_wrap(labels, max_width), str_wrap(name, max_width)),
+  theme(legend.key.height = unit(40, "pt"))
+  )
+}
 breaks_12hours <- function (limits){
   seq(limits[1], limits[2], by="12 hours")
 }

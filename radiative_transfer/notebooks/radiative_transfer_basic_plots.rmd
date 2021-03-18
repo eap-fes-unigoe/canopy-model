@@ -5,10 +5,6 @@ date: "01/02/21"
 output: html_notebook
 ---
 
-```{r "setup", include=FALSE}
-Sys.setlocale("LC_ALL", "en_US")
-```
-
 ```{r, message = F}
 source('radiative_transfer/notebooks/setup_radiation_test_data.R')
 library(scales)
@@ -28,10 +24,11 @@ days_out <- filter(all_out, datetime > as_date("2018-07-1") & datetime < as_date
 #' Adds a white and black background when is night
 night_bg <- function(){
   list(
-    geom_tile(aes(x= datetime, width = dt, y = (max(radiation) + min(radiation))/2, height = max(radiation) - min(radiation) +30, fill = night), alpha = .05, linetype = 0),
-  scale_fill_manual(name = NULL, values = c("white", "black"), labels = c("day", "night"),
-                    guide = guide_legend(override.aes = list(alpha = .2))),
-  theme_bw())
+    geom_tile(aes(x= datetime, width = dt, y = (max(radiation) + min(radiation))/2, height = max(radiation) - min(radiation) +50, fill = night), alpha = .1, linetype = 0),
+  scale_fill_manual(name = NULL, values = c("#ececec", "#555555"), labels = c("day", "night"),
+                    guide = guide_legend(override.aes = list(colour = c("#ececec", "#b9b9b9"), alpha = .4))),
+    scale_y_continuous(expand = c(0,0))
+  )
 }
 
 legend_labels <- function(labels, name="", max_width = 10){
@@ -57,34 +54,34 @@ we are plotting the four main variables ...
 we can see that....
 
 ```{r}
-time_out %>%
-  gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, factor_key = T) %>%
-  ggplot() +
-  geom_line(aes(x = datetime, y = radiation, color = type)) +
-  night_bg() +
-  legend_labels(c("Incoming sw",  "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
-  labs(title= "Time series shortwave variables", subtitle = "modelled output variables (1-8 Jul)", y = "Shortwave radiation (W m-2)")
+days_out %>%
+        gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, factor_key = T) %>%
+        ggplot() +
+        night_bg() +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        legend_labels(c("Incoming sw", "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
+        labs(title = "Time series shortwave variables", subtitle = "modelled output variables (1-8 Jul)", y = "Shortwave radiation (W m-2)")
 ```
 
 ```{r}
-time_out %>%
+days_out %>%
   gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, factor_key = T) %>%
   ggplot() +
   geom_line(aes(x = datetime, y = radiation, color = type)) +
   night_bg() +
   legend_labels(c("Incoming sw",  "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
-  labs(title= "Time series shortwave variables", subtitle = "modelled output variables (1-8 Jul)", y = "Shortwave radiation (W m-2)")
+  labs(title= "Time series shortwave variables", subtitle = "modeled output variables (1-8 Jul)", y = "Shortwave radiation (W m-2)")
 ```
 
 Shortwave
 =========
 
 ```{r}
-time_out %>%
+days_out %>%
   gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
   ggplot() +
   geom_line(aes(x = datetime, y = radiation, color = type)) +
-  night_bg() +
+        night_bg() +
   labs(title= "Time series longwave variables", subtitle = "modelled output variables", y = "Longwave radiation (w m-2)") +
   legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
 
@@ -200,24 +197,21 @@ Real data
 
 ```{r}
 days_out %>%
-  gather(key = "type", value="radiation", i_up, sw_out, factor_key = T) %>%
-  ggplot() +
-  geom_line(aes(x = datetime, y = radiation, color = type)) +
-  # adding labels and custom background
-  geom_tile(aes(x = datetime, width = 3600, y = (max(radiation) + min(radiation))/2, height = max(radiation) - min(radiation) +10, fill = night), alpha = .05, linetype = 0) +
-        labs(y="Outgoing shortwave radiation (w m-2)", str_wrap("Outgoing shortwave radiation", 10)) +
-  scale_color_hue(labels = c("Modelled", "Observed")) +
-  scale_fill_manual(values = c("white", "black"), labels = c("day", "night")) +
-  theme_bw()
+        gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
+        ggplot() +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        night_bg() +
+        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
 ```
 
 scatter plot
 
 ```{r}
 ggplot(out_plot) +
-  geom_abline(aes(intercept = 0, slope = 1, color = "theory"), key_glyph = "abline") +
+  geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
   geom_point(aes(x = mod_sw_out, y = obs_sw_out)) +
-  geom_smooth(aes(x = mod_sw_out, y = obs_sw_out, color = "regression"), formula = y ~ x, method = 'lm', se = F) +
+  geom_smooth(aes(x = mod_sw_out, y = obs_sw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
   labs(title = "Time series shortwave variables", subtitle = "modelled output variables",
         x = "Modelled emitted sw (W m-2)", y = "Observed emitted sw (W m-2)", colour = "Legend")
 ```

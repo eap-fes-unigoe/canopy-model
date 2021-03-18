@@ -1,0 +1,4 @@
+# Introduction {#intro}
+
+Radiative transfer is the physical phenomenon of energy transfer in the form of electromagnetic radiation. The equations involved in radiative transfer modelling describes atmospheric science and process in a mathematical way of understanding. The topic here describes radiative transfer for plant canopies.
+

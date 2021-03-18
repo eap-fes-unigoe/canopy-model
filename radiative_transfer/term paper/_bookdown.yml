@@ -1,0 +1,5 @@
+book_filename: "Term paper Radiative Transfer - Ecosystem and Atmosphere processes"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: "Section "
