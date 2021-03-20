@@ -80,10 +80,10 @@ for(n in 1:length(input$time)) {
   photosynthesis_stomatalconductance <- ps_sc_sun
   photosynthesis_stomatalconductance$an <- ps_sc_sun$an + ps_sc_sha$an
   photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
+  photosynthesis_stomatalconductance$ci <- ps_sc_sun$ci + ps_sc_sha$ci # this necesarry?
   #photosynthesis_stomatalconductance <- ps_sc_sun
   #photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
   #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
-  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
   out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
 
 
@@ -148,8 +148,7 @@ mean(out$gs/out$an) # slope of -5.97 -> similar to simulation
 # 4.6, as found online and is found in PAR.r, the matlab bonan script
 
 
-write.csv(out,file = "test_output_LAI_01_1602")
-
+write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/test_output_20_03_with_LAI_60_9_bad_values")
 #### Plotmaker ####
 
 Filename <- "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs_General.pdf"

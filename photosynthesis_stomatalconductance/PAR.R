@@ -1,8 +1,9 @@
-PAR = function(pars,input){
+#PAR = function(pars,input){
+PAR = function(pars,sw_in){
 
 # Solar radiation (W/m2)
-#fsds = met$sw_in
-fsds = input$sw_in #for testing purposes input$sw_in = met$sw_in
+fsds = sw_in
+#fsds = input$sw_in #for testing purposes input$sw_in = met$sw_in
 
 rho = 0.057;
 tau = 0.048;

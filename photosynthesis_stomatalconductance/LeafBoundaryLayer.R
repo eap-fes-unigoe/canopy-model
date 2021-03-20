@@ -4,8 +4,6 @@ LeafBoundaryLayer = function(state_last,met,pars) {
 
   fac = 101325 / met$pa * (met$tair / pars$tfrz)^1.81;
 
-  #print(c("vis0",pars$visc0,"fac",fac))
-
   visc = pars$visc0 * fac; # Kinematic viscosity (m2/s)
   Dh = pars$Dh0 * fac;     # Molecular diffusivity, heat (m2/s)
   Dv = pars$Dv0 * fac;     # Molecular diffusivity, H2O (m2/s)

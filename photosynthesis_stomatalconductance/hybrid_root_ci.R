@@ -104,8 +104,13 @@ for (iter in 1:itmax){
 
 }
 
-root = x0;
+root = x0; # x0 is the ci value in this case
 hybrid_root_ci_output = list(flux,root)
+
+#flux$ci = x0 # why does this not work?
+#print(flux$ci)
+#print(flux)
+#return(flux) # is it possible to just return one list?
 
 return(hybrid_root_ci_output)
 

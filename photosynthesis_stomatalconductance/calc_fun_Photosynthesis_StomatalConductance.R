@@ -1,9 +1,12 @@
 calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR){
+#calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR_list){
+# output_flux = list()
+# for(PAR in par_list) {    just an idea
 
 source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
 source("photosynthesis_stomatalconductance/satvap.R")
-# source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R")
-source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R")
+# source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R") # get h2o from group 4
+source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R") # calculate h2o without group 4
 source("photosynthesis_stomatalconductance/PAR.R")
 library("signal")
 library("pracma")
@@ -15,9 +18,22 @@ flux$eair = esat * met$rh; # Vapor pressure (Pa)
 
 # Boundary layer conductance for CO2
 
+# taking h20 conducatnace from heat group 4
+
 # flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
-flux$gbw = LeafBoundaryLayer(state_last,met,pars)[1]
-flux$gbc = LeafBoundaryLayer(state_last,met,pars)[2]
+# flux$gbw = state_last$etflx ??? -> where is it?
+
+# calculating both required conductances without group 4
+
+blfluxes = LeafBoundaryLayer(state_last,met,pars)
+flux$gbw = blfluxes[1]
+flux$gbc = blfluxes[2]
+
+# Photosynthetically active radiation: calculated from input data or taken from radiation group
+
+flux$apar2 = PAR(pars,met$sw_in) # calculating from input data
+#flux$apar2 = PAR(pars,met) # calculating from input data
+flux$apar = PAR # umol photon/m2 leaf/s # accesing from radiation group 3
 
 # entropy terms in dependence of air T
 
@@ -55,12 +71,6 @@ t1 = ft(state_last$tleaf, pars$rdha);
 t2 = fth(state_last$tleaf, pars$rdhd, flux$rdse, flux$rdc);
 flux$rd = pars$rd25 * t1 * t2;
 
-# Photosynthetically active radiation: calcuted from input data or taken from radiation group
-
-#flux$apar = PAR(pars,met)
-#print(c("PAR:",PAR))
-flux$apar = PAR # umol photon/m2 leaf/s
-
 # --- Electron transport rate je for C3 plants
 
 # Solve the polynomial: aquad*Je^2 + bquad*Je + cquad = 0
@@ -74,8 +84,6 @@ pcoeff = c(aquad,bquad,cquad);
 proots = roots(pcoeff);
 proots[1] = as.integer(proots[1])
 flux$je = min(Re(proots[[1]]), Re(proots[[2]]));
-
-#print(c("flux$je:", flux$je))
 
 # --- Ci calculation
 
@@ -94,18 +102,20 @@ flux$esat = satvap ((state_last$tleaf-pars$tfrz));
 # --- calculation of an and gs
 
 flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
+#flux = flux_dummy[1]
+
 flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
-#print(c("ci:",flux$ci))
-#print(c("gs",flux$gs))
+# "par loop idea"  output_flux = output_flux + flux (chagne flux felow this to output_flux)}
+
 
 # --- Make sure iterative solution is correct
 
 if (flux$gs < 0) {
   stop ('LeafPhotosynthesis: negative stomatal conductance')
 }
-# add cs?
-  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc,ci = flux$ci))
+# add cs? #testing, remove PAR later on!
+  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci, par1 = flux$apar, par2 = flux$apar2))
 }
 
