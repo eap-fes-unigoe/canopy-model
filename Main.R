@@ -79,13 +79,13 @@ for(n in 1:length(input$time)) {
   # Calculate soil temperature
 
 
-  # calculate photosynthesis and stomatal conductance#
-  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
-  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
-  photosynthesis_stomatalconductance <- ps_sc_sun
-  photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
-  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
-  out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
+  # calculate photosynthesis an and stomatal conductance gs for sunny and shaded leaves per ground area
+  an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha * 4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  an_gs <- an_gs_sun
+  an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  out[n, names(an_gs)] <- an_gs
 
   # Calculate leaf temperature and latent and sensible heat fluxes
   Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)

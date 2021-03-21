@@ -7,7 +7,7 @@ source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
 source("photosynthesis_stomatalconductance/satvap.R")
 # source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R") # get h2o from group 4
 source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R") # calculate h2o without group 4
-source("photosynthesis_stomatalconductance/PAR.R")
+#source("photosynthesis_stomatalconductance/PAR.R")
 
 # Beginning
 
@@ -100,7 +100,7 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 flux$esat = satvap ((state_last$tleaf-pars$tfrz));
 
-# --- calculation of an and gs
+# --- calculation of an (umol CO2/m2 leaf/s) and gs (mol H2O/m2 leaf/s)
 
 flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
 #flux = flux_dummy[1]
@@ -116,7 +116,7 @@ flux$ci = flux_dummy[[2]];
 if (flux$gs < 0) {
   stop ('LeafPhotosynthesis: negative stomatal conductance')
 }
-# add cs? #testing, remove PAR later on!
+# returning desired values: an, gs, ci, more?
   return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci))
 }
 

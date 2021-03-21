@@ -55,31 +55,17 @@ for(n in 1:length(input$time)) {
   # state_last$gbw <- 0.702
   state_last$tleaf <- met$tair # leaftemeperature placeholder
   #calculating photosynthesis and stomatal conductance for sunlit leaves.
-  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   #calculating photosynthesis and stomatal conductance for shaded leaves
-  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   ##conversion from per leaf area to per ground area by use of LAI and the proportion of each
-  photosynthesis_stomatalconductance <- ps_sc_sun
-  photosynthesis_stomatalconductance$an <- ps_sc_sun$an + ps_sc_sha$an
-  photosynthesis_stomatalconductance$gs <- mean(ps_sc_sun$gs + ps_sc_sha$gs)
-  photosynthesis_stomatalconductance$ci <- ps_sc_sun$ci + ps_sc_sha$ci # this necesarry?
-  #photosynthesis_stomatalconductance <- ps_sc_sun
-  #photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
-  #photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs * out[n,]$LAI_sunlit + ps_sc_sha$gs * out[n,]$LAI-out[n,]$LAI_sunlit
-  out[n, names(photosynthesis_stomatalconductance)] <- photosynthesis_stomatalconductance
+  an_gs <- an_gs_sun
+  an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  out[n, names(an_gs)] <- an_gs
 
-
-
-  # Calculate plant C pools, soil decomposition and soil C pools
-#  Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
-#  for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
-
-  # update progress bar
-  pb$tick()
-
+  pb$tick() # update progress bar
 }
-
-rm(met, site, state_last, names_Cpools, ipool)
 # Write out output
 #write.csv(out, file="testoutput_calib_07_2018.csv")
 
@@ -105,14 +91,16 @@ gpp_An_comparison$gpp_umol = gpp_umol
 #summary(gpp_An_comparison)
 #plot(out$an * (12 / 1000000 / 1000 * 3600),fluxes$gpp, xlim = c(0,0.003),ylim = c(0,0.003))
 par(mfrow = c(1,2))
-plot(an_kg,ylim = c(0,0.0015)) #photosyntheis in kg
-plot(fluxes$gpp,ylim = c(0,0.0015)) #gpp in kg
-plot(out$an,ylim = c(0,30)) #photosynthesis in umol
-plot(gpp_umol,ylim = c(0,30)) #gpp in umol
+plot(an_kg, ylab = "an kg CO2/m2 ground/d",ylim = c(0,0.003)) #photosyntheis in kg
+plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/d",ylim = c(0,0.003)) #gpp in kg
+plot(out$an, ylab = "an umol CO2/m2 ground/s")#,ylim = c(0,30)) #photosynthesis in umol
+plot(gpp_umol,ylab = "GPP umol CO2/m2 ground/s") #gpp in umol
 plot(gpp_An_comparison$div_an_gpp, ylim = c(-1,1))
 plot(gpp_An_comparison$div_an_gpp_10, ylim = c(-10,10))
 mean(gpp_An_comparison$div_an_gpp)
 mean(gpp_An_comparison$div_an_gpp_10)
+plot(an_kg,fluxes$gpp)
+plot(out$an, gpp_umol)
 
 
 #comüparing radiation values
@@ -123,12 +111,19 @@ rad_compare$adj_sha = rad_compare$sim_rad_sha * 4.6
 
 
 #plot gs
-plot(out$gs) # in mol h2o m-2 leaf s-1, base is 0.01
-plot(out$gs, out $an) # in mol h2o m-2 leaf s-1, base is 0.01
-mean(out$an/out$gs) # slope of -5.97 -> similar to simulation
+plot(out$gs/5, ylab = "gs mol h2o m-2 leaf s-1") # in mol h2o m-2 leaf s-1, base is 0.01
+plot(out$gs, ylab = "gs mol h2o m-2 ground s-1") # in mol h2o m-2 ground s-1, base is 0.01
+plot(out$gs/5, out $an) # in mol h2o m-2 leaf s-1, base is 0.01
+plot(out$gs, out $an) # in mol h2o m-2 ground s-1, base is 0.01
+mean(out$an/(5)/(out$gs/5)) # slope of -5.97 -> similar to simulation
+gs_without_0 <- out$gs[!out$gs < 0.1]
+plot(gs_without_0)
+an_wihtout_0 = out$an[!out$an < 0]
+plot(an_wihtout_0)
+plot(gs_without_0,an_wihtout_0)
 #outputs: with 2 as conversion factor: up to 60 an in umol Co2m-2, should be in the are of 10-12, comparison off by a lot
 # 4.6, as found online and is found in PAR.r, the matlab bonan script
-
+out$an/out$gs
 
 write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/test_output_20_03_with_LAI_60_9_bad_values")
 #### Plotmaker ####
