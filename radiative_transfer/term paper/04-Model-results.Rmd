@@ -47,97 +47,60 @@ $I^\downarrow = I^\uparrow + \overrightarrow{I}_{c} + \overrightarrow{I}_{g}$
 
 #### One week {-}
 
-In the one week view the daily cycle can be clearly seen.
-```{r, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+In figure \@ref(fig:sw-1wk) the model output for the shortwave is plotted for one week during the summer.
+The daily cycle can be clearly seen, with all variables having a peak at noon and reach the value of 0 during the night.
+The total incoming radiation changes depending on the day, mainly due to cloud cover, and the absorbed shortwave follow its pattern.
+```{r sw-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
 out_1week %>%
         gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, factor_key = T) %>%
         ggplot() +
         night_bg() +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
         legend_labels(c("Incoming sw", "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
-        labs(x = "Datetime", y = "Shortwave radiation (W m-2)")
+        labs(x = "Datetime", y = "Shortwave radiation (W m-2)", title = "Shortwave one week", subtitle = "Modeled output variables (1-8 Jul 2018)")
 ```
 #### One year {-}
 
-```{r, echo = F, fig.cap = "Shortwave one year. Modeled output variables, weekly average 2018."}
-lai_breaks <- c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28")
+Then the shortwave over one year is analyzed \@ref(fig:sw-1y), after aggregating over one week.
+There is a yearly cycle in the incoming shortwave radiation with a significant difference,
+as the averages goes from more than 300 $W m^2$ to almost 10 $W m^2$ (this is the week average so takes into account also the night when there is 0 sw radiation).
+During the winter the LAI it is estimated at`1`, as even if there are no leaves the branches still absorbs light.
+
+The absorbed by the soil depends on the amount of LAI, in fact during the spring when the radiation is high but there are no leaves yet its values increase constantly.
+As soon as leaves starts to come out the shortwave absorbed by the soil decreases to reach a stable low value during the summer and eventually increase again when leaves fall.
+
+The radiation reflected by the canopy doesn't have a big change over the year and overall canopy albedo remains for the all year between `0.16` and `0.20`.
+Finally, the radiation absorbed the canopy follows, as expected, the pattern in the incoming radiation. During the spring its value are really similar to the shortwave absorbed by the soil, however this is only a coincidence in this setting.
+```{r sw-1y, echo = F, fig.cap = "Shortwave one year. Modeled output variables, weekly average 2018. Vertical balck lines are the moment when there is change in LAI"}
+lai_breaks <- as_datetime(c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28"))
+lai_breaks_lbl <- c("leaf out", "leaf complete", "leaf fall", "leaf fall complete")
+pos <- function (x) {x+10}
 out_1year_wk %>%
-        gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, i_down, factor_key = T) %>%
+        gather(key = "type", value = "radiation", , sw_in, ic, i_up, ig, factor_key = T) %>%
         ggplot() +
-        geom_vline(xintercept = as_datetime(lai_breaks), linetype=2, alpha = .8, size=.4) +
+        geom_vline(xintercept = lai_breaks, linetype=2, alpha = .8, size=.4) +
+        annotate('label', x=lai_breaks, y=c(315, 315, 315, 290), label = lai_breaks_lbl) + #make the last lable lower to avoid overlap
         geom_line(aes(x = datetime, y = radiation, color = type)) +
         legend_labels(c("Incoming sw", "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)")
+        labs(x= "Datetime", y = "Shortwave radiation (W m-2)", title="Shortwave one year", subtitle = "Modeled output variables, weekly average 2018")
 ```
-```{r}
-library(patchwork)
-lai_breaks <- c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28")
-p1 <- out_all %>%
-        filter(datetime > as_datetime("2018-04-01") & datetime < as_datetime("2018-04-15")) %>%
-        gather(key = "type", value = "radiation", ic, ig, i_down, factor_key = T) %>%
-        ggplot() +
-        geom_vline(xintercept = as_datetime(lai_breaks), linetype=2, alpha = .8, size=.4) +
-        geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)")
 
-p2 <- out_all %>%
-        filter(datetime > as_datetime("2018-04-01") & datetime < as_datetime("2018-04-15")) %>%
-        gather(key = "type", value = "radiation", , sw_in, sw_dif, factor_key = T) %>%
-        ggplot() +
-        geom_vline(xintercept = as_datetime(lai_breaks), linetype=2, alpha = .8, size=.4) +
-        geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)")
-
-p1/p2
-```
-```{r}
-library(patchwork)
-lai_breaks <- c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28")
-p1 <- out_all %>%
-        filter(datetime > as_datetime("2018-04-01") & datetime < as_datetime("2018-04-15")) %>%
-        ggplot() +
-        geom_vline(xintercept = as_datetime(lai_breaks), linetype=2, alpha = .8, size=.4) +
-        geom_line(aes(x = datetime, y = i_down/sw_in)) +
-        lims(y=c(0,1)) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)")
-
-p2 <- out_all %>%
-        filter(datetime > as_datetime("2018-04-01") & datetime < as_datetime("2018-04-15")) %>%
-        gather(key = "type", value = "radiation", sw_dif, factor_key = T) %>%
-        ggplot() +
-        geom_vline(xintercept = as_datetime(lai_breaks), linetype=2, alpha = .8, size=.4) +
-        geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)")
-
-p1/p2
-```
-```{r}
-out_1year_wk %>%
-transmute(datetime=datetime, canopy_albedo = i_up / sw_in) %>%
-ggplot() +
-geom_line(aes(x=datetime, y=canopy_albedo))
-```
-```{r}
-out_1year_wk %>%
-transmute(datetime=datetime, canopy_albedo = i_down / sw_in) %>%
-ggplot() +
-geom_line(aes(x=datetime, y=canopy_albedo))
-```
 ### Longwave
 
-The shown shortwave variables are:
+The shown longwave variables are:
 
- - Incoming sw (measured) $I^\downarrow$
- - Absorbed sw by canopy $I^\uparrow$
- - Upward sw reflected by the canopy $\overrightarrow{I}_{c}$
- - Absorbed sw soil $\overrightarrow{I}_{g}$
+ - Incoming lw (measured) $L^\downarrow$
+ - Absorbed lw by canopy $L^\uparrow$
+ - Upward lw emitted by the canopy $\overrightarrow{L}_{c}$
+ - Absorbed lw soil $\overrightarrow{L}_{g}$
 
 Due to radiative balance those variables are in the following relationship:
 
-$I^\downarrow = I^\uparrow + \overrightarrow{I}_{c} + \overrightarrow{I}_{g}$
+$L^\downarrow = L^\uparrow + \overrightarrow{L}_{c} + \overrightarrow{L}_{g}$
 
 #### One week {-}
 
+Compared to shortwave
 ```{r, echo = F}
 out_1week %>%
   gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
