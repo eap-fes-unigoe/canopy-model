@@ -1,11 +1,10 @@
-# clear environment
-rm(list=ls())
+# photosynthesis and stomatal conductance calibration script
 
-# Soil moisture calib
-library(FME)
+rm(list=ls()) # clear environment
 
+library(FME) # load requirded FME package
 
-#pars_calib <- c(theta.sat = 0.482, ra = 10)
+# setting parameters to be calibrated with upper and lower limits
 pars_calib <- c(vcmax25 = 60 , g1 = 9)
 #pars_calib <- c(vcmax25 = 60)
 pars_up <- c(vcmax25 = 80, g1 = 10)
@@ -15,7 +14,6 @@ source("photosynthesis_stomatalconductance/setup_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_costphoto.R")
 
-o = 0
 
 myfit <- modFit(f = cost_photo, p = pars_calib, lower = pars_low , upper = pars_up )
 #myfit <- modFit(f = cost_photo, p = pars_calib)

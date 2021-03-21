@@ -1,7 +1,7 @@
 calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR){
 #calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR_list){
 # output_flux = list()
-# for(PAR in par_list) {    just an idea
+# for(PAR in par_list) {    just an idea to
 
 source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
 source("photosynthesis_stomatalconductance/satvap.R")
@@ -31,9 +31,12 @@ flux$gbc = blfluxes[2]
 
 # Photosynthetically active radiation: calculated from input data or taken from radiation group
 
-flux$apar2 = PAR(pars,met$sw_in) # calculating from input data
+#flux$apar2 = PAR(pars,met$sw_in) # calculating from input data
 #flux$apar2 = PAR(pars,met) # calculating from input data
+# print(c("par2:",flux$apar2))
+#
 flux$apar = PAR # umol photon/m2 leaf/s # accesing from radiation group 3
+# print(c("par1:",flux$apar))
 
 # entropy terms in dependence of air T
 
@@ -108,7 +111,7 @@ flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
 # "par loop idea"  output_flux = output_flux + flux (chagne flux felow this to output_flux)}
-
+# afterwards: sum results of sunny and shaded. (take mean for gs? hmm)
 
 # --- Make sure iterative solution is correct
 
@@ -116,6 +119,6 @@ if (flux$gs < 0) {
   stop ('LeafPhotosynthesis: negative stomatal conductance')
 }
 # add cs? #testing, remove PAR later on!
-  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci, par1 = flux$apar, par2 = flux$apar2))
+  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci))
 }
 
