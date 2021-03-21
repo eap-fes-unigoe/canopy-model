@@ -1,8 +1,5 @@
 CiFunc = function(met,state_last,pars,flux, ci_val){
 
-#library("signal")
-#library("pracma")
-
 # --- Metabolic (demand-based) photosynthetic rate
 
 # C3: Rubisco-limited photosynthesis

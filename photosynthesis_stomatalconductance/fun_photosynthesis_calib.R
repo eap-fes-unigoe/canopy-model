@@ -6,8 +6,8 @@ pars$vcmax25 = pars_calib[1]
 pars$g1 = pars_calib[2]
 
 ## Calibration run (for loop) ----
-#for(n in 1:length(input$time)) {
-for(n in 1:24) {
+for(n in 1:length(input$time)) {
+#for(n in 1:24) {
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
   #site <- fluxes[n,]
@@ -26,7 +26,6 @@ for(n in 1:24) {
   an_gs <- an_gs_sun
   an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
   an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
-  # an_gs <- an_gs_sun * out[n,]$LAI_sunlit + an_gs_sha * (out[n,]$LAI - out[n,]$LAI_sunlit)
   out[n, names(an_gs)] <- an_gs
 }
 

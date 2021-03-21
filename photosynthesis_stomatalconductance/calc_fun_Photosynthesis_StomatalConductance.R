@@ -16,8 +16,7 @@ flux$eair = esat * met$rh; # Vapor pressure (Pa)
 
 # Boundary layer conductance for CO2
 
-# taking h20 conducatnace from heat group 4
-
+# taking h20 conductance from leaf temperature group
 # flux$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
 # flux$gbw = state_last$etflx ??? -> where is it?
 
@@ -27,14 +26,8 @@ blfluxes = LeafBoundaryLayer(state_last,met,pars)
 flux$gbw = blfluxes[1]
 flux$gbc = blfluxes[2]
 
-# Photosynthetically active radiation: calculated from input data or taken from radiation group
-
-#flux$apar2 = PAR(pars,met$sw_in) # calculating from input data
-#flux$apar2 = PAR(pars,met) # calculating from input data
-# print(c("par2:",flux$apar2))
-#
-flux$apar = PAR # umol photon/m2 leaf/s # accesing from radiation group 3
-# print(c("par1:",flux$apar))
+# Photosynthetically active radiation from radiation group
+flux$apar = PAR # umol photon/m2 leaf/s
 
 # entropy terms in dependence of air T
 
@@ -100,21 +93,18 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 flux$esat = satvap ((state_last$tleaf-pars$tfrz));
 
-#esat = satvap ((state_last$tleaf-pars$tfrz));
-#flux$vpd = max(esat - flux$hs*esat, 0.1);
-
 # --- calculation of an (umol CO2/m2 leaf/s) and gs (mol H2O/m2 leaf/s)
 
 flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
-#flux = flux_dummy[1]
-
 flux = flux_dummy[[1]]
 flux$ci = flux_dummy[[2]];
 
 # "par loop idea"  output_flux = output_flux + flux (chagne flux felow this to output_flux)}
 # afterwards: sum results of sunny and shaded. (take mean for gs? hmm)
 
-flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
+#esat = satvap ((state_last$tleaf-pars$tfrz));
+#flux$vpd = max(esat - flux$hs*esat, 0.1);
+#flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
 
 # --- Make sure iterative solution is correct
 
