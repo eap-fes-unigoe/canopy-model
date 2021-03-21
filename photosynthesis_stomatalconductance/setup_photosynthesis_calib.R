@@ -10,7 +10,6 @@ source("setup_parameters.R")
 source("setup_sitedata.R")
 
 ## Load functions ----
-#source("fun_calc_Cpools.R")
 source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 

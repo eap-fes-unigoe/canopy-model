@@ -100,6 +100,9 @@ tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
 flux$esat = satvap ((state_last$tleaf-pars$tfrz));
 
+#esat = satvap ((state_last$tleaf-pars$tfrz));
+#flux$vpd = max(esat - flux$hs*esat, 0.1);
+
 # --- calculation of an (umol CO2/m2 leaf/s) and gs (mol H2O/m2 leaf/s)
 
 flux_dummy = hybrid_root_ci (met,state_last,pars,flux,ci0, ci1,tol);
@@ -111,12 +114,15 @@ flux$ci = flux_dummy[[2]];
 # "par loop idea"  output_flux = output_flux + flux (chagne flux felow this to output_flux)}
 # afterwards: sum results of sunny and shaded. (take mean for gs? hmm)
 
+flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
+
 # --- Make sure iterative solution is correct
 
 if (flux$gs < 0) {
   stop ('LeafPhotosynthesis: negative stomatal conductance')
 }
-# returning desired values: an, gs, ci, more?
-  return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci))
+# returning desired values: an, gs, ci, more? flux$cs!! return whole flux for now!
+  return(flux)
+  #return(data.frame(an = flux$an, gs = flux$gs, gbc = flux$gbc, ci = flux$ci))
 }
 

@@ -13,7 +13,6 @@ source("setup_parameters.R")
 source("setup_sitedata.R")
 
 ## Load functions ----
-source("fun_calc_Cpools.R")
 source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
 
@@ -28,7 +27,6 @@ initial_state <- read.csv("initial_state.csv")
 out <- initial_state
 
 # Source setup scripts for different model components
-#source("setup_Cpools.R")
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
 
 # Setup progress bar
@@ -59,11 +57,11 @@ for(n in 1:length(input$time)) {
   #calculating photosynthesis and stomatal conductance for shaded leaves
   an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   ##conversion from per leaf area to per ground area by use of LAI and the proportion of each
-  an_gs <- an_gs_sun
-  an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
-  an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  #an_gs <- an_gs_sun
+  #an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  #an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  an_gs <- an_gs_sun * out[n,]$LAI_sunlit + an_gs_sha * (out[n,]$LAI - out[n,]$LAI_sunlit)
   out[n, names(an_gs)] <- an_gs
-
   pb$tick() # update progress bar
 }
 # Write out output
@@ -113,8 +111,8 @@ rad_compare$adj_sha = rad_compare$sim_rad_sha * 4.6
 #plot gs
 plot(out$gs/5, ylab = "gs mol h2o m-2 leaf s-1") # in mol h2o m-2 leaf s-1, base is 0.01
 plot(out$gs, ylab = "gs mol h2o m-2 ground s-1") # in mol h2o m-2 ground s-1, base is 0.01
-plot(out$gs/5, out $an) # in mol h2o m-2 leaf s-1, base is 0.01
-plot(out$gs, out $an) # in mol h2o m-2 ground s-1, base is 0.01
+plot(out$gs/5, out$an) # in mol h2o m-2 leaf s-1, base is 0.01
+plot(out$gs, out$an) # in mol h2o m-2 ground s-1, base is 0.01
 mean(out$an/(5)/(out$gs/5)) # slope of -5.97 -> similar to simulation
 gs_without_0 <- out$gs[!out$gs < 0.1]
 plot(gs_without_0)

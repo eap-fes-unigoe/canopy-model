@@ -4,7 +4,7 @@ cost_photo <- function(pars_calib) {
   resid <- resid[!is.na(resid)] # removal of NAs of the residuals
 
   # testing for g1 residuals?
-  #resid <- output$an/output$gs - pars_calib$g1 does this make sense?
+  #resid <- output$an/output$gs - pars_calib$g1 does this make sense? no, the formula is more comples than that
   #resid <- resid[!is.na(resid)] # removal of NAs of the residuals
 
   print(Sys.time())
