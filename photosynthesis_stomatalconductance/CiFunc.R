@@ -1,7 +1,7 @@
 CiFunc = function(met,state_last,pars,flux, ci_val){
 
-library("signal")
-library("pracma")
+#library("signal")
+#library("pracma")
 
 # --- Metabolic (demand-based) photosynthetic rate
 
@@ -63,7 +63,6 @@ if (flux$an > 0){
 } else {
   flux$gs = pars$g0;
 }
-
 # --- Diffusion (supply-based) photosynthetic rate
 
 # Leaf CO2 conductance (mol CO2/m2/s)

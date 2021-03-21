@@ -1,28 +1,10 @@
-### Main
-
-## This is the main script
-## It runs all steps to carry out the simulation. This includes:
-## 1. Loading packages, required functions, parameters, input data and initial state.
-## 2. Initial calculations and definition of variables
-## 3. Running a for loop that calculates fluxes and stocks over the simulation time
-## 4. Writing out model output
-#testfun_photosynthesis = function()
-
-# photosynthesis_tests_loop <- function(met,state_last,pars,ps_sc) {
-
+### Photosynthesis testing loop
 
 ##
 rm(list=ls())
 
-## Required packages
-
 # Setting some time unit variables in unit seconds
-t_units <- list(hour  = 3600,
-                halfh = 1800,
-                day   = 86400,
-                month = 2592000,
-                year  = 31536000)
-dt <- t_units$hour # delta time: model time step
+dt <- 3600 # delta time: model time step
 
 ## Load parameters and adjust units ----
 source("setup_parameters.R")
@@ -73,13 +55,13 @@ for(n in 1:length(input$time)) {
   # state_last$gbw <- 0.702
   state_last$tleaf <- met$tair # leaftemeperature placeholder
   #calculating photosynthesis and stomatal conductance for sunlit leaves.
-  ps_sc_sun <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  ps_sc_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   #calculating photosynthesis and stomatal conductance for shaded leaves
-  ps_sc_sha <- suppressWarnings(calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6)) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
+  ps_sc_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s ?
   ##conversion from per leaf area to per ground area by use of LAI and the proportion of each
   photosynthesis_stomatalconductance <- ps_sc_sun
   photosynthesis_stomatalconductance$an <- ps_sc_sun$an + ps_sc_sha$an
-  photosynthesis_stomatalconductance$gs <- ps_sc_sun$gs + ps_sc_sha$gs
+  photosynthesis_stomatalconductance$gs <- mean(ps_sc_sun$gs + ps_sc_sha$gs)
   photosynthesis_stomatalconductance$ci <- ps_sc_sun$ci + ps_sc_sha$ci # this necesarry?
   #photosynthesis_stomatalconductance <- ps_sc_sun
   #photosynthesis_stomatalconductance$an <- ps_sc_sun$an * out[n,]$LAI_sunlit + ps_sc_sha$an * out[n,]$LAI-out[n,]$LAI_sunlit
@@ -143,7 +125,7 @@ rad_compare$adj_sha = rad_compare$sim_rad_sha * 4.6
 #plot gs
 plot(out$gs) # in mol h2o m-2 leaf s-1, base is 0.01
 plot(out$gs, out $an) # in mol h2o m-2 leaf s-1, base is 0.01
-mean(out$gs/out$an) # slope of -5.97 -> similar to simulation
+mean(out$an/out$gs) # slope of -5.97 -> similar to simulation
 #outputs: with 2 as conversion factor: up to 60 an in umol Co2m-2, should be in the are of 10-12, comparison off by a lot
 # 4.6, as found online and is found in PAR.r, the matlab bonan script
 
