@@ -10,7 +10,6 @@ for(n in 1:length(input$time)) {
 #for(n in 1:24) {
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
-  #site <- fluxes[n,]
 
   # Calculate radiative transfer
 
@@ -29,6 +28,6 @@ for(n in 1:length(input$time)) {
   out[n, names(an_gs)] <- an_gs
 }
 
-rm(met, site, state_last, names_Cpools, ipool)
+rm(met, state_last)
  return(out)
 }
