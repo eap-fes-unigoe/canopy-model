@@ -3,8 +3,12 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Radiative trasfer Term paper</a></li>
+        <li><a href="./">Radiative transfer - Term paper</a></li>
     download: ["pdf", "epub"]
+    sharing:
+      facebook: no
+      twitter: no
+      all: no
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex

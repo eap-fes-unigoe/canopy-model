@@ -65,7 +65,7 @@ fun_calc_radiative_transfer <- function(input, state, pars, dt){
     radiation_PAI <- max(LAI, pars$min_radiation_PAI) # During winter the are no leaves but there are still branches that interact with light
     avg_datetime <- input$datetime - duration(dt/2) # calculating the zenith at the mid of the interval
     zenith <- get_zenith(avg_datetime, pars$lat, pars$lon)
-    Kb <- get_Kb(zenith, max_Kb = 1000) # 1000 is an arbitraty high number
+    Kb <- get_Kb(zenith, max_Kb = 1000) # 1000 is an arbitrary high number
     Kd <- get_Kd(LAI)
     omega_leaf <- pars$rho_leaf + pars$tau_leaf
     beta <- get_beta(pars$rho_leaf, pars$tau_leaf)

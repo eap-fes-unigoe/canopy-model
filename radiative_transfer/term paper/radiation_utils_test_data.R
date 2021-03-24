@@ -1,13 +1,14 @@
 # setup input and fluxes for 2016 (because in 2018 lw is NA)
 library(tidyverse)
 library(progress)
+library(scales)
 dt <- 3600
 source("setup_parameters.R")
 
 source("fun_calc_radiative_transfer.R")
 
-input <- read.csv(file.path('data','Hainich_2018_input.csv'))
-fluxes <- read.csv(file.path('data','Hainich_2018_fluxes.csv'))
+input <- read.csv(file.path('data', 'Hainich_2018_input.csv'))
+fluxes <- read.csv(file.path('data', 'Hainich_2018_fluxes.csv'))
 
 # Initial variable selection, renaming and conversion
 input <- input %>% mutate(
@@ -151,12 +152,12 @@ radiative_transfer_step_debug <- function(input, state, pars, dt){
 }
 
 #' Adds a white and black background when is night
-night_bg <- function(){
+#' data should be a dataframe with datetime and the night column without repetitions (eg. not in tidy format)
+ night_bg <- function(data, y_mean=0){
   list(
-    geom_tile(aes(x= datetime, width = dt, y = (max(radiation) + min(radiation))/2, height = max(radiation) - min(radiation) +50, fill = night), alpha = .1, linetype = 0),
-  scale_fill_manual(name = NULL, values = c("#ececec", "#555555"), labels = c("day", "night"),
-                    guide = guide_legend(override.aes = list(colour = c("#ececec", "#b9b9b9"), alpha = .4))),
-    scale_y_continuous(expand = c(0,0))
+    geom_tile(aes(x= datetime, width = dt, y = y_mean, height = Inf, fill = night), alpha = .4, linetype = 0, data=data),
+    scale_fill_manual(name = NULL, values = c("#ececec", "#555555"), labels = c("day", "night"),
+                    guide = guide_legend(override.aes = list(colour = c("#ececec", "#b9b9b9"), alpha = .4)))
   )
 }
 
@@ -166,10 +167,10 @@ legend_labels <- function(labels, name="", max_width = 10){
   theme(legend.key.height = unit(40, "pt"))
   )
 }
-breaks_12hours <- function (limits){
-  seq(limits[1], limits[2], by="12 hours")
-}
-
-labels_12hours <- function (limits){
-  format(breaks_12hours(limits), "%d %b %Ih")
-}
+# breaks_12hours <- function (limits){
+#   seq(limits[1], limits[2], by="12 hours")
+# }
+#
+# labels_12hours <- function (limits){
+#   format(breaks_12hours(limits), "%d %b %Ih")
+# }

@@ -1,0 +1,35 @@
+# Attachements
+
+Here all the source code is collected. It is also available on [github](https://github.com/eap-fes-unigoe/canopy-model/)
+
+## Model code
+
+### Model entry point
+```{r model-entry, code=xfun::read_utf8('../../fun_calc_radiative_transfer.R')}
+```
+
+### Parameter calculation
+```{r calc-par, code=xfun::read_utf8('../calc_parameters.R')}
+```
+### Shortwave
+```{r model-sw, code=xfun::read_utf8('../shortwave.R')}
+```
+### Longwave
+
+```{r model-lw, code=xfun::read_utf8('../longwave.R')}
+```
+
+## Report code
+
+### Setup
+```{r utils, code=xfun::read_utf8('radiation_utils_test_data.R')}
+```
+
+### Notebooks
+```{r get-labels, echo = FALSE}
+labs = knitr::all_labels()
+labs = setdiff(labs, c("setup", "get-labels", "model-entry", "calc-par", "model-sw", "model-lw", "utils"))
+```
+```{r all-code, ref.label=labs, eval=FALSE}
+```
+

@@ -4,9 +4,10 @@
 ```{r, include=FALSE}
 suppressPackageStartupMessages({
   suppressWarnings({
-   source('radiative_transfer/notebooks/setup_radiation_test_data.R')
-   library(scales)
+   source('radiative_transfer/term paper/radiation_utils_test_data.R')
+   # library(scales)
     library(tsibble)
+    library(hydroGOF)
   })
 })
 ```
@@ -54,7 +55,7 @@ The total incoming radiation changes depending on the day, mainly due to cloud c
 out_1week %>%
         gather(key = "type", value = "radiation", sw_in, ic, i_up, ig, factor_key = T) %>%
         ggplot() +
-        night_bg() +
+        night_bg(out_1week) +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
         legend_labels(c("Incoming sw", "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
         labs(x = "Datetime", y = "Shortwave radiation (W m-2)", title = "Shortwave one week", subtitle = "Modeled output variables (1-8 Jul 2018)")
@@ -100,20 +101,27 @@ $L^\downarrow = L^\uparrow + \overrightarrow{L}_{c} + \overrightarrow{L}_{g}$
 
 #### One week {-}
 
-Compared to shortwave
-```{r, echo = F}
+Longwave radiation have a daily cycles, but the variation is much smaller compared to shortwave \@ref(fig:lw-1wk).
+The canopy is emitting more longwave radiation than the one that is receiving from the sky, hence the absorbed radiation from the canopy is negative.
+The incoming shortwave radiation depends on the weather, with cloudy skies resulting in higher level of incoming radiation as it can be seen on the 5-6 of July. The difference can be quite important with an increse of about 30% in radiation levels.
+The upward longwave radiation, instead, depends on the temperature of the canopy and the soil, which is influenced by heat fluxes and shortwave radiation. Therefore the incoming and outgoing radiation doesn't change together and the radiative balance changes, reaching almost zero in the morning of the 6th of July
+
+Need to talk about the different behaviour in soil/canopy trends
+
+```{r lw-1wk, echo = F, fig.cap = ""}
 out_1week %>%
-  gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
-  ggplot() +
-  geom_hline(yintercept = 0, linetype=2) +
-  geom_line(aes(x = datetime, y = radiation, color = type)) +
-        night_bg() +
-  labs(x="Datetime", y = "Longwave radiation (w m-2)") +
-  legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
+        gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
+        ggplot() +
+        geom_hline(yintercept = 0, linetype = 2) +
+        night_bg(out_1week) +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(x = "Datetime", y = "Longwave radiation (w m-2)") +
+        legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
 ```
-``
+
 
 #### One year {-}
+During the year there longwave radiation has a cycle with higher values in the summer than in the winter. However the different in limited.
 
 ```{r, echo = F}
 out_1year_wk %>%
@@ -126,3 +134,108 @@ out_1year_wk %>%
 ```
 
 ## Model Evaluation
+
+The model results
+
+### Shortwave
+
+#### Time series {-}
+##### One Week {-}
+
+The model has an overall good agreement between the modeled outgoing sw and the measured one
+
+The non-zero values at night are problem of the sensor not the model
+```{r swout-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+out_1week %>%
+        gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
+        ggplot() +
+        night_bg(out_1week) +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
+```
+##### One Year {-}
+Problem in estimating the LAI during the spring/fall the model is less accurate
+```{r swout-1yr, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+out_1year_wk %>%
+        gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
+        ggplot() +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
+```
+
+#### Quantitative evaluation {-}
+
+```{r, echo = F}
+sw_lm <- lm(obs_sw_out ~ mod_sw_out, data = out_plot)
+sw_r2 <- round(summary(sw_lm)$r.squared, 2)
+sw_slope <- round(coef(sw_lm)[2], 2)
+sw_intercept <- round(coef(sw_lm)[1], 2)
+sw_rmse <- sqrt(mean((out_plot$obs_sw_out - out_plot$mod_sw_out)^2))
+sw_nse <- NSE(out_plot$mod_sw_out, out_plot$obs_sw_out) # Nash-Sutcliffe Efficiency
+```
+```{r sw-scat, echo = F}
+ggplot(out_plot) +
+  geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
+  geom_point(aes(x = mod_sw_out, y = obs_sw_out)) +
+  geom_smooth(aes(x = mod_sw_out, y = obs_sw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
+  labs(title = "Outgoing sw modeled vs observed",
+       subtitle = paste(c("slope: ", sw_slope, " intercept: ", sw_intercept, " r2: ", sw_r2, " . Data from 2018."), collapse = ""),
+       x = "Modelled outgoing sw (W m-2)", y = "Observed outgoing sw (W m-2)", colour = "Legend")
+```
+
+
+### Longwave
+
+#### Time series {-}
+##### One Week {-}
+
+The model has an overall good agreement between the modeled outgoing lw and the measured one
+
+The non-zero values at night are problem of the sensor not the model
+```{r lwout-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+out_1week %>%
+        gather(key = "type", value = "radiation", l_up, lw_out, factor_key = T) %>%
+        ggplot() +
+        night_bg(out_1week, y_mean = 400) +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
+```
+##### One Year {-}
+Problem in estimating the LAI during the spring/fall the model is less accurate
+```{r lwout-1yr, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+out_1year_wk %>%
+        gather(key = "type", value = "radiation", l_up, lw_out, factor_key = T) %>%
+        ggplot() +
+        geom_line(aes(x = datetime, y = radiation, color = type)) +
+        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
+```
+
+#### Quantitative evaluation {-}
+
+```{r, echo = F}
+lw_lm <- lm(obs_lw_out ~ mod_lw_out, data = out_plot)
+lw_r2 <- round(summary(lw_lm)$r.squared, 2)
+lw_slope <- round(coef(lw_lm)[2], 2)
+lw_intercept <- round(coef(lw_lm)[1], 2)
+
+lw_rmse <- round(sqrt(mean((out_plot$obs_lw_out - out_plot$mod_lw_out)^2)), 2)
+lw_nse <- round(NSE(out_plot$mod_lw_out, out_plot$obs_lw_out), 2)# Nash-Sutcliffe Efficiency
+```
+Linear model
+`r lw_slope`
+
+```{r lw-scat, echo = F}
+ggplot(out_plot) +
+  geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
+  geom_point(aes(x = mod_lw_out, y = obs_lw_out)) +
+  geom_smooth(aes(x = mod_lw_out, y = obs_lw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
+  labs(title = "Outgoing lw modeled vs observed",
+       subtitle = paste(c("slope: ", lw_slope, " intercept: ", lw_intercept, " r2: ", lw_r2, " . Data from 2018."), collapse = ""),
+       x = "Modeled outgoing lw (W m-2)", y = "Observed outgoing lw (W m-2)", colour = "Legend")
+```
+
+RMSE:``r lw_rmse``   NSE:``r lw_nse``
