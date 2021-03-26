@@ -4,6 +4,7 @@ library(dplyr)
 library(lubridate)
 
 input <- read.csv(file.path("data", "Hainich_2018-07_input.csv"))
+#input <- read.csv(file.path("data", "Hainich_2018_input.csv"))
 fluxes <- read.csv(file.path("data", "Hainich_2018-07_fluxes.csv"))
 
 # Initial variable selection, renaming and conversion
