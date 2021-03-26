@@ -28,6 +28,7 @@ flux$gbc = blfluxes[2]
 
 # Photosynthetically active radiation from radiation group
 flux$apar = PAR # umol photon/m2 leaf/s
+#flux$apa2 = PAR(met$sw_in)
 
 # entropy terms in dependence of air T
 
@@ -104,7 +105,7 @@ flux$ci = flux_dummy[[2]];
 
 #esat = satvap ((state_last$tleaf-pars$tfrz));
 #flux$vpd = max(esat - flux$hs*esat, 0.1);
-#flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
+flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
 
 # --- Make sure iterative solution is correct
 

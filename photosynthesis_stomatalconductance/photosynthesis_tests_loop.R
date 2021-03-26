@@ -49,6 +49,10 @@ for(n in 1:length(input$time)) {
   out[n, names(radiation)] <- radiation
 
   # calculate photosynthesis and stomatal conductance for sunlit and shaded leaves
+  #adjusting parameters for sensitiviy analysis
+  pars$vcmax25 = 60
+  pars$g1 = 13.5
+
   state_last$tleaf <- met$tair # leaf temeperature placeholder
   an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
   an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
@@ -100,8 +104,9 @@ g1_lm = lm(gs_g0 ~ an_hs_ca)
 #plot(g1_lm)
 coef(g1_lm)
 summary(g1_lm) # returns a slope of 8.83 -> seems possible
+# g1 [at time step in calibration] - coef(g1_lm)...hm could that work?
 
-write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/test_output_20_03_with_LAI_60_9_bad_values")
+write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/sensitivity_60_13-5")
 #### Plotmaker ####
 
 Filename <- "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs_General.pdf"
