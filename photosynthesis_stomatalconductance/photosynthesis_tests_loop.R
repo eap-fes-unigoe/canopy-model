@@ -49,10 +49,6 @@ for(n in 1:length(input$time)) {
   out[n, names(radiation)] <- radiation
 
   # calculate photosynthesis and stomatal conductance for sunlit and shaded leaves
-  #adjusting parameters for sensitiviy analysis
-  pars$vcmax25 = 60
-  pars$g1 = 13.5
-
   state_last$tleaf <- met$tair # leaf temeperature placeholder
   an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
   an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
@@ -60,12 +56,31 @@ for(n in 1:length(input$time)) {
   an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
   an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
   out[n, names(an_gs)] <- an_gs
+
+    # Calculate leaf temperature and latent and sensible heat fluxes
+  #Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)
+  #for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- flux[i]}
+
+  # Calculate plant C pools, soil decomposition and soil C pools
+  #Cpools <- fun_calc_Cpools(pars, state_last, Cpools, vars_Cpools, fun_kmod_Ms, fun_kmod_Ts, site)
+  #for(ipool in 1:length(names_Cpools)) {out[n, names_Cpools[ipool]] <- Cpools[ipool]}
+
   pb$tick() # update progress bar
 }
 
 # some display settings
 options(scipen = 999) # turning off "e" notations
 par(mfrow = c(1,2)) # 2 visible plots
+
+#NPP = GPP - plant respiration
+#NEE = NEP = GPP - total respiration (RE) = NPP - soil respiration
+#nee,net ecosystem CO2 exchange,umol/m2s
+#gpp,gross primary productivity,umol/m2s
+#reco,ecosystem respiration,umol/m2s
+#An = would optimally be compared with NPP
+fluxes$gpp  - fluxes$reco - fluxes$nee
+plot(out$ag)
+plot(out$rd)
 
 # unit conversions
 gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 (ground?) dt-1 to µmol m-2 (ground?) s-1 reversion
@@ -81,12 +96,17 @@ plot(gs_leaf)
 plot(an_kg, ylab = "an kg CO2/m2 ground/d",ylim = c(0,0.003)) #photosyntheis in kg
 plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/d",ylim = c(0,0.003)) #gpp in kg
 plot(an_kg,fluxes$gpp)
+plot(an_kg,fluxes$nee)
 
 # in umol per second
 plot(out$an, ylab = "an umol CO2/m2 ground/s")#,ylim = c(0,30)) #photosynthesis in umol
 plot(gpp_umol,ylab = "GPP umol CO2/m2 ground/s") #gpp in umol
 plot(out$an, gpp_umol)
+plot(out$ag, gpp_umol) #ag is gross photosynthesis rate
 
+#comparing par from radiation gropu and from par function
+plot(out$apar, out$apar2)
+plot(out$apar, fluxes$r)
 
 #plot gs
 plot(out$gs, ylab = "gs mol h2o m-2 ground s-1") # in mol h2o m-2 ground s-1, base is 0.01
@@ -104,9 +124,15 @@ g1_lm = lm(gs_g0 ~ an_hs_ca)
 #plot(g1_lm)
 coef(g1_lm)
 summary(g1_lm) # returns a slope of 8.83 -> seems possible
+
+#testing for differences...of just the one parameter...can this be used for calibration in any way?
+#why not?
+#resid <- pars$g1 - coef(g1_lm)[2] # residual calculation after unit conversion
+
 # g1 [at time step in calibration] - coef(g1_lm)...hm could that work?
 
-write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/sensitivity_60_13-5")
+write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/photosynthesis_hainich_year_data_60_9")
+saveRDS(out, file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/photosynthesis_hainich_year_data_60_9.rds")
 #### Plotmaker ####
 
 Filename <- "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Photosynthesis Model Outputs_General.pdf"

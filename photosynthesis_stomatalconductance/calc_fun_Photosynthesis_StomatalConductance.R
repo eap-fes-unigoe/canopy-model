@@ -28,7 +28,7 @@ flux$gbc = blfluxes[2]
 
 # Photosynthetically active radiation from radiation group
 flux$apar = PAR # umol photon/m2 leaf/s
-#flux$apa2 = PAR(met$sw_in)
+#flux$apar2 = PAR(met$sw_in)
 
 # entropy terms in dependence of air T
 
