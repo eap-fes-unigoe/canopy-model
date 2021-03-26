@@ -1,0 +1,35 @@
+---
+title: "Term paper Radiative Transfer - Ecosystem and Atmosphere Processes"
+author: "Simone Massaro - Sugam Subedi"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography:
+biblio-style: apalike
+link-citations: yes
+---
+# Preface {-}
+
+```{r "setup", include=FALSE}
+knitr::opts_knit$set(root.dir = "../../") #set to repo root to correctly load all package
+knitr::opts_knit$set(fig.width=16,  fig.height = 9)
+knitr::opts_knit$set(dpi=30)
+```
+
+```{r, dpi=30}
+plot(c(0,0), c(1,1), main="low res")
+```
+This is the Term Paper for the Ecosystem and Atmosphere Processes course (Winter semester 2020) at Uni Göttingen, prof. Alexander Knohl.
+
+This is a result of a group work between Simone Massaro and Sugam Subedi.
+
+It is part of a course project to develop  a canopy model ..
+
+This term paper is also available in html format at ... which is the suggested way to read it.
+
+#### Task division {-}
+
+The tasks have been divided inside the group:
+
+- *Simone Massaro*: all code development, Model results and Discussion sections.
+- *Sugam Subedi*: Theory and Model development sections.
