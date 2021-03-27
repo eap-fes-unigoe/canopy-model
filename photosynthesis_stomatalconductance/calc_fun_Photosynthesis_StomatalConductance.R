@@ -1,17 +1,15 @@
-calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR){
-#calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,PAR_list){
-# output_flux = list()
-# for(PAR in par_list) {    just an idea to
+calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,apar){
 
-source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
-source("photosynthesis_stomatalconductance/satvap.R")
+  # moved sources to setup file
+#source("photosynthesis_stomatalconductance/hybrid_root_ci.R")
+#source("photosynthesis_stomatalconductance/satvap.R")
 # source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R") # get h2o from group 4
-source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R") # calculate h2o without group 4
+#source("photosynthesis_stomatalconductance/LeafBoundaryLayer.R") # calculate h2o without group 4
 #source("photosynthesis_stomatalconductance/PAR.R")
 
 # Beginning
 
-esat = satvap(met$tair-pars$tfrz); # Saturation vapor pressure at atmosphere (Pa)
+esat = satvap(met$tair-pars$tfrz)[[1]]; # Saturation vapor pressure at atmosphere (Pa)
 flux$eair = esat * met$rh; # Vapor pressure (Pa)
 
 # Boundary layer conductance for CO2
@@ -27,7 +25,7 @@ flux$gbw = blfluxes[1]
 flux$gbc = blfluxes[2]
 
 # Photosynthetically active radiation from radiation group
-flux$apar = PAR # umol photon/m2 leaf/s
+#flux$apar = PAR # umol photon/m2 leaf/s
 #flux$apar2 = PAR(met$sw_in)
 
 # entropy terms in dependence of air T
@@ -71,7 +69,7 @@ flux$rd = pars$rd25 * t1 * t2;
 # Solve the polynomial: aquad*Je^2 + bquad*Je + cquad = 0
 # for Je. Correct solution is the smallest of the two roots.
 
-qabs = 0.5 * pars$phi_psii * flux$apar;
+qabs = 0.5 * pars$phi_psii * apar;
 aquad = pars$theta_j;
 bquad = -(qabs + flux$jmax);
 cquad = qabs * flux$jmax;
@@ -92,7 +90,7 @@ ci1 = ci0 * 0.99;
 
 tol = 0.1;                 # Accuracy tolerance for Ci (umol/mol)
 
-flux$esat = satvap ((state_last$tleaf-pars$tfrz));
+#esat = satvap(state_last$tleaf-pars$tfrz)[[1]];
 
 # --- calculation of an (umol CO2/m2 leaf/s) and gs (mol H2O/m2 leaf/s)
 
@@ -103,9 +101,9 @@ flux$ci = flux_dummy[[2]];
 # "par loop idea"  output_flux = output_flux + flux (chagne flux felow this to output_flux)}
 # afterwards: sum results of sunny and shaded. (take mean for gs? hmm)
 
-#esat = satvap ((state_last$tleaf-pars$tfrz));
+#esat = satvap ((state_last$tleaf-pars$tfrz))[1];
 #flux$vpd = max(esat - flux$hs*esat, 0.1);
-flux$hs = (flux$gbw * flux$eair + flux$gs * flux$esat) / ((flux$gbw + flux$gs) * flux$esat);
+#flux$hs = (flux$gbw * flux$eair + flux$gs * esat) / ((flux$gbw + flux$gs) * esat);
 
 # --- Make sure iterative solution is correct
 

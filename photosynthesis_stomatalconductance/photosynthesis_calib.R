@@ -6,8 +6,8 @@ library(FME) # load requirded FME package
 
 # setting parameters to be calibrated with upper and lower limits
 pars_calib <- c(vcmax25 = 60 , g1 = 9)
-pars_up <- c(vcmax25 = 80, g1 = 10)
-pars_low <- c(vcmax25 = 40, g1 = 8)
+pars_up <- c(vcmax25 = 61, g1 = 9.1)
+pars_low <- c(vcmax25 = 35, g1 = 8.5)
 
 source("photosynthesis_stomatalconductance/setup_photosynthesis_calib.R")
 source("photosynthesis_stomatalconductance/fun_photosynthesis_calib.R")

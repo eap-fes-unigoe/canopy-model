@@ -14,7 +14,8 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_radiative_transfer.R")
-source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
+source("photosynthesis_stomatalconductance/fun_calc_an_gs.R")
+#source("leafTemperature/fun_calc_LeafTemperature.R")
 
 ## Load initial state ----
 ## This should be a dataframe with all the state variables and one row with initial values
@@ -28,6 +29,7 @@ out <- initial_state
 
 # Source setup scripts for different model components
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
+#source("leafTemperature/setup_LeafTemperature.R")
 
 # Setup progress bar
 library(progress)
@@ -49,15 +51,20 @@ for(n in 1:length(input$time)) {
   out[n, names(radiation)] <- radiation
 
   # calculate photosynthesis and stomatal conductance for sunlit and shaded leaves
-  state_last$tleaf <- met$tair # leaf temeperature placeholder
-  an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
-  an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
-  an_gs <- an_gs_sun # leaf m-2 -> ground m-2 by x LAI
-  an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
-  an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  an_gs <- fun_calc_an_gs(met,state_last,pars,out[n,])
+  #state_last$tleaf <- met$tair # leaf temeperature placeholder
+  #an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
+  #an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
+  #an_gs <- an_gs_sun # leaf m-2 -> ground m-2 by x LAI
+  #an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
+  #an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
   out[n, names(an_gs)] <- an_gs
 
-    # Calculate leaf temperature and latent and sensible heat fluxes
+  #Calculate leaf temperature and latent and sensible heat fluxes
+  #function of Saturation vapor pressure and temperature derivative
+  #source("satvap.R")
+  #function of Latent heat of vaporization
+  #source("latvap.R")
   #Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)
   #for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- flux[i]}
 
@@ -84,25 +91,26 @@ plot(out$rd)
 
 # unit conversions
 gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 (ground?) dt-1 to µmol m-2 (ground?) s-1 reversion
-an_kg = out$an * 12 / 1000000 / 1000 * 3600 #µmol m-2 ground s-1
-an_leaf = out$an/5 # an µmol m-2 leaf s-1
-gs_leaf = out$gs/5  # gs mol h2o m-2 leaf s-1, base is 0.01
+an_kg = out$an * 12 / 1000000 / 1000 * 3600 #µmol m-2 ground h-1
+an_leaf = out$an / 5 # an µmol m-2 leaf s-1
+gs_leaf = out$gs / 5  # gs mol h2o m-2 leaf s-1, base is 0.01
 plot(an_leaf)
 plot(gs_leaf)
 
 # comparing an and gpp
 
 # in kg per day
-plot(an_kg, ylab = "an kg CO2/m2 ground/d",ylim = c(0,0.003)) #photosyntheis in kg
-plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/d",ylim = c(0,0.003)) #gpp in kg
+plot(an_kg, ylab = "an kg CO2/m2 ground/h",ylim = c(0,0.003)) #photosynthesis in kg
+plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/h",ylim = c(0,0.003)) #gpp in kg
 plot(an_kg,fluxes$gpp)
-plot(an_kg,fluxes$nee)
+#plot(an_kg,fluxes$nee)
 
 # in umol per second
 plot(out$an, ylab = "an umol CO2/m2 ground/s")#,ylim = c(0,30)) #photosynthesis in umol
 plot(gpp_umol,ylab = "GPP umol CO2/m2 ground/s") #gpp in umol
 plot(out$an, gpp_umol)
 plot(out$ag, gpp_umol) #ag is gross photosynthesis rate
+plot(out$an, out$ag)
 
 #comparing par from radiation gropu and from par function
 plot(out$apar, out$apar2)
