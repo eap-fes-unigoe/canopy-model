@@ -31,6 +31,9 @@ out <- initial_state
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
 #source("leafTemperature/setup_LeafTemperature.R")
 
+#function of Latent heat of vaporization for leaf temperatre group
+#source("latvap.R")
+
 # Setup progress bar
 library(progress)
 pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
@@ -52,19 +55,9 @@ for(n in 1:length(input$time)) {
 
   # calculate photosynthesis and stomatal conductance for sunlit and shaded leaves
   an_gs <- fun_calc_an_gs(met,state_last,pars,out[n,])
-  #state_last$tleaf <- met$tair # leaf temeperature placeholder
-  #an_gs_sun <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sun*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
-  #an_gs_sha <- calc_fun_Photosynthesis_StomatalConductance(met,state_last,pars,out[n,]$ic_sha*4.6) # 1 W/m2 ≈ 4.6 μmole.m2/s
-  #an_gs <- an_gs_sun # leaf m-2 -> ground m-2 by x LAI
-  #an_gs$an <- an_gs_sun$an * out[n,]$LAI_sunlit + an_gs_sha$an * (out[n,]$LAI - out[n,]$LAI_sunlit)
-  #an_gs$gs <- an_gs_sun$gs * out[n,]$LAI_sunlit + an_gs_sha$gs * (out[n,]$LAI - out[n,]$LAI_sunlit)
   out[n, names(an_gs)] <- an_gs
 
   #Calculate leaf temperature and latent and sensible heat fluxes
-  #function of Saturation vapor pressure and temperature derivative
-  #source("satvap.R")
-  #function of Latent heat of vaporization
-  #source("latvap.R")
   #Leafflux <- LeafTemperature(pars, state_last, vars_LeafTemperature)
   #for(i in 1:length(flux$Date.Time)){out[n,flux$Date.Time[i]] <- flux[i]}
 
@@ -79,21 +72,19 @@ for(n in 1:length(input$time)) {
 options(scipen = 999) # turning off "e" notations
 par(mfrow = c(1,2)) # 2 visible plots
 
-#NPP = GPP - plant respiration
-#NEE = NEP = GPP - total respiration (RE) = NPP - soil respiration
-#nee,net ecosystem CO2 exchange,umol/m2s
-#gpp,gross primary productivity,umol/m2s
-#reco,ecosystem respiration,umol/m2s
 #An = would optimally be compared with NPP
-fluxes$gpp  - fluxes$reco - fluxes$nee
+#fluxes$gpp  - fluxes$reco - fluxes$nee
+# units are m-2 ground s-1
 plot(out$ag)
-plot(out$rd)
+plot(out$an)
+plot(out$gs)
+#plot(out$rd)
 
 # unit conversions
-gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 (ground?) dt-1 to µmol m-2 (ground?) s-1 reversion
+gpp_umol = fluxes$gpp /(12 / 1000000 / 1000 * 3600) # kg m-2 ground? dt-1 to µmol m-2 ground s-1 reversion
 an_kg = out$an * 12 / 1000000 / 1000 * 3600 #µmol m-2 ground h-1
 an_leaf = out$an / 5 # an µmol m-2 leaf s-1
-gs_leaf = out$gs / 5  # gs mol h2o m-2 leaf s-1, base is 0.01
+gs_leaf = out$gs * 5  # gs mol h2o m-2 leaf s-1, base is 0.01
 plot(an_leaf)
 plot(gs_leaf)
 
@@ -101,7 +92,7 @@ plot(gs_leaf)
 
 # in kg per day
 plot(an_kg, ylab = "an kg CO2/m2 ground/h",ylim = c(0,0.003)) #photosynthesis in kg
-plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/h",ylim = c(0,0.003)) #gpp in kg
+plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/h") #gpp in kg
 plot(an_kg,fluxes$gpp)
 #plot(an_kg,fluxes$nee)
 
@@ -111,10 +102,11 @@ plot(gpp_umol,ylab = "GPP umol CO2/m2 ground/s") #gpp in umol
 plot(out$an, gpp_umol)
 plot(out$ag, gpp_umol) #ag is gross photosynthesis rate
 plot(out$an, out$ag)
+#plot(input$p)
 
 #comparing par from radiation gropu and from par function
-plot(out$apar, out$apar2)
-plot(out$apar, fluxes$r)
+#plot(out$apar, out$apar2)
+#plot(out$apar, fluxes$r)
 
 #plot gs
 plot(out$gs, ylab = "gs mol h2o m-2 ground s-1") # in mol h2o m-2 ground s-1, base is 0.01
@@ -139,7 +131,7 @@ summary(g1_lm) # returns a slope of 8.83 -> seems possible
 
 # g1 [at time step in calibration] - coef(g1_lm)...hm could that work?
 
-write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/photosynthesis_hainich_year_data_60_9")
+write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/hainich_july_60_9")
 saveRDS(out, file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/photosynthesis_hainich_year_data_60_9.rds")
 #### Plotmaker ####
 
