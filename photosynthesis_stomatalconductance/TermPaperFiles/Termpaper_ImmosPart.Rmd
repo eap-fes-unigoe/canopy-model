@@ -12,57 +12,63 @@ setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new/photosynthesis_stomatalco
 
 ## Theory
 
-The leaf photosynthesis model can essentially be divided into two interacting components which are modeled individually. These two components are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. All theory, equations and figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
+The leaf photosynthesis model can essentially be divided into two interacting components which are modeled individually. These two components
+are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. All theory, equations and
+figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
 
 ### Photosynthesis
 
 
-Photosynthesis is calculated using the Farquhar-von Caemmerer-Bernacchi model (FvCB model) that mathematically describes the C3 photosynthesis pathway. 
+Photosynthesis is calculated using the Farquhar-von Caemmerer-Bernacchi model (FvCB model) that mathematically describes the C3 photosynthesis
+pathway. 
 The foundation for the model is formulated as 
 
-![**1.1: An = net assimilation(μmol CO2 m–2 s–1), Vc = carboxylation limited hotosynthesis, Vo = oxygenation limited loss of carbon, Rd = mitochondrial respiration**](TheoryFormulas/11.1.JPG)
+![**1.1: An = net assimilation(μmol CO2 m–2 s–1), Vc = carboxylation limited hotosynthesis, Vo = oxygenation limited loss of carbon, Rd = mitochondrial respiration**](TheoryFormulas/11.1.JPG){width=30%}
 
-To calculate carboxylation and oxygenation, the Michaelis Menten response functions are used which calculate carboxylation and oxygenation from the maximum rates (**Vcmax/Vomax**), intercellular concentrations (**ci, oi**) and the michaelis menten constants (**Kc and Ko**). 
+To calculate carboxylation and oxygenation, the Michaelis Menten response functions are used which calculate carboxylation and oxygenation
+from the maximum rates (**Vcmax/Vomax**), intercellular concentrations (**ci, oi**) and the michaelis menten constants (**Kc and Ko**). 
 
-![**1.2: Michaelis Menten Formula for carboxylation**](TheoryFormulas/11.2.JPG)
+![**1.2: Michaelis Menten Formula for carboxylation**](TheoryFormulas/11.2.JPG){width=25%}
 
-![**1.3: Michaelis Menten Formula for oxygenation**](TheoryFormulas/11.3.JPG)
+![**1.3: Michaelis Menten Formula for oxygenation**](TheoryFormulas/11.3.JPG){width=25%}
 
 Since oxygenation leads to loss of carbon, an intercellular carbon concentration exists at which no CO2 is taken up. This 
 concentration is called the CO2 compensation point and is calculated by 
 
-![**1.4: Calculation of the CO2 compensation point**](TheoryFormulas/11.6.JPG)
+![**1.4: Calculation of the CO2 compensation point**](TheoryFormulas/11.6.JPG){width=25%}
 
-Furthermore assimilation is not only limited by the maximum rate of carboxylation but also by the rate at which Ribulose 1,5-bisphosphate (**RuBP**) is regenerating. This depends on light absorption and the electron transport in the photosystems (**Jmax**) which is typically termed product limited assimilation. 
+Furthermore assimilation is not only limited by the maximum rate of carboxylation but also by the rate at which Ribulose 1,5-bisphosphate
+(**RuBP**) is regenerating. This depends on light absorption and the electron transport in the photosystems (**Jmax**) which is typically
+termed product limited assimilation. 
 These assimilation types can account for **Vo** if the CO2 compensation point is regarded and are calculated by 
 
-![**1.5: Calculation of Rubisco limited photosynthesis rate**](TheoryFormulas/11.28.JPG)
+![**1.5: Calculation of Rubisco limited photosynthesis rate**](TheoryFormulas/11.28.JPG){width=30%}
 
-![**1.6: Calculation of product limited photosynthesis rate**](TheoryFormulas/11.29.JPG)
+![**1.6: Calculation of product limited photosynthesis rate**](TheoryFormulas/11.29.JPG){width=20%}
 
 The net assimilation according to the FvCB model therefore can be formulated as 
 
-![**1.7**](TheoryFormulas/11.30.JPG)
+![**1.7**](TheoryFormulas/11.30.JPG){width=30%}
 
 which is the minimum assimilation out of both carboxylation-limited- (Rubisco limited) and product-limited assimilation.  
-To account for different enzyme kinetics at varying temperatures, temperature acclimation has to be incorporated using the Arrhenius function which is normalized to 25°C 
+To account for different enzyme kinetics at varying temperatures, temperature acclimation has to be incorporated using the Arrhenius function
+which is normalized to 25°C 
 
-![**1.8: Arrhenius function** as a function of leaf temperature (Tl in K) with R = universal gas constant, DeltaHa = activation energy](TheoryFormulas/11.34.JPG)
+![**1.8: Arrhenius function** as a function of leaf temperature (Tl in K) with R = universal gas constant, DeltaHa = activation energy](TheoryFormulas/11.34.JPG){width=40%}
 
 
-This function can be used in its peaked form to adapt the various parameters of the model (such as Vcmax, Jmax, Kc, Ko, etc.) from 25°C standard values to the appropriate growth temperature. 
+This function can be used in its peaked form to adapt the various parameters of the model (such as Vcmax, Jmax, Kc, Ko, etc.) from 25°C
+standard values to the appropriate growth temperature. 
 
-![**1.9: Peaked Arrhenius function for Vcmax** with f(Tl)H = thermal berakdown of biochemical processes](TheoryFormulas/11.35.JPG)
+![**1.9: Peaked Arrhenius function for Vcmax** with f(Tl)H = thermal berakdown of biochemical processes](TheoryFormulas/11.35.JPG){width=40%}
 
-![**1.10: Thermal Breakdown of biochemical processes** with DeltaS = entropy term for parameter in question; DeltaHd = deactivation energy](TheoryFormulas/11.36.JPG)
+![**1.10: Thermal Breakdown of biochemical processes** with DeltaS = entropy term for parameter in question; DeltaHd = deactivation energy](TheoryFormulas/11.36.JPG){width=40%}
 
 The entropy term for the thermal breakdown of biochemical processes can be calculated from temperature by 
 
-![**1.11: Calculation of entropy term for Vcmax**](TheoryFormulas/11.62.JPG)
+![**1.11: Calculation of entropy term for Vcmax**](TheoryFormulas/11.62.JPG){width=30%}
 
-![**1.12: Calculation of entropy term for Jmax**](TheoryFormulas/11.63.JPG)
-
-
+![**1.12: Calculation of entropy term for Jmax**](TheoryFormulas/11.63.JPG){width=30%}
 
 
 ### Stomatal Conductance
@@ -70,37 +76,46 @@ The entropy term for the thermal breakdown of biochemical processes can be calcu
 
 To calculate intercellular CO2 concentration for photosynthesis it is necessary to know the conductance of the stomata. This can be understood from 
 
-![**2.1: Calculation of net assimilation with conductances; ca, cs, ci = ambient, surface and intercellular CO2 concentration (μmol mol–1); gbw, glc, gsw = boundary layer, leaf and stomata conductances for H2O (mol H2O m–2 s–1)**](TheoryFormulas/12.1.JPG)
+![**2.1: Calculation of net assimilation with conductances; ca, cs, ci = ambient, surface and intercellular CO2 concentration (μmol mol–1); gbw, glc, gsw = boundary layer, leaf and stomata conductances for H2O (mol H2O m–2 s–1)**](TheoryFormulas/12.1.JPG){width=50%}
 
-In order for CO2 to diffuse into the cell, a concentration gradient from outside to inside the cell is required. This is a dependency which is formulated in the photosynthetic diffusion equation
+In order for CO2 to diffuse into the cell, a concentration gradient from outside to inside the cell is required. This is a dependency which is
+formulated in the photosynthetic diffusion equation
 
-![**2.2**](TheoryFormulas/12.12.JPG)
+![**2.2**](TheoryFormulas/12.12.JPG){width=40%}
 
 which can be rearragend to
 
-![**2.3**](TheoryFormulas/12.13.JPG)
+![**2.3**](TheoryFormulas/12.13.JPG){width=20%}
 
-Since this is a linear relationship between net assimilation and stomatal conductance, a slope can be calculated and a ratio of intercellular to ambient CO2 concentration is used to calculate stomatal conductance if **ci** is known. The relationship between intercellular CO2 concentration, net assimilation and stomatal conductance can be rewritten to focus on the leaf surface which is done for the Ball Berry model of stomata conductance. 
+Since this is a linear relationship between net assimilation and stomatal conductance, a slope can be calculated and a ratio of intercellular
+to ambient CO2 concentration is used to calculate stomatal conductance if **ci** is known. The relationship between intercellular CO2
+concentration, net assimilation and stomatal conductance can be rewritten to focus on the leaf surface which is done for the Ball Berry model
+of stomata conductance. 
 
-![**2.4: Ball berry model of stomata conductance or stomata constraint function with hs = fractional humidity at the leaf surface (dimensionless), g1 = slope of the relationship, g0 = minimum conductance (mol H2O m–2 s–1)**](TheoryFormulas/12.14.JPG)
+![**2.4: Ball berry model of stomata conductance or stomata constraint function with hs = fractional humidity at the leaf surface (dimensionless), g1 = slope of the relationship, g0 = minimum conductance (mol H2O m–2 s–1)**](TheoryFormulas/12.14.JPG){width=20%}
 
-This model focuses on leaf surface humidity and boundary layer CO2 concentration while aiming to satisfy the interaction between stomatal conductance and net assimilation. This interaction can be mathematically described by solving a set of net assimilation two equations for intercellular CO2 concentration. 
+This model focuses on leaf surface humidity and boundary layer CO2 concentration while aiming to satisfy the interaction between stomatal
+conductance and net assimilation. This interaction can be mathematically described by solving a set of net assimilation two equations for
+intercellular CO2 concentration. 
 Net assimilation of CO2 is governed by the biochemical demand for CO2, the diffusive supply and a stomatal constraint function. 
 The constraint function can be combined with the supply function 
 
-![**2.5: Diffusive supply function**](TheoryFormulas/Supplyfunction.JPG)
+![**2.5: Diffusive supply function**](TheoryFormulas/Supplyfunction.JPG){width=30%}
 
 to yield the supply-constraint function
 
-![**2.6: Supply-constraint function**](TheoryFormulas/12.25.JPG)
+![**2.6: Supply-constraint function**](TheoryFormulas/12.25.JPG){width=40%}
 
 The biochemical demand is calculated as follows, depending on the photosynthesis limiting factor. 
 
-![**2.7: Biochemical demand function with a and b depending on wether photosynthesis is limited by carboxylation (a = Vcmax & b = Kc(1+oi/Ko) or electron transport (a = J/4 & b = 2*CO2 compensation point)](TheoryFormulas/12.24.JPG)
+![**2.7: Biochemical demand function with a and b depending on wether photosynthesis is limited by carboxylation (a = Vcmax & b = Kc(1+oi/Ko) or electron transport (a = J/4 & b = 2xCO2 compensation point)**](TheoryFormulas/12.24.JPG){width=30%}
 
-To calculate **ci** dependent on a given leaf temperature, an iterative approach can be taken which uses an initial **ci** value and adapts this value until it satisfies the biochemical demand function as well as the diffusive supply-constraint function. This approach is graphically described in the following figure and is also applied in the model. The calculation is repeated until the old and new **ci** values converge.
+To calculate **ci** dependent on a given leaf temperature, an iterative approach can be taken which uses an initial **ci** value and adapts
+this value until it satisfies the biochemical demand function as well as the diffusive supply-constraint function. 
+This approach is graphically described in the following figure and is also applied in the model. 
+The calculation is repeated until the old and new **ci** values converge.
 
-![**Figure X: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG)
+![**Figure X: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG){width=70%}
 
 
 ##Results
@@ -126,6 +141,10 @@ The same behavior applies to the relative change in stomatal conductance when Vc
 
 ![**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**](Sensitivity Analysis Plots/Vcmax_gs-time.JPG){width=80%}
 
+The model responds to  increasing Vcmax with a shift of the photosynthesis temperature optimum. The temperature optimum increases about 7 K from -50% Vcmax to +50% Vcmax. (Figure X)
+
+![**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**](Sensitivity Analysis Plots/Vcmax_an_temp.JPG){width=80%}
+
 ### g1 modification
 
 If g1 is modified, a change of 25% weakly changes net assimilation into either direction respectively.
@@ -137,4 +156,9 @@ The model therefore is more sensitive to strong decreases in g1 than to other ch
 Stomatal conductance increases and decreases proportionally with given changes to g1 and is not particularly sensitive to changes in either direction. (Figure X)
 
 ![**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**](Sensitivity Analysis Plots/g1_gs-time.JPG){width=80%}
+
+
+Net assimilation responds to temperature under g1 modification with a shift in temperature optimum relative to increasing g1. The temperature optima of the different g1 scenarios coves a slightly larger range than the optima of the Vcmax modification. (Figure X & X)
+
+![**Figure X: Temperature response to sensitivity analysis (g1 modification)**](Sensitivity Analysis Plots/g1_an_temp.JPG){width=80%}
 
