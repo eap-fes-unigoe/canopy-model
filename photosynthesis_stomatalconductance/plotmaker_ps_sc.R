@@ -3,7 +3,7 @@ source("setup_sitedata.R")
 
 #####Plotmaker Function####
 setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new")
-out = read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/sensitivity_60_13-5", header = T, dec = ".", sep = ",")
+out = read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/par_comparison_60_9", header = T, dec = ".", sep = ",")
 Sitedata =  input
 
 
@@ -27,10 +27,10 @@ sw_in_an_predict = predict(qmsw_an)
 
 ########
 
-S = "Sensitivity analysis @ g1 +50% (Vcmax =60, g1 = 13.5)"
+S = "Photosynthesis Model July (Vcmax =60, g1 = 9)"
 
 
-pdf (file= "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Sensitivity analysis plots/sensitivity_60_13-5.pdf")
+pdf (file= "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Sensitivity analysis plots/hainich_july_60_9.pdf")
 
 plot(out$an ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= c("Net assimilation over time", S), type = "l", cex.main= 0.8, ylim = c(0,80))
 plot(out$gs ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main= c("stomata conductance over time", S), type = "l", cex.main= 0.8, ylim =c(0,1.8))
