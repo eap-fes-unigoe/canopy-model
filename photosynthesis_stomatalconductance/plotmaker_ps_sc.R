@@ -18,7 +18,7 @@ d.mod.norm.gs = subset(d.mod[which(d.mod$gs > 0.1),])
 d.mod.norm.gs$tair2 = d.mod.norm.gs$tair^2
 qmtemp_gs = lm(d.mod.norm.gs$gs ~ d.mod.norm.gs$tair + d.mod.norm.gs$tair2 )
 
-qmsw_an<-nls(out$an~a*Sitedata$sw_in/(1+b*Sitedata$sw_in),data= c(out, Sitedata),start=list(a=1.8,b=0.04))
+qmsw_an = nls(out$an~a*Sitedata$sw_in/(1+b*Sitedata$sw_in),data=c(out, Sitedata),start=list(a=1.8,b=0.04))
 
 
 temp_an_predict = predict(qmtemp_an)
