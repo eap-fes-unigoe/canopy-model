@@ -11,7 +11,7 @@ source("setup_sitedata.R")
 
 ## Load functions ----
 source("fun_calc_radiative_transfer.R")
-source("photosynthesis_stomatalconductance/calc_fun_Photosynthesis_StomatalConductance.R")
+source("photosynthesis_stomatalconductance/fun_calc_an_gs.R")
 
 ## Load initial state ----
 initial_state <- read.csv("initial_state.csv")

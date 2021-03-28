@@ -1,10 +1,18 @@
-### Photosynthesis testing loop
+---
+title: "R Notebook"
+output: html_notebook
+---
 
-##
-rm(list=ls())
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+The following chunks of code are taken from the Photosynthesis tests_loop script, based on the main script. Frist some preparatory code:
+just load example results to demonstrate code? maybe...
+```{r}
 # Setting some time unit variables in unit seconds
-dt <- 3600 # delta time: model time step
+dt <- 3600 # delta time: model time step 3600 sec = 1h
 
 ## Load parameters and adjust units ----
 source("setup_parameters.R")
@@ -15,11 +23,8 @@ source("setup_sitedata.R")
 ## Load functions ----
 source("fun_calc_radiative_transfer.R")
 source("photosynthesis_stomatalconductance/fun_calc_an_gs.R")
-#source("leafTemperature/fun_calc_LeafTemperature.R")
 
 ## Load initial state ----
-## This should be a dataframe with all the state variables and one row with initial values
-
 initial_state <- read.csv("initial_state.csv")
 
 ## Initial calculations and variables ----
@@ -29,10 +34,11 @@ out <- initial_state
 
 # Source setup scripts for different model components
 source("photosynthesis_stomatalconductance/setup_Photosynthesis_StomatalConductance.R")
-#source("leafTemperature/setup_LeafTemperature.R")
+
 
 #function of Latent heat of vaporization for leaf temperatre group
 #source("latvap.R")
+```
 
 # Setup progress bar
 library(progress)
@@ -123,7 +129,13 @@ plot(gs_g0 ~ an_hs_ca)
 g1_lm = lm(gs_g0 ~ an_hs_ca)
 #plot(g1_lm)
 coef(g1_lm)
-summary(g1_lm) # returns a slope of 8.83
+summary(g1_lm) # returns a slope of 8.83 -> seems possible
+
+#testing for differences...of just the one parameter...can this be used for calibration in any way?
+#why not?
+#resid <- pars$g1 - coef(g1_lm)[2] # residual calculation after unit conversion
+
+# g1 [at time step in calibration] - coef(g1_lm)...hm could that work?
 
 write.csv(out,file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/hainich_july_60_9")
 saveRDS(out, file = "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/photosynthesis_hainich_year_data_60_9.rds")

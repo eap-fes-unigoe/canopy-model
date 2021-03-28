@@ -13,8 +13,9 @@ hybrid_root_ci = function(met,state_last,pars,flux, xa, xb, tol){
 # so this must be returned in the function call as an output argument. The matlab
 # function feval evaluates func.
 
-source("photosynthesis_stomatalconductance/brent_root_ci.R")
-source("photosynthesis_stomatalconductance/CiFunc.R")
+  #moved sources to setup file
+#source("photosynthesis_stomatalconductance/brent_root_ci.R")
+#source("photosynthesis_stomatalconductance/CiFunc.R")
 
 
 
