@@ -2,14 +2,10 @@
 
 
 ```{r, include=FALSE}
-suppressPackageStartupMessages({
-  suppressWarnings({
-   source('radiative_transfer/term paper/radiation_utils_test_data.R')
-   # library(scales)
-    library(tsibble)
-    library(hydroGOF)
-  })
-})
+source('radiative_transfer/term paper/radiation_utils_test_data.R')
+# library(scales)
+library(tsibble)
+library(hydroGOF)
 ```
 ```{r, include = F, cache = T}
 out <- rad_transf_new_p()
@@ -27,8 +23,9 @@ out_1year_wk <- out_all %>% # to day average
 
 ## Model output
 
+The input data for the model was obtained from the fluxnet site at Hainich for the year 2018.
 
-The first aspect to explore is the main model output both for the shortwave and longwave component
+The first step is exploring the main model output both for the shortwave and longwave component.
 
 
 ### Shortwave
@@ -62,17 +59,17 @@ out_1week %>%
 ```
 #### One year {-}
 
-Then the shortwave over one year is analyzed \@ref(fig:sw-1y), after aggregating over one week.
+Then the shortwave over one year is analyzed \@ref(fig:sw-1y), after averaging over one week.
 There is a yearly cycle in the incoming shortwave radiation with a significant difference,
-as the averages goes from more than 300 $W m^2$ to almost 10 $W m^2$ (this is the week average so takes into account also the night when there is 0 sw radiation).
-During the winter the LAI it is estimated at`1`, as even if there are no leaves the branches still absorbs light.
+as the averages goes from more than $300 W m^2$ to almost $10 W m^2$ (this is the week average so takes into account also the night when there is 0 sw radiation).
+During the winter the LAI it is estimated at $1$, as even if there are no leaves the branches still absorbs light.
 
 The absorbed by the soil depends on the amount of LAI, in fact during the spring when the radiation is high but there are no leaves yet its values increase constantly.
 As soon as leaves starts to come out the shortwave absorbed by the soil decreases to reach a stable low value during the summer and eventually increase again when leaves fall.
 
-The radiation reflected by the canopy doesn't have a big change over the year and overall canopy albedo remains for the all year between `0.16` and `0.20`.
+The radiation reflected by the canopy doesn't have a big change over the year and overall canopy albedo remains for the all year between $0.16$ and $0.20$.
 Finally, the radiation absorbed the canopy follows, as expected, the pattern in the incoming radiation. During the spring its value are really similar to the shortwave absorbed by the soil, however this is only a coincidence in this setting.
-```{r sw-1y, echo = F, fig.cap = "Shortwave one year. Modeled output variables, weekly average 2018. Vertical balck lines are the moment when there is change in LAI"}
+```{r sw-1y, echo = F, fig.cap = "Shortwave one year. Modeled output variables, weekly average 2018. Vertical black lines are the moment when there is change in LAI"}
 lai_breaks <- as_datetime(c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28"))
 lai_breaks_lbl <- c("leaf out", "leaf complete", "leaf fall", "leaf fall complete")
 pos <- function (x) {x+10}
@@ -83,7 +80,8 @@ out_1year_wk %>%
         annotate('label', x=lai_breaks, y=c(315, 315, 315, 290), label = lai_breaks_lbl) + #make the last lable lower to avoid overlap
         geom_line(aes(x = datetime, y = radiation, color = type)) +
         legend_labels(c("Incoming sw", "Absorbed sw canopy", "Upward sw", "Absorbed sw soil")) +
-        labs(x= "Datetime", y = "Shortwave radiation (W m-2)", title="Shortwave one year", subtitle = "Modeled output variables, weekly average 2018")
+        labs(x= "Datetime", y = "Shortwave radiation (W m-2)",
+             title="Shortwave one year", subtitle = "Modeled output variables, weekly average 2018")
 ```
 
 ### Longwave
@@ -108,14 +106,15 @@ The upward longwave radiation, instead, depends on the temperature of the canopy
 
 Need to talk about the different behaviour in soil/canopy trends
 
-```{r lw-1wk, echo = F, fig.cap = ""}
+```{r lw-1wk, echo = F, fig.cap = "Longwave output over one week"}
 out_1week %>%
         gather(key = "type", value = "radiation", lw_in, l_up, lc, lg, factor_key = T) %>%
         ggplot() +
         geom_hline(yintercept = 0, linetype = 2) +
         night_bg(out_1week) +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(x = "Datetime", y = "Longwave radiation (w m-2)") +
+        labs(x = "Datetime", y = "Longwave radiation (w m-2)",
+             title = "Longwave one week", subtitle = "Modeled output variables (1-8 Jul 2018)") +
         legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
 ```
 
@@ -129,39 +128,53 @@ out_1year_wk %>%
   ggplot() +
   geom_hline(yintercept = 0, linetype=2) +
   geom_line(aes(x = datetime, y = radiation, color = type)) +
-  labs(x="Datetime", y = "Longwave radiation (w m-2)") +
+  labs(x="Datetime", y = "Longwave radiation (w m-2)",
+   title="Shortwave one year", subtitle = "Modeled output variables, weekly average 2018") +
   legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
 ```
 
 ## Model Evaluation
 
-The model results
+The model results are compared with observed data to evaluate the model accuracy. It is done independently for the longwave and shortwave components.
+
+In the Hainich dataset there are observed variables that will be used for the evaluation.
+
+The evaluation will be carried out by visually comparing time series and by quantitative means.
 
 ### Shortwave
 
+For the shortwave the only observed variable that can be used for the model evaluation is the outgoing shortwave radiation.
+
 #### Time series {-}
+
+
 ##### One Week {-}
 
-The model has an overall good agreement between the modeled outgoing sw and the measured one
+The model has an overall good agreement between the modeled outgoing sw and the measured one \@ref(fig:swout-1wk).
 
-The non-zero values at night are problem of the sensor not the model
-```{r swout-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+The day peak of the model is often delayed compared to the observed one. This phase shift may connected to the relative long time interval (1 hour) in model outputs.
+The model generally slightly underestimate the radiation during sunny days (first 3 and last), while overestimate during with cloudy conditions.
+During the night the observed radiation is slightly above zero, while the model is at zero. This is clearly a measurement error, as during the night there is no shortwave radiation.
+
+```{r swout-1wk, echo = F, fig.cap = "Shortwave Modeles vs Observed. One week.", dpi=200}
 out_1week %>%
         gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
         ggplot() +
         night_bg(out_1week) +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        labs(y = "Outgoing shortwave radiation (w m-2)",
+        title= "Modeled vs Observed outgoing shortwave radiation", subtitle = "1 summer week (1-8 Jul 2018)") +
         legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
 ```
 ##### One Year {-}
 Problem in estimating the LAI during the spring/fall the model is less accurate
-```{r swout-1yr, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+```{r swout-1yr, echo = F, fig.cap = "Shortwave Modeles vs Observed. One year."}
 out_1year_wk %>%
         gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
         ggplot() +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        labs(y = "Outgoing shortwave radiation (w m-2)",
+             title= "Modeled vs Observed outgoing shortwave radiation", subtitle = "weekly average 2018") +
         legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
 ```
 
@@ -187,30 +200,35 @@ ggplot(out_plot) +
 
 
 ### Longwave
+For the shortwave the only observed variable that can be used for the model evaluation is the outgoing shortwave radiation.
 
 #### Time series {-}
+
 ##### One Week {-}
 
-The model has an overall good agreement between the modeled outgoing lw and the measured one
+The longwave components is also accurately modeled @\ref(fig:lwout-1wk).
 
-The non-zero values at night are problem of the sensor not the model
-```{r lwout-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+There is a daily pattern in the difference between the modeled and the observed outgoing longwave. This is probably due to the fact that the model doesn't use the true leaf temperature, as it needs to be calculated by other models, but uses the air temperature as a proxy.
+
+```{r lwout-1wk, echo = F, fig.cap = "Longwave Modeles vs Observed. One week."}
 out_1week %>%
         gather(key = "type", value = "radiation", l_up, lw_out, factor_key = T) %>%
         ggplot() +
         night_bg(out_1week, y_mean = 400) +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(y = "Outgoing shortwave radiation (w m-2)") +
-        legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
+        labs(y = "Outgoing shortwave radiation (w m-2)",
+             title= "Modeled vs Observed outgoing longwave radiation", subtitle = "1 summer week (1-8 Jul 2018)") +
+        legend_labels(labels = c("Modelled", "Observed"), "Outgoing longwave radiation")
 ```
 ##### One Year {-}
 Problem in estimating the LAI during the spring/fall the model is less accurate
-```{r lwout-1yr, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
+```{r lwout-1yr, echo = F, fig.cap = "Longwave Modeles vs Observed. One year."}
 out_1year_wk %>%
         gather(key = "type", value = "radiation", l_up, lw_out, factor_key = T) %>%
         ggplot() +
         geom_line(aes(x = datetime, y = radiation, color = type)) +
-        labs(y = "Outgoing shortwave radiation (w m-2)") +
+        labs(y = "Outgoing shortwave radiation (w m-2)",
+             title= "Modeled vs Observed outgoing longwave radiation", subtitle = "weekly average 2018") +
         legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
 ```
 
