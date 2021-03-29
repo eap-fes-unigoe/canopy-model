@@ -14,6 +14,20 @@ by Jonathan Gehret, Immo Shan & Lina Wernicke
 
 ## Introduction
 
+The Earth’s ecosystems and the atmosphere are coupled in a network of physical, biological and chemical processes, forming a complex cycling of energy and substances - the “Earth system”. Terrestrial and aquatic ecosystems are part of it as well as the organisms inhabiting them, including the human population. Due to multiple interconnections between the Earth system’s components, human activities heavily impact the balance between them, causing global changes in climate, water and nutrient cycling, biodiversity and many more (IGBP, 2015).
+
+The magnitude and pace of these human induced changes exceed the natural ranges of change in the Earth system and characterize a new era called the Anthropocene, ringed in by the industrial revolution in the late 18th century. Ever since, the world’s population is rising enormously and with it its consumption of resources and associated waste production. The rapid exploitation and combustion of fossil fuels which have built up over millions of years led to an unprecedented atmospheric concentration of carbon dioxide, methane and other greenhouse gases (IGBP, 2015). Another crucial factor of human impact is land use: As indicated by the Global Human Modification map, 95% of the Earth’s surface has been transformed to different extent by human activities (The Nature Conservancy, n.d.). Land cover change and the effects of fossil fuel combustion result in a feedback cascade between the Earth system’s components, creating challenges of new magnitude for human health. The altered atmosphere composition affects climate as well as plant productivity and thus, requires the adaptation of land uses like agriculture and forestry to sustain future yields.
+
+To adapt to global change, the understanding of the processes between terrestrial ecosystems and the atmosphere is essential. Vegetation closely couples the biosphere with the atmosphere through the continuous exchange of carbon and water. About 30% of the carbon dioxide globally emitted by human activities is removed by the biosphere as well as about 40% of received rain is given back to the atmosphere through plant transpiration (Hawkins et al., 2020). Precipitation, temperature and atmospheric CO2 determine the distribution of vegetation across the Earth and vice versa vegetation types influence atmospheric CO2 concentration and climate through the reflection of radiation and the release of water vapor. Especially forests play an important role and have a major impact on carbon and water cycling, temperature regulation and the albedo of landscapes. Dependent on the type of forest ecosystem and its location, these impacts can mitigate or amplify human-induced climate change (Bonan, 2015, 13 ff.).
+
+The main physiological mechanisms linking the fluxes of CO2, water and energy between atmosphere and vegetation are photosynthesis and stomatal conductance. These closely coupled processes determine the plant’s water-use efficiency by regulating the gas exchange between leaf and air and thereby balancing the loss of water vapor from transpiration against the intake of CO2 for assimilation in response to prevailing environmental conditions (Bonan, 2015, 241 ff.). Influencing factors are, in addition to CO2 concentration and water availability, incoming radiation, temperature as well as soil parameters - all these need to be considered in analyzing land-atmosphere relations.
+
+A comprehension of the complex correlations between atmosphere and terrestrial ecosystems is difficult to establish through mere observations. To properly connect all involved components and display their interdependencies with each other, computer models are indispensable. Such models merge simulation approaches from meteorological, hydrological and ecological points of view, forming useful research tools to investigate the impacts of global change (Bonan, 2019, 1 ff.). To display how ecosystems will react to ongoing change, an extrapolation of known data is inappropriate because it cannot predict future responses under changed environmental conditions. More confidence in predictions is given in modelling approaches derived from ecological theory with explicit assumptions about causal mechanisms within a system. Their grounding on mathematical equations makes these process-based models easier to interpret compared to other modelling approaches - as long as included ecological processes are relevant and refer to appropriate spatial and temporal scales. But even then, confidence in predictions is limited due to uncertain scopes of global change (Cuddington et al., 2013). To evaluate the accuracy of model predictions, the simulation of ecosystem responses to past conditions can be harnessed: If the modelled simulations fit measured data - especially of extreme weather conditions like droughts or heat waves - the model is likely to be able to predict future scenarios as well (Hawkins et al., 2020).
+
+This bottom-up modelling approach was applied within the module “Ecosystem-Atmosphere Processes” to simulate the fluxes of substances and energy between a forest ecosystem and the atmosphere. The model development followed the structure of Bonan (2019), split into five sub-models created by student groups for the sections of soil hydrology and temperature, soil carbon cycling, radiative transfer, leaf temperature and photosynthesis and stomatal conductance. The data to be fitted with the simulation origins from continuous measurements of a research site in the Hainich National Park in Thuringia, Germany. The measuring tower is located in an unmanaged old beech forest which is part of the largest coherent deciduous woodland in Germany. The beech (Fagus sylvatica) is a common species in natural forests of Central Europe and is the potential natural vegetation of wide parts of Germany (Nationalpark Hainich, n.d.). How the Hainich beech forest responds to certain environmental conditions might help to predict how the distribution area of Fagus sylvatica could shift in future or how much more resilient natural forests are compared to managed forest stands regarding climate change.
+
+This term paper describes the development of the sub-model for the processes of photosynthesis and stomatal conductance for the Hainich site, including underlying theory and an evaluation and discussion of the results.
+
 
 
 ## Theory
@@ -122,10 +136,7 @@ this value until it satisfies the biochemical demand function as well as the dif
 This approach is graphically described in the following figure and is also applied in the model. 
 The calculation is repeated until the old and new **ci** values converge.
 
-![**Figure X: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG){width=70%}
-
-
-
+![**Figure X: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG){width=50%}
 
 
 ## Model development
@@ -148,29 +159,28 @@ The model ran for a duration of 1 month (July 2018) and the values were decrease
 
 If Vcmax is decreased, net assimilation responds stronger to changes than if Vcmax is increased. In comparison, net assimilation drops about 30% if Vcmax is decreased by 25% and increases by approximately 10% if Vcmax is increased by 25%. (Figure X)
 
-**Figure X: Net assimilation response to sensitivity analysis (Vcmax modification)**
 
 ![](Sensitivity Analysis Plots/30_9_an.png){width=50%}![](Sensitivity Analysis Plots/45_9_an.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_an.png){width=50%}![](Sensitivity Analysis Plots/90_9_an.png){width=50%}
-
+**Figure X: Net assimilation response to sensitivity analysis (Vcmax modification)**
 
 
 The same behavior applies to the relative change in stomatal conductance when Vcmax is modified. The model is more sensitive to a decrease than to an increase in Vcmax. (Figure X)
 
-**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**
 
 ![](Sensitivity Analysis Plots/30_9_gs.png){width=50%}![](Sensitivity Analysis Plots/45_9_gs.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_gs.png){width=50%}![](Sensitivity Analysis Plots/90_9_gs.png){width=50%}
 
+**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**
 
 
 The model responds to  increasing Vcmax with a shift of the photosynthesis temperature optimum. The temperature optimum increases about 7 K from -50% Vcmax to +50% Vcmax. (Figure X)
 
-**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**
-
-
 ![](Sensitivity Analysis Plots/30_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/45_9_an_temp.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/90_9_an_temp.png){width=50%}
+
+**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**
+
 
 #### g1 modification
 
@@ -178,36 +188,69 @@ If g1 is modified, a change of 25% weakly changes net assimilation into either d
 A 50% change of g1 does not change much if g1 is increased but a decrease causes a strong decrease in net assimilation. 
 The model therefore is more sensitive to strong decreases in g1 than to other changes. (Figure X)
 
-**Figure X: Net assimilation response to sensitivity analysis (g1 modification)**
 
 ![](Sensitivity Analysis Plots/60_4-5_an.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_an.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an.png){width=50%}
 
+**Figure X: Net assimilation response to sensitivity analysis (g1 modification)**
 
 Stomatal conductance increases and decreases proportionally with given changes to g1 and is not particularly sensitive to changes in either direction. (Figure X)
 
-**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**
+
 
 ![](Sensitivity Analysis Plots/60_4-5_gs.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_gs.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_gs.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_gs.png){width=50%}
 
+**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**
+
+
+
 Net assimilation responds to temperature under g1 modification with a shift in temperature optimum relative to increasing g1. The temperature optima of the different g1 scenarios coves a slightly larger range than the optima of the Vcmax modification. (Figure X & X)
 
-**Figure X: Temperature response to sensitivity analysis (g1 modification)**
+
 
 ![](Sensitivity Analysis Plots/60_4-5_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an_temp.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an_temp.png){width=50%}
 
-
+**Figure X: Temperature response to sensitivity analysis (g1 modification)**
 
 
 ### Modeled vs. observed data
+
+#### Comparison
+To compare modeled and observed data, the model was run over one year with 2018 climate data from the Hainich Forest.
+The first obvious difference is that the modeled photosynthesis is much higher than the observed data with a maximum value of 62.2 umol CO2/m2 leaf/s while observed GPP peaks at 40.6 umol CO2/m2 leaf/s. Furthermore the modeled photosynthesis commences after roughly 100 days with no respiration before Day 100 and after Day 300. Observed GPP increases and decreases around similar times of the year but shows activity in winter as well. (Figure X)
+
+![](Sensitivity Analysis Plots/an over one year.png){width=50%}![](Sensitivity Analysis Plots/Year long GPP.png){width=50%}
+**Figure X: Modeled photosynthesis vs. observed photosynthesis**
+
+#### Stomatal conductance
+
+Modeled stomatal conductance shows a similar trend as modeled photosynthesis with no activity until ~ Day 100 and stp of activity at Day 300. 
+
+![](Sensitivity Analysis Plots/gs over one year.png){width=50%}
+**Figure X: Modeled stomatal conductance over one year**
+
+#### Temperature response
+
+The temperature optimum of modeled photosynthesis lies at approximately 300 K (~27° C) (Figure X)
+
+![](Sensitivity Analysis Plots/An over 1 year_temp.png){width=50%}
+**Figure X: Temperature dependence of modeled photosynthesis**
+
 
 
 
 
 ## Discussion
 
+### Calibration
+
+### Sensitivity analysis
+
+### Modeled vs. Observed
+
+### Problems during transcription 
 
 
 ## References
@@ -215,3 +258,53 @@ Net assimilation responds to temperature under g1 modification with a shift in t
 
 
 ## Appendix
+
+
+
+### Plotmaker making of
+
+To have a uniform and simple way of producing plots, we designed a plotmaker
+function which allowed us to feed in the output data of the model. The plotmaker then ran a few linear and nonlinear models to better understand the trend of the data. Since nighttime values  create a baseline of subzero values, we decided to exclude these values from the regressions to avoid a distortion of the model.
+
+```{r plotmaker models, eval = FALSE}
+#### Linear models ####
+
+d.mod = data.frame(out, Sitedata) #creating a linear model data frame
+
+d.mod.norm.an = subset(d.mod[which(d.mod$an > 0),])#only taking values >0
+d.mod.norm.an$tair2 = d.mod.norm.an$tair^2
+qmtemp_an = lm(d.mod.norm.an$an ~ d.mod.norm.an$tair + d.mod.norm.an$tair2 )
+
+d.mod.norm.gs = subset(d.mod[which(d.mod$gs > 0.1),])#only taking values >0.1
+d.mod.norm.gs$tair2 = d.mod.norm.gs$tair^2
+qmtemp_gs = lm(d.mod.norm.gs$gs ~ d.mod.norm.gs$tair + d.mod.norm.gs$tair2 )
+
+qmsw_an = nls(out$an~a*Sitedata$sw_in/(1+b*Sitedata$sw_in),data=c(out, Sitedata),start=list(a=1.8,b=0.04))
+
+temp_an_predict = predict(qmtemp_an)
+temp_gs_predict = predict(qmtemp_gs)
+sw_in_an_predict = predict(qmsw_an)
+```
+
+
+**Then the pdf is rendered by running different plot function consecutively and combining them into one file.** 
+
+```{r plotmaker pdf, eval = FALSE}
+S = "Subtitle"
+pdf (file= "Filepath")
+
+plot(out$an ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= c("Net assimilation over time", S), type = "l", cex.main= 0.8, ylim = c(0,80))
+plot(out$gs ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main= c("stomata conductance over time", S), type = "l", cex.main= 0.8, ylim =c(0,1.8))
+
+plot(out$an ~ Sitedata$tair, xlab = "Temperature (K)", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main = c("Net assimilation over temperature", S), sub = "Fitted model excludes baseline (night values) for better fit.", cex.main= 0.8, ylim = c(0,80))
+lines(temp_an_predict ~ d.mod.norm.an$tair, col = "red")
+
+plot(out$gs ~ Sitedata$tair, xlab = "Temperature (K)", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main =c("stomata conductance over temperature", S), sub = "Fitted model excludes baseline (night values) for better fit.", cex.main= 0.8, ylim = c(0, 1.8))
+lines(temp_gs_predict ~ d.mod.norm.gs$tair, col = "red")
+
+plot(out$an ~ Sitedata$sw_in, xlab = "Incoming shortwave radiation (W/m2)", ylab ="Leaf net photosynthesis (umol CO2/m2 leaf/s)", main = c("Net assimilation over shortwave radiation", S), cex.main= 0.8, ylim = c(0,80))
+lines(sw_in_an_predict ~ Sitedata$sw_in, col="red")
+dev.off()
+
+```
+
