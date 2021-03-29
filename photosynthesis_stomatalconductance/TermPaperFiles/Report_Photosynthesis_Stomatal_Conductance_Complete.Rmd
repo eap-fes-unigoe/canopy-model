@@ -1,0 +1,39 @@
+---
+title: "Modelling of Ecosystem-Atmosphere Processes - Photosynthesis and Stomatal Conductance"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Term Paper in the Module Ecosystem-Atmosphere Processes
+by Jonathan Gehret, Immo Shan & Lina Wernicke
+// Date: 31.03.2021
+
+
+## Introduction
+
+
+
+## Theory
+
+
+
+## Model development
+
+
+
+## Model results and evaluation
+
+
+
+## Discussion
+
+
+
+## References
+
+
+
+## Appendix

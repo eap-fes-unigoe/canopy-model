@@ -317,6 +317,49 @@ To account for different enzyme kinetics at varying temperatures, temperature ac
 </div>
 </div>
 </div>
+<div id="plotmmaker" class="section level2">
+<h2>Plotmmaker</h2>
+<p>To have a uniform and simple way of producing plots, we designed a plotmaker function which allowed us to feed in the output data of the model. The plotmaker then ran a few linear and nonlinear models to better understand the trend of the data. Since nighttime values create a baseline of subzero values, we decided to exclude these values from the regressions to avoid a distortion of the model.</p>
+<pre class="r"><code>#### Linear models ####
+
+d.mod = data.frame(out, Sitedata) #creating a linear model data frame
+
+d.mod.norm.an = subset(d.mod[which(d.mod$an &gt; 0),])#only taking values &gt;0
+d.mod.norm.an$tair2 = d.mod.norm.an$tair^2
+qmtemp_an = lm(d.mod.norm.an$an ~ d.mod.norm.an$tair + d.mod.norm.an$tair2 )
+
+
+d.mod.norm.gs = subset(d.mod[which(d.mod$gs &gt; 0.1),])#only taking values &gt;0.1
+d.mod.norm.gs$tair2 = d.mod.norm.gs$tair^2
+qmtemp_gs = lm(d.mod.norm.gs$gs ~ d.mod.norm.gs$tair + d.mod.norm.gs$tair2 )
+
+qmsw_an = nls(out$an~a*Sitedata$sw_in/(1+b*Sitedata$sw_in),data=c(out, Sitedata),start=list(a=1.8,b=0.04))
+
+
+temp_an_predict = predict(qmtemp_an)
+temp_gs_predict = predict(qmtemp_gs)
+sw_in_an_predict = predict(qmsw_an)</code></pre>
+<p>Then the pdf is rendered by running diffferent plot function consecutively and combining them into one file.</p>
+<pre class="r"><code>S = &quot;Subtitle&quot;
+
+
+pdf (file= &quot;Filepath&quot;)
+
+plot(out$an ~ c(1:length(out$an)), xlab = &quot;Timesteps in 30 min&quot;, ylab = &quot;Leaf net photosynthesis (umol CO2/m2 leaf/s)&quot;, main= c(&quot;Net assimilation over time&quot;, S), type = &quot;l&quot;, cex.main= 0.8, ylim = c(0,80))
+plot(out$gs ~ c(1:length(out$an)), xlab = &quot;Timesteps in 30 min&quot;, ylab = &quot;Leaf stomatal conductance (mol H2O/m2 leaf/s)&quot;, main= c(&quot;stomata conductance over time&quot;, S), type = &quot;l&quot;, cex.main= 0.8, ylim =c(0,1.8))
+
+plot(out$an ~ Sitedata$tair, xlab = &quot;Temperature (K)&quot;, ylab = &quot;Leaf net photosynthesis (umol CO2/m2 leaf/s)&quot;, main = c(&quot;Net assimilation over temperature&quot;, S), sub = &quot;Fitted model excludes baseline (night values) for better fit.&quot;, cex.main= 0.8, ylim = c(0,80))
+lines(temp_an_predict ~ d.mod.norm.an$tair, col = &quot;red&quot;)
+
+
+plot(out$gs ~ Sitedata$tair, xlab = &quot;Temperature (K)&quot;, ylab = &quot;Leaf stomatal conductance (mol H2O/m2 leaf/s)&quot;, main =c(&quot;stomata conductance over temperature&quot;, S), sub = &quot;Fitted model excludes baseline (night values) for better fit.&quot;, cex.main= 0.8, ylim = c(0, 1.8))
+lines(temp_gs_predict ~ d.mod.norm.gs$tair, col = &quot;red&quot;)
+
+
+plot(out$an ~ Sitedata$sw_in, xlab = &quot;Incoming shortwave radiation (W/m2)&quot;, ylab =&quot;Leaf net photosynthesis (umol CO2/m2 leaf/s)&quot;, main = c(&quot;Net assimilation over shortwave radiation&quot;, S), cex.main= 0.8, ylim = c(0,80))
+lines(sw_in_an_predict ~ Sitedata$sw_in, col=&quot;red&quot;)
+dev.off()</code></pre>
+</div>
 
 
 
