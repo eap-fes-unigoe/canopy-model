@@ -6,8 +6,8 @@ pars$vcmax25 = pars_calib[1]
 pars$g1 = pars_calib[2]
 
 ## Calibration run (for loop) ----
-for(n in 1:length(input$time)) {
-#for(n in 1:24) {
+#for(n in 1:length(input$time)) {
+for(n in 1:24) {
   if(n==1) {state_last <- initial_state[1,]} else state_last <- out[(n-1),] # state variable values at previous time step
   met <- input[n,]
 

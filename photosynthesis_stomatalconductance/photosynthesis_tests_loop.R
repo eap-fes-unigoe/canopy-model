@@ -91,7 +91,7 @@ plot(gs_leaf)
 # comparing an and gpp
 
 # in kg per day
-plot(an_kg, ylab = "an kg CO2/m2 ground/h",ylim = c(0,0.003)) #photosynthesis in kg
+plot(an_kg, ylab = "an kg CO2/m2 ground/h") #photosynthesis in kg
 plot(fluxes$gpp, ylab = "GPP kg CO2/m2 ground/h") #gpp in kg
 plot(an_kg,fluxes$gpp)
 #plot(an_kg,fluxes$nee)
@@ -135,4 +135,9 @@ Sitedata = data.frame(c(input,fluxes))
 source("photosynthesis_stomatalconductance/plotmaker_ps_sc.R")
 plotmaker_ps_sc(out)
 
-
+plot(input$sw_in)
+points(out$ic_sh, col = "green")
+points(out$ic_sun, col = "red")
+points(out$ic_sha+out$ic_sun, col = "blue")
+points(input$sw_in, col = "blue")
+plot(out$ic)
