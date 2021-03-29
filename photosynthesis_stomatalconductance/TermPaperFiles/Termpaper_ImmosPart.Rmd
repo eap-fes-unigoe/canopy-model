@@ -5,7 +5,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new/photosynthesis_stomatalconductance/TermPaperFiles/TheoryFormulas")
 ```
 
 
@@ -17,7 +16,9 @@ are photosynthesis in the form of net assimilation and stomatal conductance as c
 figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
 
 ### Photosynthesis
-
+```{r workingdrive}
+setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new/photosynthesis_stomatalconductance/TermPaperFiles/TheoryFormulas")
+```
 
 Photosynthesis is calculated using the Farquhar-von Caemmerer-Bernacchi model (FvCB model) that mathematically describes the C3 photosynthesis
 pathway. 
@@ -122,9 +123,31 @@ The calculation is repeated until the old and new **ci** values converge.
 
 
 ### Sensitivity Analysis
+```{r sensitivity analysis setup, echo=FALSE}
+source("setup_sitedata.R")
+setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new")
+Sitedata =  input
+```
+
 
 The sensitivity analysis has been conducted with assumed central values of Vcmax = 60 and g1 = 9. 
 The model ran for a duration of 1 month (July 2018) and the values were decreased and increased by 25% and 50% respectively. The oscillations represent day and night cycles. 
+
+
+
+```{r plot1, echo=FALSE}
+out = read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/par_comparison_60_9", header = T, dec = ".", sep = ",")
+S = "Photosynthesis Model July (Vcmax =60, g1 = 9)"
+plot(out$an ~ c(1:length(out$an)/24), xlab = "Timesteps in 30 min", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= c("Net assimilation over time", S), type = "l", cex.main= 0.8, ylim = c(0,80))
+
+
+
+
+```
+
+
+
+
 
 ![**Figure X: Net assimilation at Vcmax = 60, g1 = 9**](Sensitivity Analysis Plots/Vcmax_an_60_9.JPG){width=50%}
 ![**Figure X: Stomatal conductance at Vcmax = 60, g1 = 9**](Sensitivity Analysis Plots/Vcmax_gs_60_9.JPG){width=50%}

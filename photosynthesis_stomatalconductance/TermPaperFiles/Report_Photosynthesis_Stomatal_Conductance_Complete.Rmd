@@ -141,25 +141,36 @@ The calculation is repeated until the old and new **ci** values converge.
 The sensitivity analysis has been conducted with assumed central values of Vcmax = 60 and g1 = 9. 
 The model ran for a duration of 1 month (July 2018) and the values were decreased and increased by 25% and 50% respectively. The oscillations represent day and night cycles. 
 
-![**Figure X: Net assimilation at Vcmax = 60, g1 = 9**](Sensitivity Analysis Plots/Vcmax_an_60_9.JPG){width=50%}
-
-![**Figure X: Stomatal conductance at Vcmax = 60, g1 = 9**](Sensitivity Analysis Plots/Vcmax_gs_60_9.JPG){width=50%}
+![](Sensitivity Analysis Plots/60_9_An.png){width=50%}![](Sensitivity Analysis Plots/60_9_gs.png){width=50%}
 
 #### Vcmax modification
 
 
 If Vcmax is decreased, net assimilation responds stronger to changes than if Vcmax is increased. In comparison, net assimilation drops about 30% if Vcmax is decreased by 25% and increases by approximately 10% if Vcmax is increased by 25%. (Figure X)
 
-![**Figure X: Net assimilation response to sensitivity analysis (Vcmax modification)**](Sensitivity Analysis Plots/Vcmax_an_time.JPG){width=80%}
+**Figure X: Net assimilation response to sensitivity analysis (Vcmax modification)**
+
+![](Sensitivity Analysis Plots/30_9_an.png){width=50%}![](Sensitivity Analysis Plots/45_9_an.png){width=50%}
+![](Sensitivity Analysis Plots/75_9_an.png){width=50%}![](Sensitivity Analysis Plots/90_9_an.png){width=50%}
+
 
 
 The same behavior applies to the relative change in stomatal conductance when Vcmax is modified. The model is more sensitive to a decrease than to an increase in Vcmax. (Figure X)
 
-![**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**](Sensitivity Analysis Plots/Vcmax_gs-time.JPG){width=80%}
+**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**
+
+![](Sensitivity Analysis Plots/30_9_gs.png){width=50%}![](Sensitivity Analysis Plots/45_9_gs.png){width=50%}
+![](Sensitivity Analysis Plots/75_9_gs.png){width=50%}![](Sensitivity Analysis Plots/90_9_gs.png){width=50%}
+
+
 
 The model responds to  increasing Vcmax with a shift of the photosynthesis temperature optimum. The temperature optimum increases about 7 K from -50% Vcmax to +50% Vcmax. (Figure X)
 
-![**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**](Sensitivity Analysis Plots/Vcmax_an_temp.JPG){width=80%}
+**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**
+
+
+![](Sensitivity Analysis Plots/30_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/45_9_an_temp.png){width=50%}
+![](Sensitivity Analysis Plots/75_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/90_9_an_temp.png){width=50%}
 
 #### g1 modification
 
@@ -167,18 +178,25 @@ If g1 is modified, a change of 25% weakly changes net assimilation into either d
 A 50% change of g1 does not change much if g1 is increased but a decrease causes a strong decrease in net assimilation. 
 The model therefore is more sensitive to strong decreases in g1 than to other changes. (Figure X)
 
-![**Figure X: Net assimilation response to sensitivity analysis (g1 modification)**](Sensitivity Analysis Plots/g1_an_time.JPG){width=80%}
+**Figure X: Net assimilation response to sensitivity analysis (g1 modification)**
+
+![](Sensitivity Analysis Plots/60_4-5_an.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an.png){width=50%}
+![](Sensitivity Analysis Plots/60_11-25_an.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an.png){width=50%}
+
 
 Stomatal conductance increases and decreases proportionally with given changes to g1 and is not particularly sensitive to changes in either direction. (Figure X)
 
-![**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**](Sensitivity Analysis Plots/g1_gs-time.JPG){width=80%}
+**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**
 
+![](Sensitivity Analysis Plots/60_4-5_gs.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_gs.png){width=50%}
+![](Sensitivity Analysis Plots/60_11-25_gs.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_gs.png){width=50%}
 
 Net assimilation responds to temperature under g1 modification with a shift in temperature optimum relative to increasing g1. The temperature optima of the different g1 scenarios coves a slightly larger range than the optima of the Vcmax modification. (Figure X & X)
 
-![**Figure X: Temperature response to sensitivity analysis (g1 modification)**](Sensitivity Analysis Plots/g1_an_temp.JPG){width=80%}
+**Figure X: Temperature response to sensitivity analysis (g1 modification)**
 
-
+![](Sensitivity Analysis Plots/60_4-5_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an_temp.png){width=50%}
+![](Sensitivity Analysis Plots/60_11-25_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an_temp.png){width=50%}
 
 
 

@@ -1,9 +1,11 @@
 
-source("setup_sitedata.R")
+
 
 #####Plotmaker Function####
 setwd("C:/Users/Mogli/Desktop/Git Hub/canopy-model_new")
-out = read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/par_comparison_60_9", header = T, dec = ".", sep = ",")
+out = read.table("photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/sensitivity_60_13-5", header = T, dec = ".", sep = ",")
+
+source("setup_sitedata.R")
 Sitedata =  input
 
 
@@ -27,13 +29,13 @@ sw_in_an_predict = predict(qmsw_an)
 
 ########
 
-S = "Photosynthesis Model July (Vcmax =60, g1 = 9)"
+S = "Sensitivity analysis (Vcmax =60, g1 = 13.5)"
 
 
-pdf (file= "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Sensitivity analysis plots/hainich_july_60_9.pdf")
+#pdf (file= "photosynthesis_stomatalconductance/Model files Stomata Conductance & Photosynthesis/Outputs/Sensitivity analysis plots/hainich_july_60_9.pdf")
 
-plot(out$an ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= c("Net assimilation over time", S), type = "l", cex.main= 0.8, ylim = c(0,80))
-plot(out$gs ~ c(1:length(out$an)), xlab = "Timesteps in 30 min", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main= c("stomata conductance over time", S), type = "l", cex.main= 0.8, ylim =c(0,1.8))
+plot(out$an ~ c(1:length(out$an)/24), xlab = "Timesteps in days", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main= c("Net assimilation over time", S), type = "l", cex.main= 0.8, ylim = c(0,80))
+plot(out$gs ~ c(1:length(out$an)/24), xlab = "Timesteps in days", ylab = "Leaf stomatal conductance (mol H2O/m2 leaf/s)", main= c("stomata conductance over time", S), type = "l", cex.main= 0.8, ylim =c(0,1.8))
 
 plot(out$an ~ Sitedata$tair, xlab = "Temperature (K)", ylab = "Leaf net photosynthesis (umol CO2/m2 leaf/s)", main = c("Net assimilation over temperature", S), sub = "Fitted model excludes baseline (night values) for better fit.", cex.main= 0.8, ylim = c(0,80))
 lines(temp_an_predict ~ d.mod.norm.an$tair, col = "red")
@@ -45,6 +47,6 @@ lines(temp_gs_predict ~ d.mod.norm.gs$tair, col = "red")
 
 plot(out$an ~ Sitedata$sw_in, xlab = "Incoming shortwave radiation (W/m2)", ylab ="Leaf net photosynthesis (umol CO2/m2 leaf/s)", main = c("Net assimilation over shortwave radiation", S), cex.main= 0.8, ylim = c(0,80))
 lines(sw_in_an_predict ~ Sitedata$sw_in, col="red")
-dev.off()
+#dev.off()
 
 
