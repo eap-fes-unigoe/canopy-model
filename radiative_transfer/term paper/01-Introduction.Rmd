@@ -1,4 +1,14 @@
 # Introduction {#intro}
 
-Radiative transfer is the physical phenomenon of energy transfer in the form of electromagnetic radiation. The equations involved in radiative transfer modelling describes atmospheric science and process in a mathematical way of understanding. The topic here describes radiative transfer for plant canopies.
+Electromagnetic radiation is they only way for the Earth can exchange energy with the rest of the universe. Incoming solar radiation is the source of virtually all energy present on Earth, and outgoing infrared radiation is how Earth can reduce its temperature.
+This leads the behaviour of radiation at being one of the core aspect that regulates Earth's climate and biological processes.
 
+The most important interaction between the radiation and the Earth take places at its boundaries, which are often occupied by forest ecosystems.
+Incoming solar is absorbed, reflected and absorbed by the canopies, which also emit longwave radiation.
+
+The behaviour of the radiation depends on canopy properties: its architecture and leaf optical properties.
+The amount of available radiation directly influences two key aspects in ecosystems: temperature and photosynthesis. Therefore, understanding how radiation interacts with canopies is crucial to study ecosystem functions and subsequently model their features.
+The aim of this project is developing a model for radiative transfer in canopies and bettwe
+ the
+
+Shortwave used for photosynthesis.

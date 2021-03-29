@@ -19,7 +19,8 @@ source("radiative_transfer/calc_parameters.R")
 #' - t_soil temperature of soil (in Kelvin)
 #' - t_leaf temperature of leaves (in Kelvin)
 #'
-#' @param pars a list of the model parameters containing at least the following elements
+#' @param pars a list of the model parameters containing at least the following elements:
+#'
 #' - max LAI value in the summer
 #' - min_LAI min value of LAI during winter, it is an aproximation that consider the total Plant Area Index as LAI
 #' - leaf_out day leaves start in spring
@@ -55,9 +56,6 @@ source("radiative_transfer/calc_parameters.R")
 #' - l_down Transmitted longwave radiation below the canopy
 #' - LAI Leaf Area Index
 #' - LAI_sunlit LAI of sunlit canopy
-
-# The Kd in the Two Stream model has a different value
-Kd_2stream <- get_two_stream_Kd() # This is a costant value that depends only on the leaf angle distribution
 fun_calc_radiative_transfer <- function(input, state, pars, dt){
     # Calc all the intermediate parameters
     # Possible optimization here as not all the paramaters changes every step
@@ -71,7 +69,7 @@ fun_calc_radiative_transfer <- function(input, state, pars, dt){
     beta <- get_beta(pars$rho_leaf, pars$tau_leaf)
     beta0 <- get_beta0(zenith, Kb, Kd_2stream, omega_leaf)
 
-    # the incoming shortwave is the total diffure + direct. Due to sensor errors teh difference can be negative so the min possible value is set to 0
+    # the incoming shortwave is the total diffure + direct. Due to sensor errors the difference can be negative so the min possible value is set to 0
     sw_sky_b <- max(input$sw_in - input$sw_dif, 0)
     shortwave <- shortwave_radiation(sw_sky_b, input$sw_dif, radiation_PAI, Kb, Kd_2stream, beta, beta0 , omega_leaf,
                                      pars$clump_OMEGA, pars$alb_soil_b, pars$alb_soil_d)
@@ -82,3 +80,5 @@ fun_calc_radiative_transfer <- function(input, state, pars, dt){
 
     return(data.frame(c(shortwave, longwave, LAIs)))
 }
+# The Kd in the Two Stream model has a different value
+Kd_2stream <- get_two_stream_Kd() # This is a costant value that depends only on the leaf angle distribution

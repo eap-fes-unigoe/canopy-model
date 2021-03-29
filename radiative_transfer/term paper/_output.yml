@@ -4,7 +4,7 @@ bookdown::gitbook:
     toc:
       before: |
         <li><a href="./">Radiative transfer - Term paper</a></li>
-    download: ["pdf", "epub"]
+    download: "pdf"
     sharing:
       facebook: no
       twitter: no

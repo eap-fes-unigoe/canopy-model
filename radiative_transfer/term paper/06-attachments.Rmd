@@ -1,8 +1,9 @@
 # Attachements
 
-Here all the source code is collected. It is also available on [github](https://github.com/eap-fes-unigoe/canopy-model/)
+Here all the source code is collected. It is also available on [github](https://github.com/eap-fes-unigoe/canopy-model/).
 
 ## Model code
+This is the code of the model
 
 ### Model entry point
 ```{r model-entry, code=xfun::read_utf8('../../fun_calc_radiative_transfer.R')}
@@ -20,6 +21,7 @@ Here all the source code is collected. It is also available on [github](https://
 ```
 
 ## Report code
+This is the code used for writing this report
 
 ### Setup
 ```{r utils, code=xfun::read_utf8('radiation_utils_test_data.R')}

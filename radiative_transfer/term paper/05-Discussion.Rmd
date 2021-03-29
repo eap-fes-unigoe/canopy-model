@@ -54,7 +54,7 @@ Variation of absorbed radiation by the soil and canopy with the variation of LAI
 
 We can see that the overall canopy albedo is constant while the division between soil and canopy changes
 
-```{r}
+```{r, echo = F}
 out_2 %>%
   gather("Radiation_type", "Radiation", ic, ig, i_up) %>%
   ggplot() +
@@ -97,7 +97,7 @@ out_3 %>%
 
 Variation of the fraction of soil radiation that is absorbed with the change of the solar zenith (angle between vertical and sun)
 
-```{r}
+```{r ic-zenith, echo=F}
 fake_input_4 <- tibble(
   datetime = as.POSIXct("2016-07-21 00:00"), # Summer day
   zenith = seq(0, 90, 2.5),
@@ -115,7 +115,7 @@ out_4 %>%
   mutate(absorbed_fraction = ic / sw_in) %>%
   ggplot() +
   geom_line(aes(x = zenith, y = absorbed_fraction), color = "red") +
-  labs(x = "Zenith (deg)", y = "Fraction of total radiation absorbed", title="Fraction of abosorbed radiation with different zenith")
+  labs(x = "Zenith (deg)", y = "Fraction of total radiation absorbed", title="Fraction of absorbed radiation with different zenith")
 ```
 
 ```{r}
@@ -134,7 +134,7 @@ The model was developed for explorative purposes.
 
 ## Model improvements
 
-The model has been implement in the simplest possible way.
+The model has been implement with the goal to be simple
 The future step in order to have a better model are:
 
  - solving the shortwave radiations for the visible and near infrared radiation, as leaves have different optical properties

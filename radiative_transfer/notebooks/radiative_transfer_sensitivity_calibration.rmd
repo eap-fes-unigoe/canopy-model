@@ -12,7 +12,7 @@ knitr::opts_knit$set(root.dir = "../../")
 ```
 
 ```{r, message = FALSE}
-source('radiative_transfer/notebooks/setup_radiation_test_data.R')
+source('../term paper/radiation_utils_test_data.R')
 library(FME)
 ```
 
