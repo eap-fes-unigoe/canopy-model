@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #### Term Paper in the Module Ecosystem-Atmosphere Processes
-by Jonathan Gehret, Immo Shan & Lina Wernicke
+by Jonathan Gehret (23301512), Immo Shan (21660614) & Lina Wernicke (26801586)
 // Date: 31.03.2021
 
 
@@ -33,9 +33,9 @@ This term paper describes the development of the sub-model for the processes of 
 ## Theory
 
 
-The leaf photosynthesis model can essentially be divided into two interacting components which are modeled individually. These two components
-are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. All theory, equations and
-figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
+The leaf photosynthesis model can essentially be divided into two interacting components which are modeled individually. 
+These two components are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. The following theoretical explainations attempt to outline the calculations and relationships that were applied in the photosynthesis model.
+All theory, equations and figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
 
 ### Photosynthesis
 
@@ -134,9 +134,9 @@ The biochemical demand is calculated as follows, depending on the photosynthesis
 To calculate **ci** dependent on a given leaf temperature, an iterative approach can be taken which uses an initial **ci** value and adapts
 this value until it satisfies the biochemical demand function as well as the diffusive supply-constraint function. 
 This approach is graphically described in the following figure and is also applied in the model. 
-The calculation is repeated until the old and new **ci** values converge.
+The calculation is repeated until the old and new **ci** values converge. (Figure 1)
 
-![**Figure X: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG){width=50%}
+![**Figure 1: Iterative approach for calculating ci**](TheoryFormulas/ci_calculation_iterative.JPG){width=50%}
 
 
 ## Model development
@@ -252,7 +252,7 @@ The temperature response of net assimilation to increasing Vcmax can be explaine
 
 When comparing modeled and observed data, the photosynthesis for the most part of the year is perfectly zero. Due to missing foiliage, a missing assimilation is quite possible, however zero activity for net assimilation is not realistic since respiration is not accounted for. Therefor, during winter, a negative net assimilation would be more plausible. 
 After inspecting the input climate data for missing or implausible values, it is clear that the problem does not lie within that input data. It therefor can be either a potential error in the radiation input or an erroneous condition in the model which causes net assimilation to be completely zero. 
-Regarding the strong difference in the amplitude of the model compared to the observed assimilation, we can refer to the difficulties in the calibration process which would lower Vcmax and g1 to unrealisticly low values. If realistic values were applied, unrealistic results were given. We suspect a problem within the model, concerning an overexaggerated conversion factor.
+Regarding the strong difference in the amplitude of the model compared to the observed assimilation, we can refer to the difficulties in the calibration process which would lower Vcmax and g1 to unrealisticly low values. If realistic values were applied, unrealistic results were given. We suspect a problem within the model, concerning an overexaggerated conversion factor or an error in the use of the leaf area index.
 
 
 ### Problems during transcription 
@@ -260,7 +260,7 @@ Regarding the strong difference in the amplitude of the model compared to the ob
 
 ### Conclusion
 
-
+It can be concluded that the model in its current state lacks the necessary realism when compared to actual field data. Various efforts have been made during the course to either modify the code, acquire different data or understand the data structure in terms of units, interactions and conversions. However, despite the model actually returning an output, quite some work remains until the results may be appplied in a professional environment. Nevertheless, building the model, debugging and merging the code with other groups has resulted in an intensive involvement with the topic and provided a qualitative learning experience about ecosystem modelling as a team effort. 
 
 
 ## References
