@@ -140,104 +140,100 @@ The calculation is repeated until the old and new **ci** values converge.
 
 
 ## Model development
-
-
-
 ## Model results and evaluation
 
 ### Calibration
 
 ### Sensitivity analysis
 
-The sensitivity analysis has been conducted with assumed central values of Vcmax = 60 and g1 = 9. 
-The model ran for a duration of 1 month (July 2018) and the values were decreased and increased by 25% and 50% respectively. The oscillations represent day and night cycles. 
+The sensitivity analysis has been conducted with assumed central values of Vcmax = 60 and g1 = 9. These approximate values have been taken from Kattge et al. (2009). (Figure 2.1)
+The model ran for a duration of 1 month (July 2018) and the values were decreased and increased by 25% and 50% respectively. The oscillations represent day and night cycles. To superficially understand the sensitivity of the model, the output was visually compared in each direction. 
 
 ![](Sensitivity Analysis Plots/60_9_An.png){width=50%}![](Sensitivity Analysis Plots/60_9_gs.png){width=50%}
-
+**Figure 2.1: net assimilation and stomatal conductance under central  values of Vcmax and g1**
 #### Vcmax modification
 
 
-If Vcmax is decreased, net assimilation responds stronger to changes than if Vcmax is increased. In comparison, net assimilation drops about 30% if Vcmax is decreased by 25% and increases by approximately 10% if Vcmax is increased by 25%. (Figure X)
+If Vcmax is decreased, net assimilation responds stronger to changes than if Vcmax is increased. In comparison, net assimilation drops about 30% if Vcmax is decreased by 25% and increases by approximately 10% if Vcmax is increased by 25%. (Figure 2.2)
 
 
 ![](Sensitivity Analysis Plots/30_9_an.png){width=50%}![](Sensitivity Analysis Plots/45_9_an.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_an.png){width=50%}![](Sensitivity Analysis Plots/90_9_an.png){width=50%}
-**Figure X: Net assimilation response to sensitivity analysis (Vcmax modification)**
+**Figure 2.2: Net assimilation response to sensitivity analysis (Vcmax modification)**
 
 
-The same behavior applies to the relative change in stomatal conductance when Vcmax is modified. The model is more sensitive to a decrease than to an increase in Vcmax. (Figure X)
+The same behavior applies to the relative change in stomatal conductance when Vcmax is modified. The model is more sensitive to a decrease than to an increase in Vcmax. (Figure 2.3)
 
 
 ![](Sensitivity Analysis Plots/30_9_gs.png){width=50%}![](Sensitivity Analysis Plots/45_9_gs.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_gs.png){width=50%}![](Sensitivity Analysis Plots/90_9_gs.png){width=50%}
 
-**Figure X: Stomata conductance response to sensitivity analysis (Vcmax modification)**
+**Figure 2.3: Stomata conductance response to sensitivity analysis (Vcmax modification)**
 
 
-The model responds to  increasing Vcmax with a shift of the photosynthesis temperature optimum. The temperature optimum increases about 7 K from -50% Vcmax to +50% Vcmax. (Figure X)
+The model responds to  increasing Vcmax with a shift of the photosynthesis temperature optimum. The temperature optimum increases about 7 K from -50% Vcmax to +50% Vcmax. (Figure 2.4)
 
 ![](Sensitivity Analysis Plots/30_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/45_9_an_temp.png){width=50%}
 ![](Sensitivity Analysis Plots/75_9_an_temp.png){width=50%}![](Sensitivity Analysis Plots/90_9_an_temp.png){width=50%}
 
-**Figure X: Temperature response to sensitivity analysis (Vcmax modification)**
+**Figure 2.4: Temperature response to sensitivity analysis (Vcmax modification)**
 
 
 #### g1 modification
 
 If g1 is modified, a change of 25% weakly changes net assimilation into either direction respectively.
 A 50% change of g1 does not change much if g1 is increased but a decrease causes a strong decrease in net assimilation. 
-The model therefore is more sensitive to strong decreases in g1 than to other changes. (Figure X)
+The model therefore is more sensitive to strong decreases in g1 than to other changes. (Figure 2.5)
 
 
 ![](Sensitivity Analysis Plots/60_4-5_an.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_an.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an.png){width=50%}
 
-**Figure X: Net assimilation response to sensitivity analysis (g1 modification)**
+**Figure 2.5: Net assimilation response to sensitivity analysis (g1 modification)**
 
-Stomatal conductance increases and decreases proportionally with given changes to g1 and is not particularly sensitive to changes in either direction. (Figure X)
+Stomatal conductance increases and decreases proportionally with given changes to g1 and is not particularly sensitive to changes in either direction. (Figure 2.6)
 
 
 
 ![](Sensitivity Analysis Plots/60_4-5_gs.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_gs.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_gs.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_gs.png){width=50%}
 
-**Figure X: Stomata conductance response to sensitivity analysis (g1 modification)**
+**Figure 2.6: Stomata conductance response to sensitivity analysis (g1 modification)**
 
 
 
-Net assimilation responds to temperature under g1 modification with a shift in temperature optimum relative to increasing g1. The temperature optima of the different g1 scenarios coves a slightly larger range than the optima of the Vcmax modification. (Figure X & X)
+Net assimilation responds to temperature under g1 modification with a shift in temperature optimum relative to increasing g1. The temperature optima of the different g1 scenarios coves a slightly larger range than the optima of the Vcmax modification. (Figure 2.7 & 2.4)
 
 
 
 ![](Sensitivity Analysis Plots/60_4-5_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_6-75_an_temp.png){width=50%}
 ![](Sensitivity Analysis Plots/60_11-25_an_temp.png){width=50%}![](Sensitivity Analysis Plots/60_13-5_an_temp.png){width=50%}
 
-**Figure X: Temperature response to sensitivity analysis (g1 modification)**
+**Figure 2.7: Temperature response to sensitivity analysis (g1 modification)**
 
 
 ### Modeled vs. observed data
 
 #### Comparison
 To compare modeled and observed data, the model was run over one year with 2018 climate data from the Hainich Forest.
-The first obvious difference is that the modeled photosynthesis is much higher than the observed data with a maximum value of 62.2 umol CO2/m2 leaf/s while observed GPP peaks at 40.6 umol CO2/m2 leaf/s. Furthermore the modeled photosynthesis commences after roughly 100 days with no respiration before Day 100 and after Day 300. Observed GPP increases and decreases around similar times of the year but shows activity in winter as well. (Figure X)
+The first obvious difference is that the modeled photosynthesis is much higher than the observed data with a maximum value of 62.2 umol CO2/m2 leaf/s while observed GPP peaks at 40.6 umol CO2/m2 leaf/s. Furthermore the modeled photosynthesis commences after roughly 100 days with no respiration before Day 100 and after Day 300. Observed GPP increases and decreases around similar times of the year but shows activity in winter as well. (Figure 3.1)
 
 ![](Sensitivity Analysis Plots/an over one year.png){width=50%}![](Sensitivity Analysis Plots/Year long GPP.png){width=50%}
-**Figure X: Modeled photosynthesis vs. observed photosynthesis**
+**Figure 3.1: Modeled photosynthesis vs. observed photosynthesis**
 
 #### Stomatal conductance
 
-Modeled stomatal conductance shows a similar trend as modeled photosynthesis with no activity until ~ Day 100 and stp of activity at Day 300. 
+Modeled stomatal conductance shows a similar trend as modeled photosynthesis with no activity until ~ Day 100 and stp of activity at Day 300. (Figure 3.2)
 
 ![](Sensitivity Analysis Plots/gs over one year.png){width=50%}
-**Figure X: Modeled stomatal conductance over one year**
+**Figure 3.2: Modeled stomatal conductance over one year**
 
 #### Temperature response
 
-The temperature optimum of modeled photosynthesis lies at approximately 300 K (~27° C) (Figure X)
+The temperature optimum of modeled photosynthesis lies at approximately 300 K (~27° C) (Figure 3.3)
 
 ![](Sensitivity Analysis Plots/An over 1 year_temp.png){width=50%}
-**Figure X: Temperature dependence of modeled photosynthesis**
-
+**Figure 3.3: Temperature dependence of modeled photosynthesis**
 
 
 
@@ -248,9 +244,23 @@ The temperature optimum of modeled photosynthesis lies at approximately 300 K (~
 
 ### Sensitivity analysis
 
+The sensitivity analysises show a general trend of the model being more sensitive if Vcmax and g1 are decreased compared to when they are increased. This may be due to the limiting effect that Vcmax has on the model with carboxylation being arguably a strongly limiting factor of photosynthesis, the model is harshly regulated by a decrease. If Vcmax is increased, the model may be limited by different factors, which cause the net assimilation to not reach the full potential of Vcmax. Limiting factors could be light, water potential or nutritive supply (which is not considered in this model). 
+The temperature response of net assimilation to increasing Vcmax can be explained by the lower activation energy for carboxylation if temperature is increased further (Benomar et al., 2019). This interaction can be understood by the temperature dependence of the entropy term in the peaked arrhenius function (Theory, Equation 1.11 & 1.12).
+
+
 ### Modeled vs. Observed
 
+When comparing modeled and observed data, the photosynthesis for the most part of the year is perfectly zero. Due to missing foiliage, a missing assimilation is quite possible, however zero activity for net assimilation is not realistic since respiration is not accounted for. Therefor, during winter, a negative net assimilation would be more plausible. 
+After inspecting the input climate data for missing or implausible values, it is clear that the problem does not lie within that input data. It therefor can be either a potential error in the radiation input or an erroneous condition in the model which causes net assimilation to be completely zero. 
+Regarding the strong difference in the amplitude of the model compared to the observed assimilation, we can refer to the difficulties in the calibration process which would lower Vcmax and g1 to unrealisticly low values. If realistic values were applied, unrealistic results were given. We suspect a problem within the model, concerning an overexaggerated conversion factor.
+
+
 ### Problems during transcription 
+
+
+### Conclusion
+
+It can be concluded that the model output in its current state is rather unrealistic and 
 
 
 ## References
