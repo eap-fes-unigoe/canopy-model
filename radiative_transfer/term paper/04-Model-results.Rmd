@@ -7,7 +7,7 @@ source('radiative_transfer/term paper/radiation_utils_test_data.R')
 library(tsibble)
 library(hydroGOF)
 ```
-```{r, include = F, cache = T}
+```{r model-run, include = F, cache = T}
 out <- rad_transf_new_p()
 
 out_plot <- tibble(datetime = input$datetime, night = input$night, mod_sw_out = out$i_up, obs_sw_out = fluxes$sw_out, mod_lw_out = out$l_up, obs_lw_out = fluxes$lw_out)
@@ -133,7 +133,7 @@ out_1year_wk %>%
   legend_labels(c("Incoming lw", "Upward lw", "Absorbed lw canopy", "Absorbed lw soil"))
 ```
 
-## Model Evaluation
+## Model evaluation
 
 The model results are compared with observed data to evaluate the model accuracy. It is done independently for the longwave and shortwave components.
 
@@ -156,7 +156,7 @@ The day peak of the model is often delayed compared to the observed one. This ph
 The model generally slightly underestimate the radiation during sunny days (first 3 and last), while overestimate during with cloudy conditions.
 During the night the observed radiation is slightly above zero, while the model is at zero. This is clearly a measurement error, as during the night there is no shortwave radiation.
 
-```{r swout-1wk, echo = F, fig.cap = "Shortwave Modeles vs Observed. One week.", dpi=200}
+```{r swout-1wk, echo = F, fig.cap = "Shortwave Modeles vs Observed. One week."}
 out_1week %>%
         gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
         ggplot() +
@@ -167,7 +167,10 @@ out_1week %>%
         legend_labels(labels = c("Modelled", "Observed"), "Outgoing shortwave radiation")
 ```
 ##### One Year {-}
-Problem in estimating the LAI during the spring/fall the model is less accurate
+
+By analyzing a model output over the whole year, there is a good overall performace.
+During spring, and partially during autumn, there is the biggest difference between the model output and the observations.
+This is probably connected to the fact that in that period the LAI is estimated with a simple linear model, thus does not reflect completely the real world conditions.
 ```{r swout-1yr, echo = F, fig.cap = "Shortwave Modeles vs Observed. One year."}
 out_1year_wk %>%
         gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
@@ -188,16 +191,35 @@ sw_intercept <- round(coef(sw_lm)[1], 2)
 sw_rmse <- sqrt(mean((out_plot$obs_sw_out - out_plot$mod_sw_out)^2))
 sw_nse <- NSE(out_plot$mod_sw_out, out_plot$obs_sw_out) # Nash-Sutcliffe Efficiency
 ```
-```{r sw-scat, echo = F}
+The performance of the model has been also analyzed in a quantitative way.
+A linear model has been built between the observations, and the model output (Figure \@ref(fig:sw-scat)), if the model matched perfectly the observations the slope should be $1$, the intercept $0$ and the $r^2$
+The results of the linear model are:
+
+ - slope: $`r sw_slope`$
+ - intercept: $`r sw_intercept`$
+ - $r^2$: $`r sw_r2`$
+
+The intercept is really close to $0$, and the slope and $r^2$ also indicate a good fit.
+
+The performance of the model has been also evaluated using the Root Mean Square Error (RMSE) and the Nash-Sutcliffe coefficient (NSE).
+The obtained values are:
+ - RMSE: $`r sw_rmse`$
+ - NSE: $`r sw_nse`$
+
+The NSE has a value of $1$ when there is a perfect model and $`r sw_nse`$ can be considered really good. The RMSE can be interpreted as the amplitude of the error and compared to the range of the radiation. Therefore, in this scenario RMSE of $`r sw_rmse`$ can be considered good but not perfect.
+
+```{r sw-scat, echo = F, fig.cap="Modeled vs Observed outgoing sw, scatter plot"}
 ggplot(out_plot) +
   geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
   geom_point(aes(x = mod_sw_out, y = obs_sw_out)) +
   geom_smooth(aes(x = mod_sw_out, y = obs_sw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
   labs(title = "Outgoing sw modeled vs observed",
        subtitle = paste(c("slope: ", sw_slope, " intercept: ", sw_intercept, " r2: ", sw_r2, " . Data from 2018."), collapse = ""),
-       x = "Modelled outgoing sw (W m-2)", y = "Observed outgoing sw (W m-2)", colour = "Legend")
+       x = "Modelled outgoing shortwave (W m-2)", y = "Observed outgoing sw (W m-2)", colour = "Legend")
 ```
+#### Conclusion
 
+The performance of the model in more than satisfactory
 
 ### Longwave
 For the shortwave the only observed variable that can be used for the model evaluation is the outgoing shortwave radiation.
@@ -243,17 +265,30 @@ lw_intercept <- round(coef(lw_lm)[1], 2)
 lw_rmse <- round(sqrt(mean((out_plot$obs_lw_out - out_plot$mod_lw_out)^2)), 2)
 lw_nse <- round(NSE(out_plot$mod_lw_out, out_plot$obs_lw_out), 2)# Nash-Sutcliffe Efficiency
 ```
-Linear model
-`r lw_slope`
+The same procedure for shortwave has been followed for the longwave of the quantitative evaluation of model performance.
 
-```{r lw-scat, echo = F}
+The longwave model has a really good performance(Figure \@ref(fig:lw-scat))
+The results of the linear model are:
+
+ - slope: $`r lw_slope`$
+ - intercept: $`r lw_intercept`$
+ - $r^2$: $`r lw_r2`$
+
+The slope has a value of $1$ if rounded at the first decimal point and the $r2$ is very close to $1$
+
+The performance of the model has been also evaluated using the Root Mean Square Error (RMSE) and the Nash-Sutcliffe coefficient (NSE).
+The obtained values are:
+ - RMSE: $`r lw_rmse`$
+ - NSE: $`r lw_nse`$
+
+The NSE has a value of $1$ when there is a perfect model and $`r sw_nse`$ can be considered really good. The RMSE can be interpreted as the amplitude of the error and compared to the range of the radiation. Therefore, in this scenario RMSE of $`r sw_rmse`$ can be considered good but not perfect.
+
+```{r lw-scat, echo = F, fig.cap="Modeled vs Observed outgoing lw, scatter plot"}
 ggplot(out_plot) +
   geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
   geom_point(aes(x = mod_lw_out, y = obs_lw_out)) +
   geom_smooth(aes(x = mod_lw_out, y = obs_lw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
   labs(title = "Outgoing lw modeled vs observed",
        subtitle = paste(c("slope: ", lw_slope, " intercept: ", lw_intercept, " r2: ", lw_r2, " . Data from 2018."), collapse = ""),
-       x = "Modeled outgoing lw (W m-2)", y = "Observed outgoing lw (W m-2)", colour = "Legend")
+       x = "Modeled outgoing longwave (W m-2)", y = "Observed outgoing lw (W m-2)", colour = "Legend")
 ```
-
-RMSE:``r lw_rmse``   NSE:``r lw_nse``

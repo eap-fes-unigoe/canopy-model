@@ -1,16 +1,31 @@
 # Discussion
 
 ## Model components
-Kb and Kd
-```{r}
-zenith <- seq(1,80)
+
+After the analyzing the model results and evaluating its performance a more the behaviour of the model components is analyzed.
+
+### Kb {-}
+
+The direct beam extinction coefficient depends on the leaf angle distribution, which is considered constant and the zenith.
+The sun elevation is the most important elements that influences the penetration of direct shortwave radiation.
+For zenith inferior to $30°$ the *Kb* has a value of about $0.5$ (Figure \@ref(fig:kb-zenith)),
+then reaches $1$ with a $60°$ zenith and eventually start to grow exponentially reaching the theoretical value of infinity when the zun is completely horizontal.
+```{r kb-zenith, fig.cap = "Kb over zenith", echo = F}
+zenith <- seq(0,85)
 Kb <- map_dbl(zenith, get_Kb)
 
 ggplot() +
   geom_line(aes(x = zenith , y = Kb)) +
-  labs(title = "Kb over zenith")
+  labs(title = "Kb over zenith", x="Zenith (degrees)")+
+  scale_y_continuous(n.breaks = 7, limits = c(0,NA))
 ```
-```{r}
+### Kd {-}
+The diffuse radiation extinction coefficient does not depend on directly on the solar zenith, as the radiation comes from all directions.
+The variable it depends on is the LAI.
+The bigger the LAI the smaller the Kd, thus more light penetrates through the canopy (Figure \@ref(fig:kd-lai)).
+The range of the *Kd* has a smaller than the *Kb*.
+The *Kd* showed in this plot is used only by the longwave model, as the 2 stream approximation uses a different *Kd* that depends only on leaf angle distribution.
+```{r kd-lai, echo = F}
 LAI <- seq(1,10,.25)
 Kd <- map_dbl(LAI, get_Kd)
 
@@ -19,16 +34,12 @@ ggplot() +
   labs(title = "Kd over LAI")
 ```
 
+### Absorbed radiation over LAI {-}
 
-
-In this section we create some sample in put and we change only one variable to see how the model output respond to this
-
-## Absorbed radiation vs LAI
-
-
+The amount LAI influences directly the amount of radiation absorbed.
 The increase in LAI increase the amount of radiation absorbed, but then it reaches a peak at even if the LAI increase no more light is absorbed.
 
-```{r}
+```{r, echo = F}
 fake_input_5 <- tibble(
   datetime = as.Date("2020-07-15 12:00"), sw_in = 1000, sw_dif = 100, lw_in = 0, t_soil = 0, t_leaf = 0, zenith = 30,
   LAI = 1:12
@@ -49,7 +60,11 @@ out_2 %>%
   theme(legend.key.height = unit(40, "pt"))
 
 ```
-
+```{r}
+ggplot(out_2) +
+geom_line(aes(x=LAI, y=ic_sha/ic))+
+labs(title="Fraction of radiation absorbed by shaded leaves over LAI", y="Fraction abosorbed by shaded leaves")
+```
 Variation of absorbed radiation by the soil and canopy with the variation of LAI
 
 We can see that the overall canopy albedo is constant while the division between soil and canopy changes
@@ -68,7 +83,7 @@ Soil and leaves temperature changes together between 260 and 310 K
 
 This is so Boring...
 
-```{r}
+```{r, echo = F}
 fake_input_3 <- tibble(
   datetime = as.Date("2020-07-15 12:00"), # Summer day
   sw_in = 800,

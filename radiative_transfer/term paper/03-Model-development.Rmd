@@ -2,9 +2,37 @@
 
 ```{r, include = F}
 source("radiative_transfer/term paper/radiation_utils_test_data.R")
+library(FME)
 ```
-## LAI
-```{r, echo = F}
+Developing model is an important aspect i.e making the model work from all complex equations into simplified version by writing them in code format in R.
+Developing equations of parameters with optimization, and developing code for short wave through incoming direct and diffuse equations and dividing longwave also in downward and upward, absorbed with canopy and soil. Such simple division of waves into short and long gives us the absorbed radiation passed towards leaf energy balance model and photosynthesis model.
+
+We have to do some assumption so that the model could be developed like we considered only spherical leaf angle distribution and two stream model case in shortwave and forward scattering in case for longwave radiation.
+
+![Radiative transfer model flow](Radiation model flow chart - final version.png)
+
+## Parameters
+
+
+ - Leaf reflectance
+ - Leaf transmittance
+ - Soil albedo for direct shortwave radiation
+ - Soil albedo for diffuse shortwave radiation
+
+ - Leaf longwave emissivity
+ - Soil longwave emissivity
+
+ - Canopy clumping coefficient
+ - Max LAI (variation over year)
+
+ - Latitude of Hainich
+ - Longitude of Hainich
+
+### LAI
+
+The variation of the LAI over the year has been obtained with a simple model (Figure \@ref(fig:lai)) that considers a linear increase of LAI during the spring and a similar process during autumn.
+During winter the LAI is considered to be $1$ as, even if there are no leaves, trunks and branches interact with the radiation.
+```{r lai, echo = F}
 days <- seq.Date(as.Date("2020-01-01"), as.Date("2020-12-31"), by=1)
 LAI <- pmax(Vectorize(get_day_LAI, "datetime")
             (days, pars$max_LAI, pars$leaf_out, pars$leaf_full, pars$leaf_fall, pars$leaf_fall_complete), pars$min_radiation_PAI)
@@ -13,3 +41,97 @@ ggplot() +
   ylim(c(0, pars$max_LAI)) +
   labs(title = "LAI over the year")
 ```
+
+## Sensitivity
+
+The sensitity analysis of the model has been made using the `FME` package, specifically the function `sensFun`.
+
+
+The sensitivity analysis has been carried out with data from the July 2018 from the Hainich site. The leaf temperature was assumed equal to the air temperature, while the soil temperature is the average of the first 30 cm
+
+
+```{r sens-run, cache = T, include = F}
+sens_p <- pars[c("rho_leaf", "tau_leaf", "alb_soil_b", "alb_soil_d", "max_LAI", "em_leaf", "em_soil")]
+sens_model <- sensFun(rad_transf_new_p_1m, sens_p, map=NULL)
+```
+
+
+This is the `FME` sensitivity summary table that makes the mean for all the output variable
+
+```{r sw-sens, echo=F}
+sens_sum <- summary(sens_model)
+# cbind(par = attr(sens_sum, "row.names"), sens_sum) #little hack because pycharm doesn't show row names properly
+knitr::kable(
+  sens_sum, booktabs = TRUE,
+  caption = 'Shortwave sensitivity.'
+)
+```
+
+Here we analyze the sensitivity of the parameters for each output variable, which allows dividing between sw and lw submodels and better understand the effect of each parameter.
+
+### Shortwave sensitivity
+
+```{r, include = F}
+sens_sw <- filter_sens(sens_model, vars = c("i_down", "i_up", "ic", "ic_sha", "ic_sun", "ig"),
+                       pars = c("rho_leaf", "tau_leaf" ,"alb_soil_b", "alb_soil_d", "max_LAI"))
+```
+
+```{r sw-sens-mean, echo = F}
+knitr::kable(detailed_sens(sens_sw, mean), caption = "Sw sensitivity aggregated by mean")
+```
+
+
+```{r sw-sens-l1, echo = F}
+knitr::kable(detailed_sens(sens_sw, function(x) mean(abs(x))), caption = "Sw sensitivity aggregated by L1")
+```
+
+```{r sw-sens-l2, echo = F}
+knitr::kable(detailed_sens(sens_sw, function(x) sqrt(mean(x^2))), caption = "Sw sensitivity aggregated by L2")
+```
+
+The parameter with the biggest influence is the LAI value. The model is also sensible to rho\_leaf is the smallest and tau\_leaf for almost all output variables. Soil albedo parameters have virtually no influence
+
+### Longwave
+
+```{r, include = F}
+sens_lw <- filter_sens(sens_model, vars = c("l_down", "l_up", "lc", "lc_sha", "lc_sun", "lg"),
+                       pars = c("em_leaf", "em_soil", "max_LAI"))
+```
+
+```{r lw-sens-mean, echo = F}
+knitr::kable(detailed_sens(sens_lw, mean), caption = "Lw sensitivity aggregated by mean")
+```
+```{r lw-sens-l1, echo = F}
+knitr::kable(detailed_sens(sens_lw, function(x) mean(abs(x))), caption = "Lw sensitivity aggregated by L1")
+```
+```{r lw-sens-l2,echo = F}
+knitr::kable(detailed_sens(sens_lw, function(x) sqrt(mean(x^2))), caption = "Sw sensitivity aggregated by L2")
+```
+
+## Model calibration
+
+## Shortwave
+
+```{r, echo = F}
+cal_p_sw <- c(rho_leaf = 0.4, tau_leaf = 0.1)
+cal_p_sw_lower <- c(rho_leaf = 0.38, tau_leaf = 0.05 )
+cal_p_sw_upper <- c(rho_leaf = 0.42, tau_leaf = 0.2)
+
+model_cost_sw <- function (params){
+  out <- rad_transf_new_p_1m(params)
+  return(out$i_up - fluxes$sw_out)
+}
+```
+
+```{r sw-fit, cache = T, include = F}
+mfit_sw <- modFit(model_cost_sw, cal_p_sw, cal_p_sw_lower, cal_p_sw_upper)
+```
+
+```{r, error = T, echo = F}
+summary(mfit_sw)
+```
+
+### Longwave
+
+For the longwave no calibration has been made because the real leaf temperature was not available. Therefore ....
+

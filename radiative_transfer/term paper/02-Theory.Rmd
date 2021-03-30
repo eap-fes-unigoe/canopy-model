@@ -1,1 +1,127 @@
 # Theory
+
+
+Describe the main set of equations that are central to this topic
+
+
+Equations of the parameters
+
+Direct beam coefficient
+
+It is the ratio between leaf shadow and real leaf area. It depends on solar zenith angle ($Z$) and leaf inclination angle($\Theta_l$). Here we consider for spherical leaf distribution thus,
+$Kb= \dfrac{0.5}{cosZ}$
+
+Diffuse beam extinction coefficient:
+It is the optical property that reflects the attenuation in atmosphere and is also known as spectral diffuse attenuation coefficient. The extinction coefficient for diffuse radiation is obtained by substituting the sky zenith angle for the solar zenith angle and integrating over the sky hemisphere.
+
+Diffuse Transmittance $\tau_d =  2\sum_{i=1}^9 exp[-  \dfrac{G(Z_i)}{cosZ_i}  L ]sinZ_i cos Z_i \Delta Z_i$  whereas $Z_i = 5°$ to $85°$  for nine sky zones.
+Effective Extinction coefficient $K_d = \dfrac{-lnT_d}{L}$
+
+For the two stream approximation model, diffuse radiation extinction coefficient:
+$Kd= 1 / ((1 – \phi_1 / \phi2 * log((\phi_1 + \phi_2 / \phi_1)) / \phi_2)$
+Whereas Ross coefficient $X_l$ is between $-0.4$ and $0.6$ which is a leaf angle distribution which quantifies the departure of leaf angles from a spherical distribution.
+
+$\phi_1= 0.5 –0.6333\chi_l$
+
+$\phi_2= 0.877(1-2 \phi_1)$
+
+
+
+
+### Shortwave radiation
+
+Solar energy enters our atmosphere as shortwave radiation in the form of ultraviolet (UV) rays and visible light.
+In case of direct beam, scattered flux are as:
+
+$I_b^\uparrow = -\gamma_1 e^{-K_b\Omega L} +\mu_1\nu e^{-h\Omega L} + \mu_2\nu e^{h\Omega L}$
+
+$I_b^\downarrow = \gamma_2 e^{-K_b\Omega L} + \mu_1 \nu e-h\Omega x + \mu_2 \nu e^{h\Omega L}$
+
+Absorbed flux
+
+Absorbed canopy flux: $\overrightarrow{I_{cb}} = (1-e ^{-k_b\Omega L}) I_{sky,b} – I_b(0) + I_b(L) – I_b (L)$
+
+Absorbed ground flux: $\overrightarrow{I_{gb}} = (1- \rho_{gd}) I_b(L) + (1 - \rho_{gb}) I_{sky,b} e^{K_b\Omega L}$
+
+On the canopy also, we have sunlit canopy and shaded canopy,
+$I_{cSun,b} = (1-\omega_l) [(1-e^{-Kb\Omega L}) I_{sky,b} + K_d\Omega (a_1 +a_2)]$
+$I{cSha,b} = Icb – I_{cSun,b}$
+
+Now the fluxes of diffuse radiation are:
+Scattered diffuse flux:
+Scattered upward: $I_d(x) = \mu_1 \nu e^{-h\Omega x} + \mu_2 \nu e^{h\Omega x}$
+Scattered downward: $I_d(x) = -\mu_1\nu e^{-h\Omega x} - \mu_2\nu e^{h\Omega x}$
+
+Absorbed diffuse flux:
+By canopy: $I_{cd} = I_{sky,d} – I_d(0) + I_d(L) – I_d(L)$
+In case of canopy also we have,
+Absorbed diffuse flux by sunlit canopy:
+
+$a_1 = \mu_1 u\biggl[\dfrac{1- e^{-(K_b+ h)\Omega L}}{K_b+ h} \biggl] + \mu_2\nu \biggl[ \dfrac{1- e^{(-K_b+h)\Omega L}}{ K_b –h }\biggl]$
+
+Absorbed diffuse flux by shaded canopy:
+
+$a_2= -\mu_1\nu \biggl[ \dfrac{1- e-(K_b+h)\Omega L}{K_b + h }\biggl] – \mu_2\nu \biggl[ \dfrac{1- e^{(-K_b+h)\Omega L }}{K_b – h}\biggl]$
+
+Absorbed diffuse flux by soil: $I_{gd} = (1- \rho_{gd}) I_d(L)$
+
+Parameters of direct/diffuse shortwave radiation:
+
+$b= [1-(1-ß)\omega_l ] K_d$
+
+$c=  ß*\omega_l* K_d$
+
+$h=\sqrt{(b^2-c^2)}$
+
+$u= {h-b-c}/{2h}$
+
+$\nu= {h+b+c}/{2h}$
+
+For direct beam solution, boundary leaf conditions:
+$\mu_1= {\gamma_2-\mu_2u}/{v}$
+$\mu_2= {[\mu( \gamma_1+\gamma_2\rho_{gd}+ \rho_{gb} I_{sky,b})e^{-K_b\Omega L} – \gamma_2(u+\nu \rho_{gd}) s-h\Omega L ]} /{ v(v+uPgd) eh\Omega L – u(u+vpgd) e-h\Omega L}$
+
+
+Where,
+$K_b$ Direct beam extinction coefficient
+$K_d$ Diffuse beam extinction coefficient
+$\Omega$ =clumping index
+$\gamma_1$ adn $\gamma_2$  parameters
+$\chi$ cumulative leaf area index
+$\mu_1$ and $\mu_2$ constants obtained from boundary conditions
+$I_cb$ absorbed diffuse flux by canopy
+$I_gb$ absorbed diffuse flux by soil
+
+
+### Longwave radiation
+
+Longwave radiation fluxes can be described similarly to diffuse solar radiation, but dropping the direct beam radiation scattering term and with the addition of a thermal radiation source term emitted by foliage.
+
+Downward longwave radiation:
+
+$L^\downarrow(x) = L_{sky} [ 1- \varepsilon_l ( 1- e^{-K_dx} ) ] + \varepsilon_l \sigma T^4_l ( 1- e^{-K_dx})$
+
+Upward longwave radiation:
+
+$L^\uparrow(x) = L_g {1-\varepsilon_l [ 1- e^{-K_d(L-x)}]} + \varepsilon_l\sigma T^4_l [ 1- e^{-K_d(L-x)} ]$
+
+Net absorbed longwave radiation by canopy(per ground area):
+
+$L_c = \varepsilon_l(L_{sky} + L_g) (1-e^{-K_dL}) - 2\varepsilon_l\sigma T^4_l (1- e-K_dL)$
+
+Longwave radiation absorbed by soil
+
+$L_g = L^\downarrow(L) -L_g$
+
+
+
+Where,
+$L_{sky}$ = longwave radiation above the canopy
+$\varepsilon_l$ = longwave emissivity of leaf
+$\chi$= cumulative leaf area index
+$\sigma$ = steffan Boltzmann constant i.e 5.67e -08
+$T$ = temperature in Kelvin
+$L$ = leaf area index
+$L^\downarrow$ = longwave radiation towards downward
+
+

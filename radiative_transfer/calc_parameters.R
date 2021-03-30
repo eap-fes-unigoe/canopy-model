@@ -81,7 +81,7 @@ get_Kd <- function(LAI) {
 
   # Eq. 14.33
   td <- 0
-  for (z in seq(0, pi / 4, pi / 18)) { # make 9 steps from 0 till π/2
+  for (z in seq(0, pi / 4, pi / 18)) { # make 9 steps from 0 till pi/2
     td <- td + exp(-G_z / cos(z) * LAI) *
       sin(z) *
       cos(z) *

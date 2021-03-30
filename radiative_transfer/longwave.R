@@ -13,7 +13,7 @@
 #' @return list of lc, lg, lc_sun, lc_sha, l_up, l_down
 longwave_radiation <- function(lw_sky, LAI, t_leaf, t_soil, Kb, Kd, em_leaf, em_soil){
   ## commonly used terms--
-  sigma <- 5.67e-08   # Stefan-Boltzmann constant W m−2 K−4
+  sigma <- 5.67e-08   # Stefan-Boltzmann constant W m-2 K-4
   
   lw_soil_emit <- em_soil * sigma * t_soil^4
   lw_leaf_emit <- em_leaf * sigma  * t_leaf^4

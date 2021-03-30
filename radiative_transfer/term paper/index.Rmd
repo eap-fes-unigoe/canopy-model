@@ -8,7 +8,7 @@ documentclass: book
 # Preface {-}
 
 ```{r "setup", include=FALSE}
-knitr::opts_knit$set(root.dir = "../../") #set to repo root to correctly load all package
+knitr::opts_knit$set(root.dir = "../../", echo=FALSE) #set to repo root to correctly load all package
 knitr::opts_knit$set(fig.width=16,  fig.height = 9)
 ```
 
@@ -16,13 +16,13 @@ This is the Term Paper for the Ecosystem and Atmosphere Processes course (Winter
 
 This is a result of a group work between Simone Massaro and Sugam Subedi.
 
-It is part of a course project to develop  a canopy model ..
+It is part of a course project to develop  a canopy model for a canopy ecosystem.
 
-This term paper is also available in html format at ... which is the suggested way to read it.
+This term paper is also available in html format at [https://bookdown.org/massaro_simone_it/Term-paper-Radiative-Transfer-EAP/](https://bookdown.org/massaro_simone_it/Term-paper-Radiative-Transfer-EAP/) which is the suggested way to read it.
 
 #### Task division {-}
 
 The tasks have been divided inside the group:
 
 - *Simone Massaro*: all code development, Model results and Discussion sections.
-- *Sugam Subedi*: Theory and Model development sections.
+- *Sugam Subedi*: Theory and first part of model development sections.
