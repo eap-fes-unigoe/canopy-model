@@ -260,7 +260,6 @@ Regarding the strong difference in the amplitude of the model compared to the ob
 
 ### Conclusion
 
-It can be concluded that the model output in its current state is rather unrealistic and 
 
 
 ## References
