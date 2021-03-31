@@ -2,7 +2,7 @@
 
 flux = list()
 
-#loading package pracme for roots function
+#loading package pracma for roots function
 library("pracma")
 
 #load functions
@@ -13,6 +13,6 @@ source("photosynthesis_stomatalconductance/CO2LeafBoundaryLayer.R") # get h2o fr
 source("photosynthesis_stomatalconductance/brent_root_ci.R")
 source("photosynthesis_stomatalconductance/CiFunc.R")
 
-#adjusting parameters for sensitiviy analysis
+#adjusting parameters for sensitivity analysis
 #pars$vcmax25 = 60 #default: 60
 #pars$g1 = 9 #default: 9
