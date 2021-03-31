@@ -1,0 +1,10 @@
+Input variables,Units,Names
+o2air,mmol/mol,Atmospheric O2
+co2air,umol/mol,Atmospheric CO2
+eair,Pa,Vapor pressure of air
+flux$gbw,mol H2O/m2 leaf/s,"Leaf boundary layer conductance, H2O"
+flux$gbc,mol CO2/m2 leaf/s,"Leaf boundary layer conductance, CO2"
+flux$apar,umol photon/m2 leaf/s,"Leaf absorbed PAR, split in sunlit and shaded"
+flux$tleaf,K,Leaf temperature
+out$ic_sun,W/m2,Incoming shortwave radiation on sunny leaves
+out$ic_sha,W/m2,Incoming shortwave radiation on shaded leaves

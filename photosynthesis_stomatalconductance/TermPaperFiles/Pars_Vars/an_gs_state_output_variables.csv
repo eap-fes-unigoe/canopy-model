@@ -1,0 +1,18 @@
+State and output variables,Units,Names
+flux$vcmax,umol/m2/s,Maximum carboxylation rate
+flux$cp,umol/mol,CO2 compensation point
+flux$kc,umol/mol,Michaelis-Menten constant for CO2
+flux$ko,mmol/mol,Michaelis-Menten constant for O2
+flux$je,umol/m2/s,Electron transport rate
+flux$rd,umol CO2/m2 leaf/s,Leaf respiration rate
+flux$jmax,umol/m2/s,Maximum electron transport rate
+flux$ac,umol CO2/m2 leaf/s,Leaf Rubisco-limited gross photosynthesis
+flux$aj,umol CO2/m2 leaf/s,Leaf RuBP regeneration-limited gross photosynthesis
+flux$ap,C3 or CO2-limited,Leaf product-limited photosynthesis,umol CO2/m2 leaf/s
+flux$ag,umol CO2/m2 leaf/s,Leaf gross photosynthesis
+flux$an,umol CO2/m2 leaf/s,Leaf net photosynthesis
+flux$gs,mol H2O/m2 leaf/s,Leaf stomatal conductance
+flux$cs,umol/mol,Leaf surface CO2
+flux$ci,umol/mol,Leaf intercellular CO2
+flux$hs,dimensionless,Leaf fractional humidity at surface
+ci_dif,,Difference in Ci
