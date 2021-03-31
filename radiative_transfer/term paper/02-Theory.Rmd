@@ -67,9 +67,9 @@ Absorbed diffuse flux by soil: $I_{gd} = (1- \rho_{gd}) I_d(L)$
 
 Parameters of direct/diffuse shortwave radiation:
 
-$b= [1-(1-ß)\omega_l ] K_d$
+$b= [1-(1-\beta)\omega_l ] K_d$
 
-$c=  ß*\omega_l* K_d$
+$c=\beta\omega_l K_d$
 
 $h=\sqrt{(b^2-c^2)}$
 
@@ -79,7 +79,7 @@ $\nu= {h+b+c}/{2h}$
 
 For direct beam solution, boundary leaf conditions:
 $\mu_1= {\gamma_2-\mu_2u}/{v}$
-$\mu_2= {[\mu( \gamma_1+\gamma_2\rho_{gd}+ \rho_{gb} I_{sky,b})e^{-K_b\Omega L} – \gamma_2(u+\nu \rho_{gd}) s-h\Omega L ]} /{ v(v+uPgd) eh\Omega L – u(u+vpgd) e-h\Omega L}$
+$\mu_2= \dfrac{[\mu( \gamma_1+\gamma_2\rho_{gd}+ \rho_{gb} I_{sky,b})e^{-K_b\Omega L} – \gamma_2(u+\nu \rho_{gd}) s-h\Omega L ]} {v(v+uPgd) e^{h\Omega L} – u(u+vpgd) e^{-h\Omega L}}$
 
 
 Where,
@@ -89,8 +89,8 @@ $\Omega$ =clumping index
 $\gamma_1$ adn $\gamma_2$  parameters
 $\chi$ cumulative leaf area index
 $\mu_1$ and $\mu_2$ constants obtained from boundary conditions
-$I_cb$ absorbed diffuse flux by canopy
-$I_gb$ absorbed diffuse flux by soil
+$I_{cb}$ absorbed diffuse flux by canopy
+$I_{gb}$ absorbed diffuse flux by soil
 
 
 ### Longwave radiation

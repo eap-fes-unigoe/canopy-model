@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Section 4 Model results | Term paper Radiative Transfer - Ecosystem and Atmosphere Processes</title>
+  <meta name="description" content="Section 4 Model results | Term paper Radiative Transfer - Ecosystem and Atmosphere Processes" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Section 4 Model results | Term paper Radiative Transfer - Ecosystem and Atmosphere Processes" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Section 4 Model results | Term paper Radiative Transfer - Ecosystem and Atmosphere Processes" />
+  
+  
+  
+
+<meta name="author" content="Simone Massaro" />
+
+
+<meta name="date" content="2021-03-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-development.html"/>
+<link rel="next" href="discussion.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Radiative transfer - Term paper</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="theory.html"><a href="theory.html"><i class="fa fa-check"></i><b>2</b> Theory</a>
+<ul>
+<li class="chapter" data-level="2.0.1" data-path="theory.html"><a href="theory.html#shortwave-radiation"><i class="fa fa-check"></i><b>2.0.1</b> Shortwave radiation</a></li>
+<li class="chapter" data-level="2.0.2" data-path="theory.html"><a href="theory.html#longwave-radiation"><i class="fa fa-check"></i><b>2.0.2</b> Longwave radiation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-development.html"><a href="model-development.html"><i class="fa fa-check"></i><b>3</b> Model development</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-development.html"><a href="model-development.html#parameters"><i class="fa fa-check"></i><b>3.1</b> Parameters</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="model-development.html"><a href="model-development.html#lai"><i class="fa fa-check"></i><b>3.1.1</b> LAI</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="model-development.html"><a href="model-development.html#sensitivity"><i class="fa fa-check"></i><b>3.2</b> Sensitivity</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="model-development.html"><a href="model-development.html#shortwave"><i class="fa fa-check"></i><b>3.2.1</b> Shortwave</a></li>
+<li class="chapter" data-level="3.2.2" data-path="model-development.html"><a href="model-development.html#longwave"><i class="fa fa-check"></i><b>3.2.2</b> Longwave</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="model-development.html"><a href="model-development.html#model-calibration"><i class="fa fa-check"></i><b>3.3</b> Model calibration</a></li>
+<li class="chapter" data-level="3.4" data-path="model-development.html"><a href="model-development.html#shortwave-1"><i class="fa fa-check"></i><b>3.4</b> Shortwave</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="model-development.html"><a href="model-development.html#longwave-1"><i class="fa fa-check"></i><b>3.4.1</b> Longwave</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="model-results.html"><a href="model-results.html"><i class="fa fa-check"></i><b>4</b> Model results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="model-results.html"><a href="model-results.html#model-output"><i class="fa fa-check"></i><b>4.1</b> Model output</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="model-results.html"><a href="model-results.html#shortwave-2"><i class="fa fa-check"></i><b>4.1.1</b> Shortwave</a></li>
+<li class="chapter" data-level="4.1.2" data-path="model-results.html"><a href="model-results.html#longwave-2"><i class="fa fa-check"></i><b>4.1.2</b> Longwave</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="model-results.html"><a href="model-results.html#model-evaluation"><i class="fa fa-check"></i><b>4.2</b> Model evaluation</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="model-results.html"><a href="model-results.html#shortwave-3"><i class="fa fa-check"></i><b>4.2.1</b> Shortwave</a></li>
+<li class="chapter" data-level="4.2.2" data-path="model-results.html"><a href="model-results.html#longwave-3"><i class="fa fa-check"></i><b>4.2.2</b> Longwave</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>5</b> Discussion</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="discussion.html"><a href="discussion.html#model-components"><i class="fa fa-check"></i><b>5.1</b> Model components</a>
+<ul>
+<li class="chapter" data-level="" data-path="discussion.html"><a href="discussion.html#kb"><i class="fa fa-check"></i>Kb</a></li>
+<li class="chapter" data-level="" data-path="discussion.html"><a href="discussion.html#kd"><i class="fa fa-check"></i>Kd</a></li>
+<li class="chapter" data-level="" data-path="discussion.html"><a href="discussion.html#absorbed-radiation-over-lai"><i class="fa fa-check"></i>Absorbed radiation over LAI</a></li>
+<li class="chapter" data-level="" data-path="discussion.html"><a href="discussion.html#emitted-longwave-radiation-at-different-temperature"><i class="fa fa-check"></i>Emitted longwave radiation at different temperature</a></li>
+<li class="chapter" data-level="" data-path="discussion.html"><a href="discussion.html#absorbed-radiation-vs-zenith"><i class="fa fa-check"></i>Absorbed radiation vs zenith</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="discussion.html"><a href="discussion.html#conclusion-2"><i class="fa fa-check"></i><b>5.2</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="attachements.html"><a href="attachements.html"><i class="fa fa-check"></i><b>6</b> Attachements</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="attachements.html"><a href="attachements.html#model-code"><i class="fa fa-check"></i><b>6.1</b> Model code</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="attachements.html"><a href="attachements.html#model-entry-point"><i class="fa fa-check"></i><b>6.1.1</b> Model entry point</a></li>
+<li class="chapter" data-level="6.1.2" data-path="attachements.html"><a href="attachements.html#parameter-calculation"><i class="fa fa-check"></i><b>6.1.2</b> Parameter calculation</a></li>
+<li class="chapter" data-level="6.1.3" data-path="attachements.html"><a href="attachements.html#shortwave-4"><i class="fa fa-check"></i><b>6.1.3</b> Shortwave</a></li>
+<li class="chapter" data-level="6.1.4" data-path="attachements.html"><a href="attachements.html#longwave-4"><i class="fa fa-check"></i><b>6.1.4</b> Longwave</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="attachements.html"><a href="attachements.html#report-code"><i class="fa fa-check"></i><b>6.2</b> Report code</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="attachements.html"><a href="attachements.html#setup"><i class="fa fa-check"></i><b>6.2.1</b> Setup</a></li>
+<li class="chapter" data-level="6.2.2" data-path="attachements.html"><a href="attachements.html#markdown"><i class="fa fa-check"></i><b>6.2.2</b> Markdown</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Term paper Radiative Transfer - Ecosystem and Atmosphere Processes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="model-results" class="section level1" number="4">
+<h1><span class="header-section-number">Section 4</span> Model results</h1>
+<div id="model-output" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Model output</h2>
+<p>The input data for the model was obtained from the fluxnet site at Hainich for the year 2018.</p>
+<p>The first step is exploring the main model output both for the shortwave and longwave component.</p>
+<div id="shortwave-2" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Shortwave</h3>
+<p>The shown shortwave variables are:</p>
+<ul>
+<li>Incoming sw (measured) <span class="math inline">\(I^\downarrow\)</span></li>
+<li>Absorbed sw by canopy <span class="math inline">\(I^\uparrow\)</span></li>
+<li>Upward sw reflected by the canopy <span class="math inline">\(\overrightarrow{I}_{c}\)</span></li>
+<li>Absorbed sw soil <span class="math inline">\(\overrightarrow{I}_{g}\)</span></li>
+</ul>
+<p>Due to radiative balance those variables are in the following relationship:</p>
+<p><span class="math inline">\(I^\downarrow = I^\uparrow + \overrightarrow{I}_{c} + \overrightarrow{I}_{g}\)</span></p>
+<div id="one-week" class="section level4 unnumbered">
+<h4>One week</h4>
+In figure <a href="model-results.html#fig:sw-1wk">4.1</a> the model output for the shortwave is plotted for one week during the summer.
+The daily cycle can be clearly seen, with all variables having a peak at noon and reach the value of <span class="math inline">\(0\)</span> during the night.
+The total incoming radiation changes depending on the day, mainly due to cloud cover, and the absorbed shortwave follow its pattern.
+<div class="figure"><span id="fig:sw-1wk"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/sw-1wk-1.png" alt="Shortwave one week. Modeled output variables (1-8 Jul 2018)." width="672" />
+<p class="caption">
+Figure 4.1: Shortwave one week. Modeled output variables (1-8 Jul 2018).
+</p>
+</div>
+</div>
+<div id="one-year" class="section level4 unnumbered">
+<h4>One year</h4>
+<p>Then the shortwave over one year is analyzed (Figure <a href="model-results.html#fig:sw-1y">4.2</a>), after averaging over one week.
+There is a yearly cycle in the incoming shortwave radiation with a significant difference,
+as the averages goes from more than <span class="math inline">\(300 W m^2\)</span> to almost <span class="math inline">\(10 W m^2\)</span> (this is the week average so takes into account also the night when shortwave radiation is zero).</p>
+<p>The absorbed by the soil depends on the amount of LAI, in fact during the spring when the radiation is high but there are no leaves yet its values increase constantly.
+As soon as leaves starts to come out the shortwave absorbed by the soil decreases to reach a stable low value during the summer and eventually increase again when leaves fall.</p>
+The radiation reflected by the canopy doesn’t have a big change over the year and overall canopy albedo remains for the all year between <span class="math inline">\(0.16\)</span> and <span class="math inline">\(0.20\)</span>.
+Finally, the radiation absorbed the canopy follows, as expected, the pattern in the incoming radiation. During the spring its value are really similar to the shortwave absorbed by the soil, however this is only a coincidence.
+<div class="figure"><span id="fig:sw-1y"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/sw-1y-1.png" alt="Shortwave one year. Modeled output variables, weekly average 2018. Vertical black lines are the moment when there is change in LAI" width="672" />
+<p class="caption">
+Figure 4.2: Shortwave one year. Modeled output variables, weekly average 2018. Vertical black lines are the moment when there is change in LAI
+</p>
+</div>
+</div>
+</div>
+<div id="longwave-2" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Longwave</h3>
+<p>The shown longwave variables are:</p>
+<ul>
+<li>Incoming lw (measured) <span class="math inline">\(L^\downarrow\)</span></li>
+<li>Absorbed lw by canopy <span class="math inline">\(L^\uparrow\)</span></li>
+<li>Upward lw emitted by the canopy <span class="math inline">\(\overrightarrow{L}_{c}\)</span></li>
+<li>Absorbed lw soil <span class="math inline">\(\overrightarrow{L}_{g}\)</span></li>
+</ul>
+<p>Due to radiative balance those variables are in the following relationship:</p>
+<p><span class="math inline">\(L^\downarrow = L^\uparrow + \overrightarrow{L}_{c} + \overrightarrow{L}_{g}\)</span></p>
+<div id="one-week-1" class="section level4 unnumbered">
+<h4>One week</h4>
+<p>Longwave radiation haa a daily cycle, but the variation is much smaller compared to shortwave (Figure <a href="model-results.html#fig:lw-1wk">4.3</a>).
+The canopy is emitting more longwave radiation than the one that is receiving from the sky, hence the absorbed radiation from the canopy is negative.
+The incoming shortwave radiation depends on the weather, with cloudy skies resulting in higher level of incoming radiation as it can be seen on the 5-6 of July. The difference can be quite important with an increse of about 30% in radiation levels.
+The upward longwave radiation, instead, depends on the temperature of the canopy and the soil, which is influenced by heat fluxes and shortwave radiation. Therefore, the incoming and outgoing radiation don’t change together, hence there is a variation the radiative balance. In fact it almost reaches zero in the morning of the 6th of July.</p>
+<div class="figure"><span id="fig:lw-1wk"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/lw-1wk-1.png" alt="Longwave output over one week" width="672" />
+<p class="caption">
+Figure 4.3: Longwave output over one week
+</p>
+</div>
+</div>
+<div id="one-year-1" class="section level4 unnumbered">
+<h4>One year</h4>
+<p>During the year there longwave radiation has a cycle with higher values in the summer than in the winter.
+The difference is, however, limited between seasons.
+In general the behaviour is comparable with the 1 week period.</p>
+<p><img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="model-evaluation" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Model evaluation</h2>
+<p>The model results are compared with observed data to evaluate the model accuracy. It is done independently for the longwave and shortwave components.</p>
+<p>In the Hainich dataset there are observed variables that will be used for the evaluation.</p>
+<p>The evaluation will be carried out by visually comparing time series and by quantitative means.</p>
+<div id="shortwave-3" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Shortwave</h3>
+<p>For the shortwave the only observed variable that can be used for the model evaluation is the outgoing shortwave radiation.</p>
+<div id="time-series" class="section level4 unnumbered">
+<h4>Time series</h4>
+<div id="one-week-2" class="section level5 unnumbered">
+<h5>One Week</h5>
+<p>The model has an overall good agreement between the modeled outgoing shortwave, and the measured one (Figure <a href="model-results.html#fig:swout-1wk">4.4</a>).</p>
+<p>The day peak of the model is often delayed compared to the observed one. This phase shift may connected to the relative long time interval (1 hour) in model outputs.
+The model generally slightly underestimates the radiation during sunny days (first 3 and last), while overestimates during with cloudy conditions.
+During the night the observed radiation is slightly above zero, while the model is at zero. This is clearly a measurement error, as during the night there is no shortwave radiation.</p>
+<div class="figure"><span id="fig:swout-1wk"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/swout-1wk-1.png" alt="Shortwave Modeles vs Observed. One week." width="672" />
+<p class="caption">
+Figure 4.4: Shortwave Modeles vs Observed. One week.
+</p>
+</div>
+</div>
+<div id="one-year-2" class="section level5 unnumbered">
+<h5>One Year</h5>
+By analyzing a model output over the whole year, there is a good overall performance (Figure <a href="model-results.html#fig:swout-1yr">4.5</a>).
+During spring, and partially during autumn, there is the biggest difference between the model output and the observations.
+This is probably connected to the fact that in that period the LAI is estimated with a simple linear equation, thus does not reflect completely the real world conditions.
+<div class="figure"><span id="fig:swout-1yr"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/swout-1yr-1.png" alt="Shortwave Modeles vs Observed. One year." width="672" />
+<p class="caption">
+Figure 4.5: Shortwave Modeles vs Observed. One year.
+</p>
+</div>
+</div>
+</div>
+<div id="quantitative-evaluation" class="section level4 unnumbered">
+<h4>Quantitative evaluation</h4>
+<p>The performance of the model has been also analyzed in a quantitative way.
+A linear model has been built between the observations, and the model output (Figure <a href="model-results.html#fig:sw-scat">4.6</a>), if the model matched perfectly the observations the slope should be <span class="math inline">\(1\)</span>, the intercept <span class="math inline">\(0\)</span> and the <span class="math inline">\(r^2 1\)</span>.</p>
+<p>The results of the linear model are:</p>
+<ul>
+<li>slope: <span class="math inline">\(0.87\)</span></li>
+<li>intercept: <span class="math inline">\(1.38\)</span></li>
+<li><span class="math inline">\(r^2\)</span>: <span class="math inline">\(0.93\)</span></li>
+</ul>
+<p>The intercept is really close to <span class="math inline">\(0\)</span>, and the slope and <span class="math inline">\(r^2\)</span> also indicate a good fit.</p>
+<p>The performance of the model has been also evaluated using the Root Mean Square Error (RMSE) and the Nash-Sutcliffe coefficient (NSE).
+The obtained values are:</p>
+<ul>
+<li>RMSE: <span class="math inline">\(9.51\)</span></li>
+<li>NSE: <span class="math inline">\(0.91\)</span></li>
+</ul>
+<p>The NSE has a value of <span class="math inline">\(1\)</span> when there is a perfect model and <span class="math inline">\(0.91\)</span> can be considered really good. The RMSE can be interpreted as the amplitude of the error and compared to the range of the radiation. Therefore, in this scenario RMSE of <span class="math inline">\(9.51\)</span> can be considered good but not perfect.</p>
+<div class="figure"><span id="fig:sw-scat"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/sw-scat-1.png" alt="Modeled vs Observed outgoing sw, scatter plot" width="672" />
+<p class="caption">
+Figure 4.6: Modeled vs Observed outgoing sw, scatter plot
+</p>
+</div>
+</div>
+<div id="conclusion" class="section level4" number="4.2.1.1">
+<h4><span class="header-section-number">4.2.1.1</span> Conclusion</h4>
+<p>The performance of the model in more than satisfactory and the some of deviation from the observation can be explained with the inaccurate input data.</p>
+</div>
+</div>
+<div id="longwave-3" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Longwave</h3>
+<p>In the same way of shortwave the only observed variable that can be used for the model evaluation is the outgoing longwave radiation.</p>
+<div id="time-series-1" class="section level4 unnumbered">
+<h4>Time series</h4>
+<div id="one-week-3" class="section level5 unnumbered">
+<h5>One Week</h5>
+<p>The longwave components is also accurately modeled (Figure <a href="model-results.html#fig:lwout-1wk">4.7</a>).</p>
+<p>There is a daily pattern in the difference between the modeled and the observed outgoing longwave. This is probably due to the fact that the model doesn’t use the true leaf temperature, as it needs to be calculated by other models, but uses the air temperature as a proxy.</p>
+<div class="figure"><span id="fig:lwout-1wk"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/lwout-1wk-1.png" alt="Longwave Modeles vs Observed. One week." width="672" />
+<p class="caption">
+Figure 4.7: Longwave Modeles vs Observed. One week.
+</p>
+</div>
+</div>
+<div id="one-year-3" class="section level5 unnumbered">
+<h5>One Year</h5>
+By comparing the week averages over the year (Figure <a href="model-results.html#fig:lwout-1wk">4.7</a>) the model produces almost perfect output for the whole year.
+<div class="figure"><span id="fig:lwout-1yr"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/lwout-1yr-1.png" alt="Longwave Modeles vs Observed. One year." width="672" />
+<p class="caption">
+Figure 4.8: Longwave Modeles vs Observed. One year.
+</p>
+</div>
+</div>
+</div>
+<div id="quantitative-evaluation-1" class="section level4 unnumbered">
+<h4>Quantitative evaluation</h4>
+<p>The same procedure for shortwave has been followed for the longwave of the quantitative evaluation of model performance.</p>
+<p>The longwave model has a very good performance (Figure <a href="model-results.html#fig:lw-scat">4.9</a>)
+The results of the linear model are:</p>
+<ul>
+<li>slope: <span class="math inline">\(1.03\)</span></li>
+<li>intercept: <span class="math inline">\(-11.09\)</span></li>
+<li><span class="math inline">\(r^2\)</span>: <span class="math inline">\(0.99\)</span></li>
+</ul>
+<p>Both the slope and the <span class="math inline">\(r2\)</span> have a value of <span class="math inline">\(1\)</span> when rounded at the first decimal digit.</p>
+<p>This is confirmed by the high value of the Nash-Sutcliffe coefficient and the low Root Mean square error:</p>
+<ul>
+<li>RMSE: <span class="math inline">\(5.33\)</span></li>
+<li>NSE: <span class="math inline">\(0.99\)</span></li>
+</ul>
+<div class="figure"><span id="fig:lw-scat"></span>
+<img src="Term-paper-Radiative-Transfer-EAP_files/figure-html/lw-scat-1.png" alt="Modeled vs Observed outgoing lw. scatter plot" width="672" />
+<p class="caption">
+Figure 4.9: Modeled vs Observed outgoing lw. scatter plot
+</p>
+</div>
+</div>
+<div id="conclusion-1" class="section level4" number="4.2.2.1">
+<h4><span class="header-section-number">4.2.2.1</span> Conclusion</h4>
+<p>The longwave model performs very well. This is true in spite of the inaccurate leaf temperature that is used as input.</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-development.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="discussion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Term-paper-Radiative-Transfer-EAP.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

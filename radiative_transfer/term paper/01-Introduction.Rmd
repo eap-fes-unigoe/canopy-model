@@ -1,5 +1,9 @@
 # Introduction {#intro}
 
+Models are an abstraction of reality and is compromise between reality and simplicity. Radiative transfer modeling describes the absorption and separation of solar energy by the ecosystems and their components in evaluating the atmosphere-biosphere interactions.
+This topic is vital in understanding the functioning of plant and also its whole ecosystem functioning towards radiative difference in atmosphere. The mathematical equations used will assist in getting the sensible outcomes that describes the process like absorption, reflectance , transmittance , scattering by vegetation and soil elements.
+This topic also gives us great deal of understanding earth science and climate change studies. Models at canopy level helps in understanding production of ecosystem.
+
 Electromagnetic radiation is they only way for the Earth can exchange energy with the rest of the universe. Incoming solar radiation is the source of virtually all energy present on Earth, and outgoing infrared radiation is how Earth can reduce its temperature.
 This leads the behaviour of radiation at being one of the core aspect that regulates Earth's climate and biological processes.
 
@@ -7,8 +11,6 @@ The most important interaction between the radiation and the Earth take places a
 Incoming solar is absorbed, reflected and absorbed by the canopies, which also emit longwave radiation.
 
 The behaviour of the radiation depends on canopy properties: its architecture and leaf optical properties.
-The amount of available radiation directly influences two key aspects in ecosystems: temperature and photosynthesis. Therefore, understanding how radiation interacts with canopies is crucial to study ecosystem functions and subsequently model their features.
-The aim of this project is developing a model for radiative transfer in canopies and bettwe
- the
+The amount of available radiation directly influences two key aspects in ecosystems: temperature and photosynthesis. Therefore, understanding how radiation interacts with canopies is crucial to study ecosystem functions.
 
-Shortwave used for photosynthesis.
+The aim of this project is developing a model for radiative transfer in canopies to explore the key processes of radiative transfer.

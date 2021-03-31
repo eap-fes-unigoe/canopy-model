@@ -46,7 +46,7 @@ $I^\downarrow = I^\uparrow + \overrightarrow{I}_{c} + \overrightarrow{I}_{g}$
 #### One week {-}
 
 In figure \@ref(fig:sw-1wk) the model output for the shortwave is plotted for one week during the summer.
-The daily cycle can be clearly seen, with all variables having a peak at noon and reach the value of 0 during the night.
+The daily cycle can be clearly seen, with all variables having a peak at noon and reach the value of $0$ during the night.
 The total incoming radiation changes depending on the day, mainly due to cloud cover, and the absorbed shortwave follow its pattern.
 ```{r sw-1wk, echo = F, fig.cap = "Shortwave one week. Modeled output variables (1-8 Jul 2018)."}
 out_1week %>%
@@ -59,16 +59,16 @@ out_1week %>%
 ```
 #### One year {-}
 
-Then the shortwave over one year is analyzed \@ref(fig:sw-1y), after averaging over one week.
+Then the shortwave over one year is analyzed (Figure \@ref(fig:sw-1y)), after averaging over one week.
 There is a yearly cycle in the incoming shortwave radiation with a significant difference,
-as the averages goes from more than $300 W m^2$ to almost $10 W m^2$ (this is the week average so takes into account also the night when there is 0 sw radiation).
-During the winter the LAI it is estimated at $1$, as even if there are no leaves the branches still absorbs light.
+as the averages goes from more than $300 W m^2$ to almost $10 W m^2$ (this is the week average so takes into account also the night when shortwave radiation is zero).
+
 
 The absorbed by the soil depends on the amount of LAI, in fact during the spring when the radiation is high but there are no leaves yet its values increase constantly.
 As soon as leaves starts to come out the shortwave absorbed by the soil decreases to reach a stable low value during the summer and eventually increase again when leaves fall.
 
 The radiation reflected by the canopy doesn't have a big change over the year and overall canopy albedo remains for the all year between $0.16$ and $0.20$.
-Finally, the radiation absorbed the canopy follows, as expected, the pattern in the incoming radiation. During the spring its value are really similar to the shortwave absorbed by the soil, however this is only a coincidence in this setting.
+Finally, the radiation absorbed the canopy follows, as expected, the pattern in the incoming radiation. During the spring its value are really similar to the shortwave absorbed by the soil, however this is only a coincidence.
 ```{r sw-1y, echo = F, fig.cap = "Shortwave one year. Modeled output variables, weekly average 2018. Vertical black lines are the moment when there is change in LAI"}
 lai_breaks <- as_datetime(c("2018-04-19", "2018-06-19", "2018-10-7", "2018-10-28"))
 lai_breaks_lbl <- c("leaf out", "leaf complete", "leaf fall", "leaf fall complete")
@@ -99,12 +99,10 @@ $L^\downarrow = L^\uparrow + \overrightarrow{L}_{c} + \overrightarrow{L}_{g}$
 
 #### One week {-}
 
-Longwave radiation have a daily cycles, but the variation is much smaller compared to shortwave \@ref(fig:lw-1wk).
+Longwave radiation haa a daily cycle, but the variation is much smaller compared to shortwave (Figure \@ref(fig:lw-1wk)).
 The canopy is emitting more longwave radiation than the one that is receiving from the sky, hence the absorbed radiation from the canopy is negative.
 The incoming shortwave radiation depends on the weather, with cloudy skies resulting in higher level of incoming radiation as it can be seen on the 5-6 of July. The difference can be quite important with an increse of about 30% in radiation levels.
-The upward longwave radiation, instead, depends on the temperature of the canopy and the soil, which is influenced by heat fluxes and shortwave radiation. Therefore the incoming and outgoing radiation doesn't change together and the radiative balance changes, reaching almost zero in the morning of the 6th of July
-
-Need to talk about the different behaviour in soil/canopy trends
+The upward longwave radiation, instead, depends on the temperature of the canopy and the soil, which is influenced by heat fluxes and shortwave radiation. Therefore, the incoming and outgoing radiation don't change together, hence there is a variation the radiative balance. In fact it almost reaches zero in the morning of the 6th of July.
 
 ```{r lw-1wk, echo = F, fig.cap = "Longwave output over one week"}
 out_1week %>%
@@ -120,7 +118,9 @@ out_1week %>%
 
 
 #### One year {-}
-During the year there longwave radiation has a cycle with higher values in the summer than in the winter. However the different in limited.
+During the year there longwave radiation has a cycle with higher values in the summer than in the winter.
+The difference is, however, limited between seasons.
+In general the behaviour is comparable with the 1 week period.
 
 ```{r, echo = F}
 out_1year_wk %>%
@@ -150,10 +150,10 @@ For the shortwave the only observed variable that can be used for the model eval
 
 ##### One Week {-}
 
-The model has an overall good agreement between the modeled outgoing sw and the measured one \@ref(fig:swout-1wk).
+The model has an overall good agreement between the modeled outgoing shortwave, and the measured one (Figure \@ref(fig:swout-1wk)).
 
 The day peak of the model is often delayed compared to the observed one. This phase shift may connected to the relative long time interval (1 hour) in model outputs.
-The model generally slightly underestimate the radiation during sunny days (first 3 and last), while overestimate during with cloudy conditions.
+The model generally slightly underestimates the radiation during sunny days (first 3 and last), while overestimates during with cloudy conditions.
 During the night the observed radiation is slightly above zero, while the model is at zero. This is clearly a measurement error, as during the night there is no shortwave radiation.
 
 ```{r swout-1wk, echo = F, fig.cap = "Shortwave Modeles vs Observed. One week."}
@@ -168,9 +168,9 @@ out_1week %>%
 ```
 ##### One Year {-}
 
-By analyzing a model output over the whole year, there is a good overall performace.
+By analyzing a model output over the whole year, there is a good overall performance (Figure \@ref(fig:swout-1yr)).
 During spring, and partially during autumn, there is the biggest difference between the model output and the observations.
-This is probably connected to the fact that in that period the LAI is estimated with a simple linear model, thus does not reflect completely the real world conditions.
+This is probably connected to the fact that in that period the LAI is estimated with a simple linear equation, thus does not reflect completely the real world conditions.
 ```{r swout-1yr, echo = F, fig.cap = "Shortwave Modeles vs Observed. One year."}
 out_1year_wk %>%
         gather(key = "type", value = "radiation", i_up, sw_out, factor_key = T) %>%
@@ -188,11 +188,12 @@ sw_lm <- lm(obs_sw_out ~ mod_sw_out, data = out_plot)
 sw_r2 <- round(summary(sw_lm)$r.squared, 2)
 sw_slope <- round(coef(sw_lm)[2], 2)
 sw_intercept <- round(coef(sw_lm)[1], 2)
-sw_rmse <- sqrt(mean((out_plot$obs_sw_out - out_plot$mod_sw_out)^2))
-sw_nse <- NSE(out_plot$mod_sw_out, out_plot$obs_sw_out) # Nash-Sutcliffe Efficiency
+sw_rmse <- round(sqrt(mean((out_plot$obs_sw_out - out_plot$mod_sw_out)^2)), 2)
+sw_nse <- round(NSE(out_plot$mod_sw_out, out_plot$obs_sw_out), 2) # Nash-Sutcliffe Efficiency
 ```
 The performance of the model has been also analyzed in a quantitative way.
-A linear model has been built between the observations, and the model output (Figure \@ref(fig:sw-scat)), if the model matched perfectly the observations the slope should be $1$, the intercept $0$ and the $r^2$
+A linear model has been built between the observations, and the model output (Figure \@ref(fig:sw-scat)), if the model matched perfectly the observations the slope should be $1$, the intercept $0$ and the $r^2 1$.
+
 The results of the linear model are:
 
  - slope: $`r sw_slope`$
@@ -203,6 +204,7 @@ The intercept is really close to $0$, and the slope and $r^2$ also indicate a go
 
 The performance of the model has been also evaluated using the Root Mean Square Error (RMSE) and the Nash-Sutcliffe coefficient (NSE).
 The obtained values are:
+
  - RMSE: $`r sw_rmse`$
  - NSE: $`r sw_nse`$
 
@@ -211,7 +213,7 @@ The NSE has a value of $1$ when there is a perfect model and $`r sw_nse`$ can be
 ```{r sw-scat, echo = F, fig.cap="Modeled vs Observed outgoing sw, scatter plot"}
 ggplot(out_plot) +
   geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
-  geom_point(aes(x = mod_sw_out, y = obs_sw_out)) +
+  geom_point(aes(x = mod_sw_out, y = obs_sw_out), size=.7) +
   geom_smooth(aes(x = mod_sw_out, y = obs_sw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
   labs(title = "Outgoing sw modeled vs observed",
        subtitle = paste(c("slope: ", sw_slope, " intercept: ", sw_intercept, " r2: ", sw_r2, " . Data from 2018."), collapse = ""),
@@ -219,16 +221,16 @@ ggplot(out_plot) +
 ```
 #### Conclusion
 
-The performance of the model in more than satisfactory
+The performance of the model in more than satisfactory and the some of deviation from the observation can be explained with the inaccurate input data.
 
 ### Longwave
-For the shortwave the only observed variable that can be used for the model evaluation is the outgoing shortwave radiation.
+In the same way of shortwave the only observed variable that can be used for the model evaluation is the outgoing longwave radiation.
 
 #### Time series {-}
 
 ##### One Week {-}
 
-The longwave components is also accurately modeled @\ref(fig:lwout-1wk).
+The longwave components is also accurately modeled (Figure \@ref(fig:lwout-1wk)).
 
 There is a daily pattern in the difference between the modeled and the observed outgoing longwave. This is probably due to the fact that the model doesn't use the true leaf temperature, as it needs to be calculated by other models, but uses the air temperature as a proxy.
 
@@ -243,7 +245,7 @@ out_1week %>%
         legend_labels(labels = c("Modelled", "Observed"), "Outgoing longwave radiation")
 ```
 ##### One Year {-}
-Problem in estimating the LAI during the spring/fall the model is less accurate
+By comparing the week averages over the year (Figure \@ref(fig:lwout-1wk)) the model produces almost perfect output for the whole year.
 ```{r lwout-1yr, echo = F, fig.cap = "Longwave Modeles vs Observed. One year."}
 out_1year_wk %>%
         gather(key = "type", value = "radiation", l_up, lw_out, factor_key = T) %>%
@@ -267,28 +269,31 @@ lw_nse <- round(NSE(out_plot$mod_lw_out, out_plot$obs_lw_out), 2)# Nash-Sutcliff
 ```
 The same procedure for shortwave has been followed for the longwave of the quantitative evaluation of model performance.
 
-The longwave model has a really good performance(Figure \@ref(fig:lw-scat))
+The longwave model has a very good performance (Figure \@ref(fig:lw-scat))
 The results of the linear model are:
 
  - slope: $`r lw_slope`$
  - intercept: $`r lw_intercept`$
  - $r^2$: $`r lw_r2`$
 
-The slope has a value of $1$ if rounded at the first decimal point and the $r2$ is very close to $1$
+Both the slope and the $r2$ have a value of $1$ when rounded at the first decimal digit.
 
-The performance of the model has been also evaluated using the Root Mean Square Error (RMSE) and the Nash-Sutcliffe coefficient (NSE).
-The obtained values are:
+This is confirmed by the high value of the Nash-Sutcliffe coefficient and the low Root Mean square error:
+
  - RMSE: $`r lw_rmse`$
  - NSE: $`r lw_nse`$
 
-The NSE has a value of $1$ when there is a perfect model and $`r sw_nse`$ can be considered really good. The RMSE can be interpreted as the amplitude of the error and compared to the range of the radiation. Therefore, in this scenario RMSE of $`r sw_rmse`$ can be considered good but not perfect.
 
-```{r lw-scat, echo = F, fig.cap="Modeled vs Observed outgoing lw, scatter plot"}
+
+```{r lw-scat, echo = F, fig.cap="Modeled vs Observed outgoing lw. scatter plot"}
 ggplot(out_plot) +
   geom_abline(aes(intercept = 0, slope = 1, color = "Theory"), key_glyph = "path") +
-  geom_point(aes(x = mod_lw_out, y = obs_lw_out)) +
+  geom_point(aes(x = mod_lw_out, y = obs_lw_out), size=.7) +
   geom_smooth(aes(x = mod_lw_out, y = obs_lw_out, color = "Regression"), formula = y ~ x, method = 'lm', se = F) +
   labs(title = "Outgoing lw modeled vs observed",
        subtitle = paste(c("slope: ", lw_slope, " intercept: ", lw_intercept, " r2: ", lw_r2, " . Data from 2018."), collapse = ""),
        x = "Modeled outgoing longwave (W m-2)", y = "Observed outgoing lw (W m-2)", colour = "Legend")
 ```
+#### Conclusion
+
+The longwave model performs very well. This is true in spite of the inaccurate leaf temperature that is used as input.

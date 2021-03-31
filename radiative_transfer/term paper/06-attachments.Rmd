@@ -27,11 +27,12 @@ This is the code used for writing this report
 ```{r utils, code=xfun::read_utf8('radiation_utils_test_data.R')}
 ```
 
-### Notebooks
+### Markdown
 ```{r get-labels, echo = FALSE}
-labs = knitr::all_labels()
-labs = setdiff(labs, c("setup", "get-labels", "model-entry", "calc-par", "model-sw", "model-lw", "utils"))
+labs <- knitr::all_labels()
+labs <- setdiff(labs, c("setup", "get-labels", "model-entry", "calc-par", "model-sw", "model-lw", "utils"))
 ```
 ```{r all-code, ref.label=labs, eval=FALSE}
 ```
 
+# References {-}

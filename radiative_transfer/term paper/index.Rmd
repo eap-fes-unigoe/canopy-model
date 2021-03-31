@@ -1,9 +1,12 @@
 ---
 title: "Term paper Radiative Transfer - Ecosystem and Atmosphere Processes"
-author: "Simone Massaro - Sugam Subedi"
+author: "Simone Massaro"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
+bibliography: bibliography.bib
+biblio-style: apalike
+link-citations: yes
 ---
 # Preface {-}
 
@@ -24,5 +27,5 @@ This term paper is also available in html format at [https://bookdown.org/massar
 
 The tasks have been divided inside the group:
 
-- *Simone Massaro*: all code development, Model results and Discussion sections.
-- *Sugam Subedi*: Theory and first part of model development sections.
+- *Simone Massaro*: all code development. In the term paper: model calibration, sensitivity, model results and discussion; Formatting of the term paper.
+- *Sugam Subedi*: In the term paper: theory section and first part of model development section.

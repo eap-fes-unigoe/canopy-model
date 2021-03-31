@@ -6,10 +6,10 @@ After the analyzing the model results and evaluating its performance a more the 
 
 ### Kb {-}
 
-The direct beam extinction coefficient depends on the leaf angle distribution, which is considered constant and the zenith.
-The sun elevation is the most important elements that influences the penetration of direct shortwave radiation.
-For zenith inferior to $30°$ the *Kb* has a value of about $0.5$ (Figure \@ref(fig:kb-zenith)),
-then reaches $1$ with a $60°$ zenith and eventually start to grow exponentially reaching the theoretical value of infinity when the zun is completely horizontal.
+The direct beam extinction coefficient depends on the leaf angle distribution and the zenith.
+The leaf angle distribution doesn't change hence the variation of the zenith is the only aspect that can influences the penetration of direct shortwave radiation.
+For zenith inferior to $30°$ the $K_b$ has a value of about $0.5$ (Figure \@ref(fig:kb-zenith)),
+then reaches $1$ with a $60°$ zenith and eventually start to grow exponentially reaching the theoretical value of infinity when the sun is completely horizontal.
 ```{r kb-zenith, fig.cap = "Kb over zenith", echo = F}
 zenith <- seq(0,85)
 Kb <- map_dbl(zenith, get_Kb)
@@ -20,12 +20,11 @@ ggplot() +
   scale_y_continuous(n.breaks = 7, limits = c(0,NA))
 ```
 ### Kd {-}
-The diffuse radiation extinction coefficient does not depend on directly on the solar zenith, as the radiation comes from all directions.
-The variable it depends on is the LAI.
-The bigger the LAI the smaller the Kd, thus more light penetrates through the canopy (Figure \@ref(fig:kd-lai)).
-The range of the *Kd* has a smaller than the *Kb*.
-The *Kd* showed in this plot is used only by the longwave model, as the 2 stream approximation uses a different *Kd* that depends only on leaf angle distribution.
-```{r kd-lai, echo = F}
+The diffuse radiation extinction coefficient does not depend on directly on the solar zenith, as the radiation comes from all directions, but depends on the LAI.
+The bigger the LAI the smaller the $K_d$, thus more light penetrates through the canopy (Figure \@ref(fig:kd)).
+The range of the $K_d$ has a smaller than the $K_b$.
+The $K_d$ showed in this plot is used only by the longwave model, as the 2 stream approximation uses a different $K_d$, that depends only on leaf angle distribution.
+```{r kd, echo = F, fig.cap = "Kb over LAI"}
 LAI <- seq(1,10,.25)
 Kd <- map_dbl(LAI, get_Kd)
 
@@ -37,16 +36,18 @@ ggplot() +
 ### Absorbed radiation over LAI {-}
 
 The amount LAI influences directly the amount of radiation absorbed.
-The increase in LAI increase the amount of radiation absorbed, but then it reaches a peak at even if the LAI increase no more light is absorbed.
+The increase in LAI initially increase the amount of radiation absorbed to then reach an asymptote (Figure \@ref(fig:lai)).
 
-```{r, echo = F}
+The sunlit leaves absorb the majority of the radiation, ranging from $70\%$ at high LAI values to over $90 \%$ with low LAI (Figure \@ref(fig:frac-sha-lai)).
+
+```{r lai, echo = F, fig.cap="Abosrbed radiation over LAI"}
 fake_input_5 <- tibble(
   datetime = as.Date("2020-07-15 12:00"), sw_in = 1000, sw_dif = 100, lw_in = 0, t_soil = 0, t_leaf = 0, zenith = 30,
   LAI = 1:12
 )
 
 out_2 <- cbind(rad_transf(input = fake_input_5), sw_in = fake_input_5$sw_in)
-labels <- str_wrap(c("Total incoming sw", "Total absorbed sw", "Absorbed sw sunlit canopy", "Absorbed sw shaded canopy"), 10)
+labels <- str_wrap(c("Total incoming sw", "Total absorbed sw", "Absorbed sw sunlit canopy", "Absorbed sw shaded canopy"), 8)
 
 out_2 %>%
   gather("type", "radiation", sw_in, ic, ic_sun, ic_sha, factor_key = T) %>%
@@ -57,33 +58,38 @@ out_2 %>%
        x = "LAI (m2 m-2)", y = "Absorbed shortwave radiation (W m-2)", color = "", linetype = "") +
   scale_color_manual(values = c("black", hue_pal()(3)), labels = labels) +
   scale_linetype_manual(values = c(2, 1, 4, 4), labels = labels) +
-  theme(legend.key.height = unit(40, "pt"))
+  theme(legend.key.height = unit(44, "pt"))
 
 ```
-```{r}
+```{r frac-sha-lai, echo = F, fig.cap="Fraction of radiation absorbed by shaded leaves over LAI"}
 ggplot(out_2) +
 geom_line(aes(x=LAI, y=ic_sha/ic))+
 labs(title="Fraction of radiation absorbed by shaded leaves over LAI", y="Fraction abosorbed by shaded leaves")
 ```
-Variation of absorbed radiation by the soil and canopy with the variation of LAI
+The variation of LAI influences also the amount of radiation absorbed by the soil, ranging from over $50\%$ to almost $0\%$ with high LAI values (Figure \@ref(fig:lai2)).
 
-We can see that the overall canopy albedo is constant while the division between soil and canopy changes
+The LAI has virtually no impact on the total canopy albedo.
 
-```{r, echo = F}
+```{r lai2, echo = F, fig.cap="Absorbed sw canopy, soil and upcoming sw with increasing LAI"}
+labels <- str_wrap(c("Total incoming sw", "Absorbed sw canopy", "Absorbed sw soil", "Upcoming sw"), 8)
 out_2 %>%
-  gather("Radiation_type", "Radiation", ic, ig, i_up) %>%
+  gather("Radiation_type", "Radiation", sw_in, ic, ig, i_up, factor_key = T) %>%
   ggplot() +
-  geom_line(aes(x = LAI, y = Radiation, color = Radiation_type, linetype = Radiation_type))
+  geom_line(aes(x = LAI, y = Radiation, color = Radiation_type, linetype = Radiation_type)) +
+  scale_color_manual("", values = c("black", hue_pal()(3)), labels = labels) +
+  scale_linetype_manual("", values = c(2, 1, 1, 1), labels = labels) +
+  theme(legend.key.height = unit(40, "pt")) +
+  labs(title = "Absorbed sw canopy, soil and upcoming sw with increasing LAI", subtitle = "Incoming radiation 900 direct + 100 diffuse. Zenith 30°",
+       x = "LAI (m2 m-2)", y = "Shortwave radiation (W m-2)")
 ```
 
-## Emitted and Absorbed longwave radiation at different temperature
+### Emitted longwave radiation at different temperature {-}
 
+The leaf temperature have a direct influence on the emitted radiation.
 
-Soil and leaves temperature changes together between 260 and 310 K
+In figure \@ref(fig:lwout) soil and leaves temperature change together between 260 and 310 K. This results in an almost linear increase in the emitted radiation.
 
-This is so Boring...
-
-```{r, echo = F}
+```{r lwout, echo = F, fig.cap = "Emitted longwave with increasing temperatures"}
 fake_input_3 <- tibble(
   datetime = as.Date("2020-07-15 12:00"), # Summer day
   sw_in = 800,
@@ -99,20 +105,18 @@ out_3 <- rad_transf(fake_input_3, fake_input_3) # the second time is for the sta
 out_3 %>%
   select(-zenith) %>%
   cbind(fake_input_3) %>%
-  gather("type", "radiation", lc) %>%
   ggplot() +
-  geom_line(aes(x = t_leaf, y = radiation, color = type))
+  geom_line(aes(x = t_leaf, y = l_up), color = "red") +
+  labs(title = "Emitted longwave with increasing temperatures",
+   x="Leaf and Soil temperature (K)", y="Emitted radiation (W m-2)", color="")
 ```
-```{r}
-
-```
-
-## Absorbed radiation vs zenith
 
 
-Variation of the fraction of soil radiation that is absorbed with the change of the solar zenith (angle between vertical and sun)
+### Absorbed radiation vs zenith {-}
 
-```{r ic-zenith, echo=F}
+The solar zenith influences the fraction of the solar radiation absorbed \@ref(fig:ic-zenith), it increases with the zenith, reaching peak at $60°$ and then rapidly decreases. The variation of absorbed radiation with the zenith is limited ranging from about $70\%$ to $80%$.
+
+```{r ic-zenith, echo=F, fig.cap = "Fraction of absorbed radiation with incresing zenith"}
 fake_input_4 <- tibble(
   datetime = as.POSIXct("2016-07-21 00:00"), # Summer day
   zenith = seq(0, 90, 2.5),
@@ -130,33 +134,23 @@ out_4 %>%
   mutate(absorbed_fraction = ic / sw_in) %>%
   ggplot() +
   geom_line(aes(x = zenith, y = absorbed_fraction), color = "red") +
-  labs(x = "Zenith (deg)", y = "Fraction of total radiation absorbed", title="Fraction of absorbed radiation with different zenith")
+  labs(x = "Zenith (deg)", y = "Fraction of total radiation absorbed", title="Fraction of absorbed radiation with incresing zenith")
 ```
 
-```{r}
-# time_out %>%
-#   ggplot() +
-#   geom_line(aes(x = datetime, y = LAI_sunlit)) +
-#   geom_hline(yintercept = 5, linetype = "dotted")
-# labs(y = "LAI sunlit (m2 m-2)")
-```
-
-## Model limits and applications
-
-The model was developed for explorative purposes.
 
 
+## Conclusion
 
-## Model improvements
+The model was developed with the goal to be as simple as possible to be able to understand the radiative transfer processes.
+The model was not intended to be used in real data conditions and its main aim has been achieved with the current version.
 
-The model has been implement with the goal to be simple
-The future step in order to have a better model are:
+Nonetheless, improvements are possible in particular:
 
- - solving the shortwave radiations for the visible and near infrared radiation, as leaves have different optical properties
- - using more accurate equation than the two-streams approximation, like
- - optimizing the performance of the model in order to allow for faster iteration during the analysis
+ - solve the shortwave radiations for the visible and near infrared radiation, as leaves have different optical properties.
+ - use more accurate equation than the two-streams approximation, like Norman model.
+ - optimize the performance of the model in order to allow for faster iteration during the analysis.
 
-For the last point an experimental port has been made using the Julia language [https://github.com/eap-fes-unigoe/canopy-model](https://github.com/eap-fes-unigoe/canopy-model)
+Regarding the last point an experimental port has been made using the Julia language [https://github.com/mone27/canopy-model.jl](https://github.com/mone27/canopy-model.jl)
 obtaining promising results (roughly 1000 times faster).
 
 
