@@ -34,7 +34,7 @@ This term paper describes the development of the sub-model for the processes of 
 
 
 The leaf photosynthesis model can essentially be divided into two interacting components which are modeled individually. 
-These two components are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. The following theoretical explainations attempt to outline the calculations and relationships that were applied in the photosynthesis model.
+These two components are photosynthesis in the form of net assimilation and stomatal conductance as chemical flux in and out of the leaf. The following theoretical explanations attempt to outline the calculations and relationships that were applied in the photosynthesis model.
 All theory, equations and figures are obtained from Bonan (2019) **Chapter 11** and **12**. 
 
 ### Photosynthesis
@@ -129,7 +129,7 @@ to yield the supply-constraint function
 
 The biochemical demand is calculated as follows, depending on the photosynthesis limiting factor. 
 
-![**2.7: Biochemical demand function with a and b depending on wether photosynthesis is limited by carboxylation (a = Vcmax & b = Kc(1+oi/Ko) or electron transport (a = J/4 & b = 2xCO2 compensation point)**](TheoryFormulas/12.24.JPG){width=30%}
+![**2.7: Biochemical demand function with a and b depending on whether photosynthesis is limited by carboxylation (a = Vcmax & b = Kc(1+oi/Ko) or electron transport (a = J/4 & b = 2xCO2 compensation point)**](TheoryFormulas/12.24.JPG){width=30%}
 
 To calculate **ci** dependent on a given leaf temperature, an iterative approach can be taken which uses an initial **ci** value and adapts
 this value until it satisfies the biochemical demand function as well as the diffusive supply-constraint function. 

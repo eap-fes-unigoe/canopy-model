@@ -17,7 +17,7 @@ fun_calc_an_gs <- function(met,state_last,pars,out) {
     state_last$gbc = CO2LeafBoundaryLayer(state_last,met,pars)
   }
 
-  # transforming W/m2 to μmol photon.m2 leaf/s by multiplication with 4.6
+  # transforming W/m2 to μmol photon.m2 leaf/s by multiplication with 2
   # if radiation script not used, default on PAR.R for testing purposes
   #calculation of LAI_sha
   if(is.na(out$ic_sun)){
@@ -25,9 +25,6 @@ fun_calc_an_gs <- function(met,state_last,pars,out) {
     par_sun <- PAR(met$sw_in)
     par_sha <- PAR(met$sw_in)
   } else {
-    source("photosynthesis_stomatalconductance/PAR.R")
-    #par_sun <- PAR(out$ic_sun)
-    #par_sha <- PAR(out$ic_sha)
     #par_sun <- out$ic_sun * 4.6
     #par_sha <- out$ic_sha * 4.6
     par_sun <- out$ic_sun * 2

@@ -5,8 +5,8 @@ calc_fun_Photosynthesis_StomatalConductance = function(met,state_last,pars,apar)
   flux$eair = esat * met$rh; # Vapor pressure (Pa)
 
   # Boundary layer conductance for H20 and CO2, as passed on from fun_calc_an_gs
-  flux$gbw = state_last$gbw
-  flux$gbc = state_last$gbc
+  flux$gbw = state_last$gbw #mol H2O/m2 leaf/s
+  flux$gbc = state_last$gbc #mol CO2/m2 leaf/s
 
   # entropy terms in dependence of air T
   flux$vcmaxse = 668.39 - 1.07 * met$tair
